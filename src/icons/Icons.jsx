@@ -24,3 +24,23 @@ export const TextBoxSelect = (props) => (
 export const QLogo = (props) => (
   <IconBase {...props} style={{ width: 121, height: 54 }} source={require('./QLogo.png')} resizeMode={'contain'} />
 );
+
+export const Screen1 = (props) => (
+  <IconBase {...props} style={{ width: 119, height: 154 }} source={require('./Screen1.png')} resizeMode={'contain'} />
+);
+
+export const Screen2 = (props) => (
+  <IconBase {...props} style={{ width: 119, height: 154 }} source={require('./Screen1.png')} resizeMode={'contain'} />
+);
+
+export const Screen3 = (props) => (
+  <IconBase {...props} style={{ width: 66, height: 126 }} source={require('./Screen4.png')} resizeMode={'contain'} />
+);
+
+export const Screen4 = (props) => (
+  <IconBase {...props} style={{ width: 66, height: 126 }} source={require('./Screen4.png')} resizeMode={'contain'} />
+);
+
+export const SkipButton = (props) => (
+  <IconBase {...props} source={require('./Skip.png')} resizeMode={'contain'} />
+);

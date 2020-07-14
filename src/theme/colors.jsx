@@ -1,6 +1,7 @@
 const white = 'white';
 const black = 'black';
 const clear = 'transparent';
+const sliderinactiveColor = 'rgba(0,0,0,0.5)';
 
 const red = '#C3111A';
 
@@ -19,7 +20,8 @@ const Common = {
   WHITE: white,
   RED: red,
   CLEAR: clear,
-  DEFAULT_BACKGROUND_COLOR: white
+  DEFAULT_BACKGROUND_COLOR: white,
+  INACTIVE_DOT_COLOR: sliderinactiveColor
 };
 
 export const colors = {

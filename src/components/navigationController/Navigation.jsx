@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Login } from '../Login';
+import { WalkThroughScreen } from '../WalkThroughScreen';
 
 import {
   ScreenNamesCustomer,
@@ -32,6 +33,7 @@ export const AppCustomerNavigator = () => {
       }
     >
       <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+      <Stack.Screen name={ScreenNamesCustomer.WALKTHROUGHSCREEN} component={WalkThroughScreen} />
     </Stack.Navigator >
   );
 };

@@ -7,6 +7,7 @@ import { isMobileNumberValid } from '../utils/Validators';
 import CommonButton from './UI/CommonButton';
 import { colors } from '../theme/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScreenNamesCustomer } from './navigationController/ScreenNames';
 
 const styles = StyleSheet.create({
   container: {
@@ -132,6 +133,8 @@ export const Login = ({ navigation }) => {
               setShowOTPView(true)
               setIsMobileAPIError(false)
             }, 1000);
+          } else {
+            navigation.push(ScreenNamesCustomer.WALKTHROUGHSCREEN)
           }
 
           // navigation.navigate(ScreenNamesMarketing.DISPATCHTRACKSTATUS, { name: name })
