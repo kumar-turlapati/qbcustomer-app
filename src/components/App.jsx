@@ -6,17 +6,15 @@
  * @flow strict-local
  */
 
+import { NavigationContainer } from '@react-navigation/native';
+import { AppCustomerNavigator } from './navigationController/Navigation';
 import React from 'react';
-import {SafeAreaView, Text, StatusBar} from 'react-native';
 
 const App = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <Text>Hello world....</Text>
-      </SafeAreaView>
-    </>
+    <NavigationContainer>
+      <AppCustomerNavigator />
+    </NavigationContainer>
   );
 };
 

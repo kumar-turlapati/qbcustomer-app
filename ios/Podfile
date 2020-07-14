@@ -8,10 +8,7 @@ target 'qbcustomer' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'qbcustomerTests' do
-    inherit! :complete
-    # Pods for testing
-  end
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   # Enables Flipper.
   #
@@ -20,14 +17,5 @@ target 'qbcustomer' do
   use_flipper!
   post_install do |installer|
     flipper_post_install(installer)
-  end
-end
-
-target 'qbcustomer-tvOS' do
-  # Pods for qbcustomer-tvOS
-
-  target 'qbcustomer-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
   end
 end
