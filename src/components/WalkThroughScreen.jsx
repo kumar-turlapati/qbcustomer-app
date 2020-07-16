@@ -10,6 +10,7 @@ import { Screen1, Screen2, Screen3, Screen4, SkipButton } from '../icons/Icons';
 import { theme } from '../theme/theme';
 import Carousel from 'react-native-snap-carousel';
 import { colors } from '../theme/colors';
+import { ScreenNamesCustomer } from './navigationController/ScreenNames';
 
 const { width: winWidth } = Dimensions.get('window');
 
@@ -135,6 +136,7 @@ export const WalkThroughScreen = ({ navigation }) => {
       <View style={styles.skipViewStyles}>
         <TouchableOpacity onPress={() => {
           console.log('skip clicked')
+          navigation.push(ScreenNamesCustomer.TABBAR)
         }}>
           <SkipButton style={{ width: 52, height: 26, height: 40 }} />
         </TouchableOpacity>

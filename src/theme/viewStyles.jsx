@@ -62,5 +62,14 @@ export const viewStyles = {
     lineHeight: 22,
     letterSpacing: - 0.5,
     color: colors.WHITE
+  },
+  tabBarStyles: {
+    fontWeight: '500',
+    fontSize: 10,
+    lineHeight: 12,
+    textAlign: 'center',
+    letterSpacing: - 0.24,
+    marginBottom: 8,
+    marginLeft: 2
   }
 };

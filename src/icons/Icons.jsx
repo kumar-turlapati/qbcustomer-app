@@ -44,3 +44,35 @@ export const Screen4 = (props) => (
 export const SkipButton = (props) => (
   <IconBase {...props} source={require('./Skip.png')} resizeMode={'contain'} />
 );
+
+export const HomeUnselected = (props) => (
+  <IconBase {...props} source={require('./Home.png')} resizeMode={'contain'} />
+);
+
+export const CatalogueUnselected = (props) => (
+  <IconBase {...props} source={require('./Catalogue.png')} resizeMode={'contain'} />
+);
+
+export const OrdersUnselected = (props) => (
+  <IconBase {...props} source={require('./Orders.png')} resizeMode={'contain'} />
+);
+
+export const ProfileUnselected = (props) => (
+  <IconBase {...props} source={require('./Profile.png')} resizeMode={'contain'} />
+);
+
+export const HomeSelected = (props) => (
+  <IconBase {...props} source={require('./Home.png')} resizeMode={'contain'} />
+);
+
+export const CatalogueSelected = (props) => (
+  <IconBase {...props} source={require('./CatalogueSelected.png')} resizeMode={'contain'} />
+);
+
+export const OrdersSelected = (props) => (
+  <IconBase {...props} source={require('./Orders.png')} resizeMode={'contain'} />
+);
+
+export const ProfileSelected = (props) => (
+  <IconBase {...props} source={require('./Profile.png')} resizeMode={'contain'} />
+);

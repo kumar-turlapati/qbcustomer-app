@@ -6,8 +6,8 @@ const sliderinactiveColor = 'rgba(0,0,0,0.5)';
 const red = '#C3111A';
 
 const TabBar = {
-  TAB_BAR_ACTIVE_TINT_COLOR: white,
-  TAB_BAR_INACTIVE_TINT_COLOR: 'rgba(2,71,91,0.6)',
+  TAB_BAR_ACTIVE_TINT_COLOR: black,
+  TAB_BAR_INACTIVE_TINT_COLOR: sliderinactiveColor
 };
 
 const Buttons = {
@@ -21,7 +21,7 @@ const Common = {
   RED: red,
   CLEAR: clear,
   DEFAULT_BACKGROUND_COLOR: white,
-  INACTIVE_DOT_COLOR: sliderinactiveColor
+  INACTIVE_DOT_COLOR: sliderinactiveColor,
 };
 
 export const colors = {
