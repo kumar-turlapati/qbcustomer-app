@@ -1,5 +1,4 @@
 import { colors } from './colors';
-import { fonts, getTextStyle } from './fonts';
 
 export const viewStyles = {
   container: {
@@ -71,5 +70,12 @@ export const viewStyles = {
     letterSpacing: - 0.24,
     marginBottom: 8,
     marginLeft: 2
+  },
+  productListTextStyles: {
+    fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 22,
+    letterSpacing: - 0.41,
+    color: colors.PRODUCT_LIST_SPECIAL_TEXT_COLOR
   }
 };

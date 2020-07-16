@@ -76,3 +76,51 @@ export const OrdersSelected = (props) => (
 export const ProfileSelected = (props) => (
   <IconBase {...props} source={require('./Profile.png')} resizeMode={'contain'} />
 );
+
+export const HeartSelected = (props) => (
+  <IconBase {...props} source={require('./FilledHeart.png')} resizeMode={'contain'} />
+);
+
+export const HeartUnSelected = (props) => (
+  <IconBase {...props} source={require('./UnfilledHeart.png')} resizeMode={'contain'} />
+);
+
+export const SortIcon = (props) => (
+  <IconBase {...props} style={{ width: 21, height: 24 }} source={require('./Sort.png')} resizeMode={'contain'} />
+);
+
+export const FilterIcon = (props) => (
+  <IconBase {...props} style={{ width: 21, height: 23 }} source={require('./Filter.png')} resizeMode={'contain'} />
+);
+
+export const CartIcon = (props) => (
+  <IconBase {...props} style={{ width: 20, height: 22 }} source={require('./Cart.png')} resizeMode={'contain'} />
+);
+
+export const Cloth1 = (props) => (
+  <IconBase {...props} source={require('./Cloth1.png')} resizeMode={'contain'} />
+);
+
+export const Cloth2 = (props) => (
+  <IconBase {...props} source={require('./Cloth2.png')} resizeMode={'contain'} />
+);
+
+export const Cloth3 = (props) => (
+  <IconBase {...props} source={require('./Cloth3.png')} resizeMode={'contain'} />
+);
+
+export const Cloth4 = (props) => (
+  <IconBase {...props} source={require('./Cloth4.png')} resizeMode={'contain'} />
+);
+
+export const BackIcon = (props) => (
+  <IconBase {...props} source={require('./back.png')} resizeMode={'contain'} />
+);
+
+export const CheckIcon = (props) => (
+  <IconBase {...props} source={require('./CheckIcon.png')} resizeMode={'contain'} />
+);
+
+export const UnCheckIcon = (props) => (
+  <IconBase {...props} source={require('./UnCheckIcon.png')} resizeMode={'contain'} />
+);

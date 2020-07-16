@@ -22,10 +22,21 @@ const Common = {
   CLEAR: clear,
   DEFAULT_BACKGROUND_COLOR: white,
   INACTIVE_DOT_COLOR: sliderinactiveColor,
+  HEADER_LEFT_TITLE_COLOR: black,
+  BLACK_WITH_OPACITY: sliderinactiveColor
+};
+
+const Product = {
+  PRODUCT_LIST_TEXT_COLOR: black,
+  PRODUCT_LIST_SPECIAL_TEXT_COLOR: black,
+  PRODUCT_LIST_ORIGINAL_TEXT_COLOR: sliderinactiveColor,
+  PRODUCT_LIST_DISCOUNT_TEXT_COLOR: red,
+
 };
 
 export const colors = {
   ...Buttons,
   ...Common,
   ...TabBar,
+  ...Product
 };
