@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 })
 
 
-export default CommonButton = ({ buttonTitle, onPressButton, propStyle, disableButton }) => {
+export default CommonButton = ({ buttonTitle, onPressButton, propStyle, disableButton, propTextStyle }) => {
 
     const renderButtom = () => {
         return (
@@ -21,7 +21,7 @@ export default CommonButton = ({ buttonTitle, onPressButton, propStyle, disableB
                     onPressButton()
                 }}>
                     <View style={[styles.mainButtonStyle, propStyle, { opacity: disableButton ? 0.5 : 1 }]}>
-                        <Text style={styles.buttonTextStyles} textAlign={'center'}>{buttonTitle}</Text>
+                        <Text style={[styles.buttonTextStyles, propTextStyle]} textAlign={'center'}>{buttonTitle}</Text>
                     </View>
                 </TouchableOpacity>
 

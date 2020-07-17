@@ -44,7 +44,7 @@ export const viewStyles = {
     borderWidth: 1,
     fontWeight: 'bold',
     fontSize: 17,
-    lineHeight: 26,
+    // lineHeight: 26,
     letterSpacing: - 0.25,
     color: colors.BLACK
   },
@@ -77,5 +77,38 @@ export const viewStyles = {
     lineHeight: 22,
     letterSpacing: - 0.41,
     color: colors.PRODUCT_LIST_SPECIAL_TEXT_COLOR
+  },
+  titleTextStyle: {
+    fontWeight: 'normal',
+    fontSize: 18,
+    lineHeight: 22,
+    letterSpacing: - 0.5,
+    color: colors.BLACK
+  },
+  inStockTextStyle: {
+    backgroundColor: colors.IN_STOCK_BACKGROUND_COLOR,
+    borderRadius: 10,
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 22,
+    letterSpacing: - 0.41,
+    color: colors.WHITE,
+    overflow: 'hidden',
+    paddingHorizontal: 8,
+    marginLeft: 10
+  },
+  priceStyles: {
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 22,
+    letterSpacing: - 0.5,
+    color: colors.BLACK
+  },
+  commonTextStyles: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: colors.BLACK,
+    lineHeight: 22,
+    letterSpacing: - 0.41
   }
 };

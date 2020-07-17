@@ -124,3 +124,32 @@ export const CheckIcon = (props) => (
 export const UnCheckIcon = (props) => (
   <IconBase {...props} source={require('./UnCheckIcon.png')} resizeMode={'contain'} />
 );
+
+export const Product = (props) => (
+  <IconBase {...props} source={require('./Product.png')} resizeMode={'stretch'} />
+);
+
+export const ProductFullScreen = (props) => (
+  <IconBase {...props} source={require('./ProductFullScreen.png')} resizeMode={'stretch'} />
+);
+
+export const WishListIcon = (props) => (
+  <IconBase {...props} source={require('./WishListIcon.png')} resizeMode={'contain'} />
+);
+
+export const CrossIcon = (props) => (
+  <IconBase {...props} source={require('./Cross.png')} resizeMode={'contain'} />
+);
+
+export const DeleteIcon = (props) => (
+  <IconBase {...props} source={require('./delete.png')} resizeMode={'contain'} />
+);
+
+export const Loader = (props) => (
+  <IconBase {...props} source={require('./loading.png')} resizeMode={'contain'} />
+);
+
+export const SideArrowIcon = (props) => (
+  <IconBase {...props} source={require('./sideArrow.png')} resizeMode={'contain'} />
+);
+

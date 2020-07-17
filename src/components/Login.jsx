@@ -90,10 +90,10 @@ export const Login = ({ navigation }) => {
             onEndEditing={e => {
               const validateMobileNumber = isMobileNumberValid(e.nativeEvent.text);
               if (validateMobileNumber && !validateMobileNumber.status) {
-                setMobileNumberError(validateMobileNumber.reason);
+                // setMobileNumberError(validateMobileNumber.reason);
                 setIsMobileNumberError(true);
               } else {
-                setMobileNumberError('');
+                // setMobileNumberError('');
                 setIsMobileNumberError(false);
               }
             }}

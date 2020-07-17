@@ -3,6 +3,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Login } from '../Login';
 import { WalkThroughScreen } from '../WalkThroughScreen';
 import { TabBar } from '../navigationController/TabBar';
+import { Filter } from '../home/Filter';
+import { ProductDetails } from '../home/ProductDetails'
+import { CartView } from '../home/CartView'
 
 import {
   ScreenNamesCustomer,
@@ -36,6 +39,9 @@ export const AppCustomerNavigator = () => {
       <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
       <Stack.Screen name={ScreenNamesCustomer.WALKTHROUGHSCREEN} component={WalkThroughScreen} />
       <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
+      <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
+      <Stack.Screen name={ScreenNamesCustomer.PRODUCTDETAILS} component={ProductDetails} />
+      <Stack.Screen name={ScreenNamesCustomer.CARTVIEW} component={CartView} />
     </Stack.Navigator >
   );
 };

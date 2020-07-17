@@ -5,6 +5,9 @@ export const ScreenNamesCustomer = {
   HOME: "Home",
   CATALOGUE: "Catalogue",
   ORDER: "Order",
-  PROFILE: "Profile"
+  PROFILE: "Profile",
+  FILTER: "Filter",
+  PRODUCTDETAILS: "ProductDetails",
+  CARTVIEW: "CartView"
 };
 

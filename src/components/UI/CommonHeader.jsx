@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BackIcon, CartIcon, FilterIcon, SortIcon } from '../../icons/Icons';
+import { BackIcon, CartIcon, FilterIcon, SortIcon, WishListIcon } from '../../icons/Icons';
 import { theme } from '../../theme/theme';
 
 const { height, width } = Dimensions.get('window')
@@ -70,7 +70,13 @@ const styles = StyleSheet.create({
         marginRight: 7,
         height: 44,
         marginTop: 49,
-    }
+    },
+    iconWishListStyles: {
+        height: 20,
+        width: 20,
+        marginTop: 3,
+        marginLeft: 2,
+    },
 })
 
 
@@ -81,7 +87,9 @@ export default CommonHeader = ({
     isProduct,
     isTabView,
     onPressFilterIcon,
-    onPressSortIcon
+    onPressSortIcon,
+    isWishList,
+    onPressWishListIcon
 }) => {
 
     const renderHeader = () => {
@@ -114,6 +122,17 @@ export default CommonHeader = ({
                             }}>
                                 <View style={styles.productIconStyles}>
                                     <FilterIcon style={styles.iconStyles} />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    {isWishList &&
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity activeOpacity={1} onPress={() => {
+                                onPressWishListIcon()
+                            }}>
+                                <View style={styles.productIconStyles}>
+                                    <WishListIcon style={styles.iconWishListStyles} />
                                 </View>
                             </TouchableOpacity>
                         </View>

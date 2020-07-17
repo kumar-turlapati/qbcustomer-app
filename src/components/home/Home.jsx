@@ -5,6 +5,7 @@ import { Cloth1, Cloth2, Cloth3, Cloth4, HeartUnSelected, HeartSelected, CheckIc
 
 import CommonHeader from '../UI/CommonHeader';
 import { Overlay } from 'react-native-elements';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
 const { height, width } = Dimensions.get('window')
 
@@ -282,9 +283,13 @@ export const Home = ({ navigation }) => {
       <CommonHeader
         leftSideText={'Products'}
         isTabView={true}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {
+          navigation.push(ScreenNamesCustomer.CARTVIEW)
+        }}
         isProduct={true}
-        onPressFilterIcon={() => { }}
+        onPressFilterIcon={() => {
+          navigation.push(ScreenNamesCustomer.FILTER)
+        }}
         onPressSortIcon={() => {
           setShowSortView(!showSortView)
         }}
@@ -295,6 +300,7 @@ export const Home = ({ navigation }) => {
   const renderRow = (item, index) => {
     return (
       <TouchableOpacity activeOpacity={1} onPress={() => {
+        navigation.push(ScreenNamesCustomer.PRODUCTDETAILS)
       }}>
         <View style={styles.rowStyles}>
           {item.icon}
@@ -337,6 +343,7 @@ export const Home = ({ navigation }) => {
       />
     )
   }
+
   const close = () => {
     setShowSortView(false)
   }
