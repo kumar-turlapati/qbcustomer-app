@@ -6,10 +6,15 @@ import { TabBar } from '../navigationController/TabBar';
 import { Filter } from '../home/Filter';
 import { ProductDetails } from '../home/ProductDetails'
 import { CartView } from '../home/CartView'
+import { WishList } from '../home/WishList'
+import { OrderDetails } from '../orders/OrderDetails'
+import { TrackOrder } from '../orders/TrackOrder'
+import { Ledger } from '../profile/Ledger'
 
 import {
   ScreenNamesCustomer,
 } from './ScreenNames';
+import { LedgerIcon } from '../../icons/Icons';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
@@ -42,6 +47,10 @@ export const AppCustomerNavigator = () => {
       <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
       <Stack.Screen name={ScreenNamesCustomer.PRODUCTDETAILS} component={ProductDetails} />
       <Stack.Screen name={ScreenNamesCustomer.CARTVIEW} component={CartView} />
+      <Stack.Screen name={ScreenNamesCustomer.WISHLIST} component={WishList} />
+      <Stack.Screen name={ScreenNamesCustomer.ORDERDETAILS} component={OrderDetails} />
+      <Stack.Screen name={ScreenNamesCustomer.TRACKORDER} component={TrackOrder} />
+      <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
     </Stack.Navigator >
   );
 };

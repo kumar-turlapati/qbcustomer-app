@@ -8,6 +8,10 @@ export const ScreenNamesCustomer = {
   PROFILE: "Profile",
   FILTER: "Filter",
   PRODUCTDETAILS: "ProductDetails",
-  CARTVIEW: "CartView"
+  CARTVIEW: "CartView",
+  WISHLIST: "WishList",
+  ORDERDETAILS: "OrderDetails",
+  TRACKORDER: "TrackOrder",
+  LEDGER: "Ledger"
 };
 

@@ -322,7 +322,12 @@ export const ProductDetails = ({ navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container} bounces={false}>
+    <ScrollView
+      style={styles.container}
+      bounces={false}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+    >
       {renderHeader()}
       {renderCarouselView()}
       {renderSliderDotView()}

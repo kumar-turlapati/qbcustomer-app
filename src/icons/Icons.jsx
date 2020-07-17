@@ -153,3 +153,26 @@ export const SideArrowIcon = (props) => (
   <IconBase {...props} source={require('./sideArrow.png')} resizeMode={'contain'} />
 );
 
+export const LedgerIcon = (props) => (
+  <IconBase {...props} source={require('./Ledger.png')} resizeMode={'contain'} />
+);
+
+export const OrderIcon = (props) => (
+  <IconBase {...props} source={require('./Order.png')} resizeMode={'contain'} />
+);
+
+export const OrderPlaced = (props) => (
+  <IconBase {...props} source={require('./OrderPlaced.png')} resizeMode={'contain'} />
+);
+
+export const OrderConfirmed = (props) => (
+  <IconBase {...props} source={require('./OrderConfirmed.png')} resizeMode={'contain'} />
+);
+
+export const OrderReady = (props) => (
+  <IconBase {...props} source={require('./OrderReady.png')} resizeMode={'contain'} />
+);
+
+export const OrderDispatched = (props) => (
+  <IconBase {...props} source={require('./OrderDispatched.png')} resizeMode={'contain'} />
+);

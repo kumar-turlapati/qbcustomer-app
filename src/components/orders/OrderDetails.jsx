@@ -6,6 +6,7 @@ import CommonHeader from '../UI/CommonHeader';
 import { Product, DeleteIcon } from '../../icons/Icons';
 import { useState } from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
 const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
     ...theme.viewStyles.container
   },
   rowStyles: {
-    height: 95,
+    height: 90,
     backgroundColor: theme.colors.WHITE,
     marginHorizontal: 16,
     flexDirection: 'row',
@@ -59,13 +60,22 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 20,
     color: theme.colors.BLACK
+  },
+  tileTextStyles: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: - 0.41,
+    color: theme.colors.BLACK,
+    marginTop: 24,
+    marginLeft: 16
   }
 })
 
 const cartItems = [
   {
     id: 1,
-    icon: <Product style={{ height: 95, width: 90 }} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 1',
     price: '₹2,754',
     quantity: 1,
@@ -74,7 +84,7 @@ const cartItems = [
   },
   {
     id: 2,
-    icon: <Product style={{ height: 95, width: 90 }} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 2',
     price: '₹2,754',
     quantity: 1,
@@ -83,7 +93,7 @@ const cartItems = [
   },
   {
     id: 3,
-    icon: <Product style={{ height: 95, width: 90 }} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 3',
     price: '₹2,754',
     quantity: 1,
@@ -92,28 +102,34 @@ const cartItems = [
   }
 ]
 
-export const CartView = ({ navigation }) => {
-
-  const [couponText, setCouponText] = useState('')
-  const [showLoader, setShowLoader] = useState(false)
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
-  const [showAlert, setShowAlert] = useState(false)
+export const OrderDetails = ({ navigation }) => {
 
   const renderHeader = () => {
     return (
       <CommonHeader
-        leftSideText={'My Cart'}
+        leftSideText={'Order Details'}
         isTabView={false}
         onPressLeftButton={() => {
           navigation.goBack()
         }}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {
+          navigation.push(ScreenNamesCustomer.CARTVIEW)
+        }}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {
-
+          navigation.push(ScreenNamesCustomer.WISHLIST)
         }}
       />
+    );
+  }
+
+  const renderOrderID = () => {
+    return (
+      <View style={{ backgroundColor: 'white', borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+        <Text style={styles.tileTextStyles} >Order ID 1234XYZ</Text>
+        <Text style={[styles.tileTextStyles, { color: theme.colors.BLACK_WITH_OPACITY, marginTop: 7, fontWeight: 'normal', fontSize: 14, marginBottom: 23 }]} >Date 05/06/2020</Text>
+      </View>
     );
   }
 
@@ -126,26 +142,11 @@ export const CartView = ({ navigation }) => {
           {item.icon}
           <View style={{ marginLeft: 18, marginTop: 17 }}>
             <Text style={styles.rowTextStyles} > {item.title}</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ height: 30, backgroundColor: '#F9F9F9', marginTop: 10, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', width: 67 }}>
-                <TouchableOpacity activeOpacity={1} onPress={() => { }}>
-                  <Text style={{ paddingLeft: 8, paddingTop: 4 }}>-</Text>
-                </TouchableOpacity>
-                <Text style={{ paddingLeft: 4, paddingTop: 4 }}>1</Text>
-                <TouchableOpacity activeOpacity={1} onPress={() => { }}>
-                  <Text style={{ paddingRight: 8, paddingTop: 4 }}>+</Text>
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity activeOpacity={1} style={{ width: 40, height: 30, justifyContent: 'center', alignItems: 'center' }} onPress={() => { }}>
-                <DeleteIcon style={{ width: 16, height: 16, marginTop: 15 }} />
-              </TouchableOpacity>
-            </View>
+            <Text style={[styles.rowTextStyles, { color: theme.colors.BLACK_WITH_OPACITY, marginTop: 13, marginLeft: 4 }]} >Qty {item.quantity}</Text>
           </View>
           <View style={{ top: 16, right: 25, position: 'absolute' }}>
             <Text style={[styles.rowTextStyles, { fontWeight: '600' }]}>{item.price}</Text>
-            <Text style={[styles.rowTextStyles, { color: theme.colors.RED, marginTop: 10 }]}>{item.discount}</Text>
           </View>
-          {!item.inStock && <Text style={styles.outOfStockView}>{'Out of stock'}</Text>}
         </View>
         {index === cartItems.length - 1 ?
           <View style={{ height: 16 }} />
@@ -176,41 +177,6 @@ export const CartView = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       />
     )
-  }
-
-  const renderCouponView = () => {
-    return (
-      <View style={{ marginTop: 5, marginHorizontal: 16 }}>
-        <Text style={styles.couponStyle}>COUPON</Text>
-        <View style={{ marginTop: 10, marginHorizontal: 0, borderColor: 'rgba(0,0,0,0.2)', borderWidth: 1, height: 45, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <TextInput
-            style={styles.textInputStyles}
-            placeholder={'Enter Coupon Code'}
-            onChangeText={changedText => {
-              setCouponText(changedText);
-            }}
-            value={couponText}
-            maxLength={20}
-            onEndEditing={e => {
-            }}
-          />
-          <Text
-            onPress={() => {
-
-            }}
-            style={{
-              fontSize: 16,
-              lineHeight: 19,
-              color: theme.colors.RED,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-            }}
-          >
-            Apply</Text>
-          <View style={{ height: 45, width: 1, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.2)', top: 0, right: 80 }} />
-        </View>
-      </View >
-    );
   }
 
   const renderLedger = () => {
@@ -244,17 +210,9 @@ export const CartView = ({ navigation }) => {
   const renderButton = () => {
     return (
       <CommonButton
-        buttonTitle={'PLACE ORDER'}
+        buttonTitle={'TRACK ORDER'}
         onPressButton={() => {
-
-          setShowLoader(true)
-          setShowSuccessAlert(false)
-          setShowAlert(true)
-
-          setTimeout(() => {
-            setShowSuccessAlert(true)
-            setShowLoader(false)
-          }, 1000);
+          navigation.push(ScreenNamesCustomer.TRACKORDER)
         }}
         propStyle={{ marginTop: 34, marginHorizontal: 17, marginBottom: 25 }}
         propTextStyle={{
@@ -267,20 +225,6 @@ export const CartView = ({ navigation }) => {
     );
   }
 
-  const renderAlert = () => {
-    return (
-      <CommonAlertView
-        showLoader={showLoader}
-        showSuceessPopup={showSuccessAlert}
-        onPressSuccessButton={() => {
-          setShowSuccessAlert(false)
-          setShowAlert(false)
-        }}
-        successTitle={'Sorry, Order failed due technical reason. Please try again after some time'}
-      />
-    )
-  }
-
   return (
     <ScrollView
       style={styles.container}
@@ -289,11 +233,10 @@ export const CartView = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
     >
       {renderHeader()}
+      {renderOrderID()}
       {renderListView()}
-      {renderCouponView()}
       {renderLedger()}
       {renderButton()}
-      {showAlert && renderAlert()}
     </ScrollView>
   );
 };
