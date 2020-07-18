@@ -6,8 +6,8 @@
  * @flow strict-local
  */
 
-import {NavigationContainer} from '@react-navigation/native';
-import {AppCustomerNavigator} from './navigationController/Navigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { AppCustomerNavigator } from './navigationController/Navigation';
 import React from 'react';
 
 const App = () => {
