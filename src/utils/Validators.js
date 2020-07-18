@@ -1,4 +1,4 @@
-export const isMobileNumberValid = mobileNumber => {
+export const isMobileNumberValid = (mobileNumber) => {
   let isAllDigits = true;
   if (mobileNumber.length !== 10)
     return {status: false, reason: 'Mobile number must be 10 digits'};

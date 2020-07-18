@@ -10,7 +10,7 @@ const lightGary = '#C4C4C4';
 
 const TabBar = {
   TAB_BAR_ACTIVE_TINT_COLOR: black,
-  TAB_BAR_INACTIVE_TINT_COLOR: sliderinactiveColor
+  TAB_BAR_INACTIVE_TINT_COLOR: sliderinactiveColor,
 };
 
 const Buttons = {
@@ -29,7 +29,7 @@ const Common = {
   BLACK_WITH_OPACITY: sliderinactiveColor,
   IN_STOCK_BACKGROUND_COLOR: '#4A4A4A',
   LIGHT_GRAY: lightGary,
-  SEPERATOR_COLOR: seperatorColor
+  SEPERATOR_COLOR: seperatorColor,
 };
 
 const Product = {
@@ -42,7 +42,7 @@ const Product = {
 const Carousel = {
   ACTIVE_CAROUSEL_COLOR: '#4A4A4A',
   IN_ACTIVE_CAROUSEL_COLOR: 'rgba(196,196,196,0.6)',
-}
+};
 
 const Slider = {
   SLIDER_THUMB_COLOR: black,
@@ -54,5 +54,5 @@ export const colors = {
   ...TabBar,
   ...Product,
   ...Slider,
-  ...Carousel
+  ...Carousel,
 };

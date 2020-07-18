@@ -1,4 +1,4 @@
-import { colors } from './colors';
+import {colors} from './colors';
 
 export const viewStyles = {
   container: {
@@ -12,7 +12,7 @@ export const viewStyles = {
     opacity: 0.1,
   },
   shadow: {
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: {width: 0, height: 6},
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
@@ -28,14 +28,14 @@ export const viewStyles = {
     fontSize: 25,
     lineHeight: 26,
     letterSpacing: -0.24,
-    color: colors.BLACK
+    color: colors.BLACK,
   },
   subTextCommonStyles: {
     fontWeight: '100',
     fontSize: 15,
     lineHeight: 26,
     letterSpacing: -0.24,
-    color: colors.BLACK
+    color: colors.BLACK,
   },
   textInputStyles: {
     height: 52,
@@ -45,45 +45,45 @@ export const viewStyles = {
     fontWeight: 'bold',
     fontSize: 17,
     // lineHeight: 26,
-    letterSpacing: - 0.25,
-    color: colors.BLACK
+    letterSpacing: -0.25,
+    color: colors.BLACK,
   },
   buttonStyle: {
     backgroundColor: colors.RED,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50
+    height: 50,
   },
   buttonTextStyles: {
     fontWeight: 'bold',
     fontSize: 17,
     lineHeight: 22,
-    letterSpacing: - 0.5,
-    color: colors.WHITE
+    letterSpacing: -0.5,
+    color: colors.WHITE,
   },
   tabBarStyles: {
     fontWeight: '500',
     fontSize: 10,
     lineHeight: 12,
     textAlign: 'center',
-    letterSpacing: - 0.24,
+    letterSpacing: -0.24,
     marginBottom: 8,
-    marginLeft: 2
+    marginLeft: 2,
   },
   productListTextStyles: {
     fontWeight: '600',
     fontSize: 14,
     lineHeight: 22,
-    letterSpacing: - 0.41,
-    color: colors.PRODUCT_LIST_SPECIAL_TEXT_COLOR
+    letterSpacing: -0.41,
+    color: colors.PRODUCT_LIST_SPECIAL_TEXT_COLOR,
   },
   titleTextStyle: {
     fontWeight: 'normal',
     fontSize: 18,
     lineHeight: 22,
-    letterSpacing: - 0.5,
-    color: colors.BLACK
+    letterSpacing: -0.5,
+    color: colors.BLACK,
   },
   inStockTextStyle: {
     backgroundColor: colors.IN_STOCK_BACKGROUND_COLOR,
@@ -91,24 +91,24 @@ export const viewStyles = {
     fontWeight: 'normal',
     fontSize: 12,
     lineHeight: 22,
-    letterSpacing: - 0.41,
+    letterSpacing: -0.41,
     color: colors.WHITE,
     overflow: 'hidden',
     paddingHorizontal: 8,
-    marginLeft: 10
+    marginLeft: 10,
   },
   priceStyles: {
     fontWeight: '600',
     fontSize: 18,
     lineHeight: 22,
-    letterSpacing: - 0.5,
-    color: colors.BLACK
+    letterSpacing: -0.5,
+    color: colors.BLACK,
   },
   commonTextStyles: {
     fontWeight: 'bold',
     fontSize: 12,
     color: colors.BLACK,
     lineHeight: 22,
-    letterSpacing: - 0.41
-  }
+    letterSpacing: -0.41,
+  },
 };

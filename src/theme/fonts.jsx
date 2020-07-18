@@ -1,5 +1,4 @@
-import { Platform } from 'react-native';
-
+import {Platform} from 'react-native';
 
 const getFont = (key, size) => {
   let fontStyle = Fonts.IBMPlexSansBold(size);
@@ -56,7 +55,7 @@ export const getTextStyle = (
   color,
   opacity,
   lineHeight,
-  letterSpacing
+  letterSpacing,
 ) => ({
   ...getFont(font, size),
   color,

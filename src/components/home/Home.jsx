@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { theme } from '../../theme/theme';
-import { Cloth1, Cloth2, Cloth3, Cloth4, HeartUnSelected, HeartSelected, CheckIcon, UnCheckIcon } from '../../icons/Icons';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import {theme} from '../../theme/theme';
+import {
+  Cloth1,
+  Cloth2,
+  Cloth3,
+  Cloth4,
+  HeartUnSelected,
+  HeartSelected,
+  CheckIcon,
+  UnCheckIcon,
+} from '../../icons/Icons';
 
 import CommonHeader from '../UI/CommonHeader';
-import { Overlay } from 'react-native-elements';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Overlay} from 'react-native-elements';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 
-const { height, width } = Dimensions.get('window')
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    ...theme.viewStyles.container
+    ...theme.viewStyles.container,
   },
   rowStyles: {
     height: 210,
@@ -22,31 +38,31 @@ const styles = StyleSheet.create({
   rowTextStyle: {
     fontSize: 14,
     lineHeight: 22,
-    letterSpacing: - 0.41,
+    letterSpacing: -0.41,
     color: theme.colors.PRODUCT_LIST_TEXT_COLOR,
-    marginTop: 2
+    marginTop: 2,
   },
   specialPriceStyle: {
-    ...theme.viewStyles.productListTextStyles
+    ...theme.viewStyles.productListTextStyles,
   },
   originalPriceStyle: {
     ...theme.viewStyles.productListTextStyles,
     color: theme.colors.PRODUCT_LIST_ORIGINAL_TEXT_COLOR,
     textDecorationLine: 'line-through',
-    marginLeft: 8
+    marginLeft: 8,
   },
   discountStyle: {
     ...theme.viewStyles.productListTextStyles,
     color: theme.colors.PRODUCT_LIST_DISCOUNT_TEXT_COLOR,
     fontWeight: 'normal',
     fontSize: 12,
-    marginLeft: 8
+    marginLeft: 8,
   },
   iconHeartStyle: {
     marginTop: 8,
     marginLeft: 18,
     height: 14,
-    width: 14
+    width: 14,
   },
   heartIconViewStyles: {
     position: 'absolute',
@@ -65,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: theme.colors.BLACK_WITH_OPACITY,
-    marginLeft: 18
+    marginLeft: 18,
   },
   sortPriceTextStyle: {
     fontWeight: 'normal',
@@ -73,9 +89,9 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: theme.colors.BLACK,
     marginLeft: 4,
-    marginTop: 4
-  }
-})
+    marginTop: 4,
+  },
+});
 
 const clothes = [
   {
@@ -85,10 +101,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth1 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth1
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 2,
@@ -97,10 +117,14 @@ const clothes = [
     discount: '',
     specialPrice: '',
     selected: false,
-    icon: <Cloth2 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth2
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 3,
@@ -109,10 +133,14 @@ const clothes = [
     discount: '',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth3 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth3
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 4,
@@ -121,10 +149,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,574',
     selected: false,
-    icon: <Cloth4 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth4
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 5,
@@ -133,10 +165,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth1 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth1
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 6,
@@ -145,10 +181,14 @@ const clothes = [
     discount: '',
     specialPrice: '',
     selected: false,
-    icon: <Cloth2 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth2
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 7,
@@ -157,10 +197,14 @@ const clothes = [
     discount: '',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth3 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth3
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 8,
@@ -169,10 +213,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,574',
     selected: false,
-    icon: <Cloth4 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth4
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 9,
@@ -181,10 +229,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth1 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth1
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 10,
@@ -193,10 +245,14 @@ const clothes = [
     discount: '',
     specialPrice: '',
     selected: false,
-    icon: <Cloth2 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth2
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 11,
@@ -205,10 +261,14 @@ const clothes = [
     discount: '',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth3 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth3
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 12,
@@ -217,10 +277,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,574',
     selected: false,
-    icon: <Cloth4 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth4
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 13,
@@ -229,10 +293,14 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth1 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth1
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 14,
@@ -241,10 +309,14 @@ const clothes = [
     discount: '',
     specialPrice: '',
     selected: false,
-    icon: <Cloth2 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth2
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 15,
@@ -253,10 +325,14 @@ const clothes = [
     discount: '',
     specialPrice: '2,754',
     selected: false,
-    icon: <Cloth3 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth3
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
   {
     id: 16,
@@ -265,18 +341,21 @@ const clothes = [
     discount: '20% off',
     specialPrice: '2,574',
     selected: false,
-    icon: <Cloth4 style={{
-      width: width / 2 - 24,
-      height: 164
-    }} />
+    icon: (
+      <Cloth4
+        style={{
+          width: width / 2 - 24,
+          height: 164,
+        }}
+      />
+    ),
   },
-]
+];
 
-export const Home = ({ navigation }) => {
-
-  const [arrayObjects, setArrayObjects] = useState(clothes)
-  const [showSortView, setShowSortView] = useState(false)
-  const [lowToHightSelected, setLowToHightSelected] = useState(true)
+export const Home = ({navigation}) => {
+  const [arrayObjects, setArrayObjects] = useState(clothes);
+  const [showSortView, setShowSortView] = useState(false);
+  const [lowToHightSelected, setLowToHightSelected] = useState(true);
 
   const renderHeader = () => {
     return (
@@ -284,46 +363,59 @@ export const Home = ({ navigation }) => {
         leftSideText={'Products'}
         isTabView={true}
         onPressRightButton={() => {
-          navigation.push(ScreenNamesCustomer.CARTVIEW)
+          navigation.push(ScreenNamesCustomer.CARTVIEW);
         }}
         isProduct={true}
         onPressFilterIcon={() => {
-          navigation.push(ScreenNamesCustomer.FILTER)
+          navigation.push(ScreenNamesCustomer.FILTER);
         }}
         onPressSortIcon={() => {
-          setShowSortView(!showSortView)
+          setShowSortView(!showSortView);
         }}
       />
     );
-  }
+  };
 
   const renderRow = (item, index) => {
     return (
-      <TouchableOpacity activeOpacity={1} onPress={() => {
-        navigation.push(ScreenNamesCustomer.PRODUCTDETAILS)
-      }}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          navigation.push(ScreenNamesCustomer.PRODUCTDETAILS);
+        }}>
         <View style={styles.rowStyles}>
           {item.icon}
           <Text style={styles.rowTextStyle}>{item.name}</Text>
-          {item.specialPrice.length !== 0 ?
-            <View style={{ flexDirection: 'row' }}>
+          {item.specialPrice.length !== 0 ? (
+            <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
-              <Text style={styles.originalPriceStyle}>₹{item.originalPrice}</Text>
-              <Text style={styles.discountStyle}>{item.discount.toUpperCase()}</Text>
+              <Text style={styles.originalPriceStyle}>
+                ₹{item.originalPrice}
+              </Text>
+              <Text style={styles.discountStyle}>
+                {item.discount.toUpperCase()}
+              </Text>
             </View>
-            :
+          ) : (
             <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
-          }
-          <TouchableOpacity activeOpacity={1} style={styles.heartIconViewStyles} onPress={() => {
-            clothes[index].selected = true
-            setArrayObjects([...clothes])
-          }}>
-            {item.selected ? <HeartSelected style={styles.iconHeartStyle} /> : <HeartUnSelected style={styles.iconHeartStyle} />}
+          )}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.heartIconViewStyles}
+            onPress={() => {
+              clothes[index].selected = true;
+              setArrayObjects([...clothes]);
+            }}>
+            {item.selected ? (
+              <HeartSelected style={styles.iconHeartStyle} />
+            ) : (
+              <HeartUnSelected style={styles.iconHeartStyle} />
+            )}
           </TouchableOpacity>
         </View>
-      </TouchableOpacity >
+      </TouchableOpacity>
     );
-  }
+  };
 
   const renderListView = () => {
     return (
@@ -335,18 +427,18 @@ export const Home = ({ navigation }) => {
         }}
         data={arrayObjects}
         numColumns={2}
-        renderItem={({ item, index }) => renderRow(item, index)}
-        keyExtractor={item => item.id}
+        renderItem={({item, index}) => renderRow(item, index)}
+        keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       />
-    )
-  }
+    );
+  };
 
   const close = () => {
-    setShowSortView(false)
-  }
+    setShowSortView(false);
+  };
 
   const renderSortView = () => {
     return (
@@ -367,40 +459,81 @@ export const Home = ({ navigation }) => {
           backgroundColor: 'transparent',
           overflow: 'hidden',
           elevation: 0,
-        }}
-      >
+        }}>
         <View
           style={{
             flexGrow: 1,
             backgroundColor: 'transparent',
-          }}
-        >
+          }}>
           {renderHeader()}
           <View style={styles.viewOverlay}>
             <Text style={styles.sortByTextStyle}>SORT BY</Text>
-            <View style={{ flexDirection: 'row', marginTop: 15, marginHorizontal: 18 }}>
-              <TouchableOpacity activeOpacity={1} style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-                setLowToHightSelected(false)
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 15,
+                marginHorizontal: 18,
               }}>
-                {!lowToHightSelected ? <CheckIcon style={{ width: 16, height: 16 }} /> : <UnCheckIcon style={{ width: 16, height: 16 }} />}
-
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setLowToHightSelected(false);
+                }}>
+                {!lowToHightSelected ? (
+                  <CheckIcon style={{width: 16, height: 16}} />
+                ) : (
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
-            <View style={{ backgroundColor: 'black', opacity: 0.2, marginHorizontal: 18, height: 1, marginTop: 15 }} />
-            <View style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 18 }}>
-              <TouchableOpacity activeOpacity={1} style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-                setLowToHightSelected(true)
+            <View
+              style={{
+                backgroundColor: 'black',
+                opacity: 0.2,
+                marginHorizontal: 18,
+                height: 1,
+                marginTop: 15,
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                marginHorizontal: 18,
               }}>
-                {lowToHightSelected ? <CheckIcon style={{ width: 16, height: 16 }} /> : <UnCheckIcon style={{ width: 16, height: 16 }} />}
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setLowToHightSelected(true);
+                }}>
+                {lowToHightSelected ? (
+                  <CheckIcon style={{width: 16, height: 16}} />
+                ) : (
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>Price - Low to High</Text>
+              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
+                Price - Low to High
+              </Text>
             </View>
           </View>
         </View>
       </Overlay>
     );
-  }
+  };
 
   return (
     <View style={styles.container}>
