@@ -382,6 +382,7 @@ export const Home = ({ navigation }) => {
         }}
         isProduct={true}
         onPressFilterIcon={() => {
+          setShowSortView(false);
           navigation.push(ScreenNamesCustomer.FILTER);
         }}
         onPressSortIcon={() => {
