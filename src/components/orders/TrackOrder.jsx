@@ -7,25 +7,20 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {theme} from '../../theme/theme';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {
-  Product,
-  DeleteIcon,
-  OrderPlaced,
-  OrderConfirmed,
-} from '../../icons/Icons';
-import {useState} from 'react';
+import { Product, DeleteIcon, OrderPlaced, OrderConfirmed, OrderReady, OrderDispatched } from '../../icons/Icons';
+import { useState } from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     ...theme.viewStyles.container,
-    backgroundColor: 'rgba(196,196,196,0.1)',
+    backgroundColor: theme.colors.BACKGROUND_COLOR
   },
   rowStyles: {
     height: 90,
@@ -111,7 +106,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const TrackOrder = ({navigation}) => {
+export const TrackOrder = ({ navigation }) => {
   const renderHeader = () => {
     return (
       <CommonHeader
@@ -134,21 +129,9 @@ export const TrackOrder = ({navigation}) => {
 
   const renderOrderID = () => {
     return (
-      <View style={{borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)'}}>
-        <Text style={styles.tileTextStyles}>Order ID 1234XYZ</Text>
-        <Text
-          style={[
-            styles.tileTextStyles,
-            {
-              color: theme.colors.BLACK_WITH_OPACITY,
-              marginTop: 7,
-              fontWeight: 'normal',
-              fontSize: 14,
-              marginBottom: 23,
-            },
-          ]}>
-          Date 05/06/2020
-        </Text>
+      <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.BORDER_COLOR }}>
+        <Text style={styles.tileTextStyles} >Order ID 1234XYZ</Text>
+        <Text style={[styles.tileTextStyles, { color: theme.colors.BLACK_WITH_OPACITY, marginTop: 7, fontWeight: 'normal', fontSize: 14, marginBottom: 23 }]} >Date 05/06/2020</Text>
       </View>
     );
   };
@@ -156,15 +139,15 @@ export const TrackOrder = ({navigation}) => {
   const renderStatus = () => {
     return (
       <View>
-        <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-          <OrderPlaced style={{width: 18, height: 24, marginTop: 8}} />
+        <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: 20 }}>
+          <OrderPlaced style={{ width: 18, height: 24, marginTop: 8 }} />
           <View>
             <Text style={styles.titleStyle}>ORDER PLACED</Text>
             <Text style={styles.dateStyle}>Date 05/06/2020 15:30</Text>
           </View>
         </View>
-        <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-          <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+        <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: 20 }}>
+          <OrderConfirmed style={{ width: 18, height: 24, marginTop: 8 }} />
           <View>
             <Text style={styles.titleStyle}>ORDER CONFIRMED</Text>
             <Text style={styles.dateStyle}>Date 05/06/2020 15:35</Text>
@@ -173,31 +156,20 @@ export const TrackOrder = ({navigation}) => {
             </Text>
           </View>
         </View>
-        <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-          <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+        <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: 20 }}>
+          <OrderReady style={{ width: 23, height: 22, marginTop: 8, marginLeft: -2 }} />
           <View>
-            <Text style={styles.titleStyle}>ORDER READY</Text>
-            <Text style={styles.dateStyle}>Date 05/06/2020 21:18</Text>
-            <Text style={styles.descriptionStyle}>
-              Your oder is in billing and packing
-            </Text>
+            <Text style={[styles.titleStyle, { marginLeft: 26 }]}>ORDER READY</Text>
+            <Text style={[styles.dateStyle, { marginLeft: 26 }]}>Date 05/06/2020 21:18</Text>
+            <Text style={[styles.descriptionStyle, { marginLeft: 26 }]}>Your oder is in billing and packing</Text>
           </View>
         </View>
-        <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-          <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+        <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: 20 }}>
+          <OrderDispatched style={{ width: 28, height: 24, marginTop: 8, marginLeft: -4 }} />
           <View>
-            <Text style={styles.titleStyle}>ORDER DISPATCHED</Text>
-            <Text style={styles.dateStyle}>Date 06/06/2020 15:35PM</Text>
-            <Text style={styles.descriptionStyle}>
-              Your order has been dispactched vide{' '}
-              <Text style={{color: 'red', textDecorationLine: 'underline'}}>
-                848848
-              </Text>{' '}
-              dt. 28-02-2020.{' '}
-              <Text style={{color: 'red', textDecorationLine: 'underline'}}>
-                Track status
-              </Text>
-            </Text>
+            <Text style={[styles.titleStyle, { marginLeft: 24 }]}>ORDER DISPATCHED</Text>
+            <Text style={[styles.dateStyle, { marginLeft: 24 }]}>Date 06/06/2020 15:35PM</Text>
+            <Text style={[styles.descriptionStyle, { marginLeft: 24 }]}>Your order has been dispactched vide <Text style={theme.viewStyles.underLineStyle}>848848</Text>  dt. 28-02-2020. <Text style={theme.viewStyles.underLineStyle}>Track status</Text></Text>
           </View>
         </View>
       </View>

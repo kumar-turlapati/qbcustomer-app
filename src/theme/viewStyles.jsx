@@ -1,4 +1,4 @@
-import {colors} from './colors';
+import { colors } from './colors';
 
 export const viewStyles = {
   container: {
@@ -6,13 +6,14 @@ export const viewStyles = {
     backgroundColor: colors.DEFAULT_BACKGROUND_COLOR,
   },
   separator: {
-    height: 1,
     backgroundColor: colors.BLACK,
-    width: '100%',
-    opacity: 0.1,
+    opacity: 0.2,
+    marginHorizontal: 18,
+    height: 1,
+    marginTop: 15
   },
   shadow: {
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
@@ -109,6 +110,45 @@ export const viewStyles = {
     fontSize: 12,
     color: colors.BLACK,
     lineHeight: 22,
-    letterSpacing: -0.41,
+    letterSpacing: - 0.41
   },
+  underLineStyle: {
+    color: colors.RED,
+    textDecorationLine: 'underline'
+  },
+  ledgerTextStyles: {
+    marginRight: 17,
+    paddingBottom: 10,
+    color: colors.GREEN,
+    fontWeight: 'bold',
+    marginTop: 1
+  },
+  ledgerDescriptionTextStyles: {
+    marginLeft: 17,
+    paddingBottom: 10,
+    marginTop: -10,
+    color: colors.BLACK_WITH_OPACITY_6
+  },
+  tabBarOptionStyle: {
+    borderTopColor: 'transparent',
+    shadowColor: colors.BLACK,
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 10,
+    borderTopWidth: 0,
+    top: 1,
+    height: 57,
+  },
+  tabBarIconStyles: {
+    marginTop: 8,
+    marginBottom: -2,
+  },
+  rowTopSeperatorStyle: {
+    backgroundColor: colors.LIGHT_GRAY,
+    opacity: 0.1,
+    position: 'absolute',
+    height: '100%',
+    width: '100%'
+  }
 };

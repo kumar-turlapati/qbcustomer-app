@@ -7,15 +7,15 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {theme} from '../../theme/theme';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {Product, DeleteIcon} from '../../icons/Icons';
-import {useState} from 'react';
+import { Product, DeleteIcon } from '../../icons/Icons';
+import { useState } from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -75,14 +75,20 @@ const styles = StyleSheet.create({
     letterSpacing: -0.41,
     color: theme.colors.BLACK,
     marginTop: 24,
-    marginLeft: 16,
+    marginLeft: 16
   },
-});
+  ledgerRowTitleStyle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginTop: 12
+  }
+})
 
 const cartItems = [
   {
     id: 1,
-    icon: <Product style={{height: 90, width: 90}} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 1',
     price: '₹2,754',
     quantity: 1,
@@ -91,7 +97,7 @@ const cartItems = [
   },
   {
     id: 2,
-    icon: <Product style={{height: 90, width: 90}} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 2',
     price: '₹2,754',
     quantity: 1,
@@ -100,7 +106,7 @@ const cartItems = [
   },
   {
     id: 3,
-    icon: <Product style={{height: 90, width: 90}} />,
+    icon: <Product style={{ height: 90, width: 90 }} />,
     title: 'Grey Solid Suit 3',
     price: '₹2,754',
     quantity: 1,
@@ -109,7 +115,7 @@ const cartItems = [
   },
 ];
 
-export const OrderDetails = ({navigation}) => {
+export const OrderDetails = ({ navigation }) => {
   const renderHeader = () => {
     return (
       <CommonHeader
@@ -132,46 +138,21 @@ export const OrderDetails = ({navigation}) => {
 
   const renderOrderID = () => {
     return (
-      <View
-        style={{
-          backgroundColor: 'white',
-          borderTopWidth: 1,
-          borderTopColor: 'rgba(0,0,0,0.1)',
-        }}>
-        <Text style={styles.tileTextStyles}>Order ID 1234XYZ</Text>
-        <Text
-          style={[
-            styles.tileTextStyles,
-            {
-              color: theme.colors.BLACK_WITH_OPACITY,
-              marginTop: 7,
-              fontWeight: 'normal',
-              fontSize: 14,
-              marginBottom: 23,
-            },
-          ]}>
-          Date 05/06/2020
-        </Text>
+      <View style={{ backgroundColor: theme.colors.WHITE, borderTopWidth: 1, borderTopColor: theme.colors.BORDER_COLOR }}>
+        <Text style={styles.tileTextStyles} >Order ID 1234XYZ</Text>
+        <Text style={[styles.tileTextStyles, { color: theme.colors.BLACK_WITH_OPACITY, marginTop: 7, fontWeight: 'normal', fontSize: 14, marginBottom: 23 }]} >Date 05/06/2020</Text>
       </View>
     );
   };
 
   const renderRow = (item, index) => {
     return (
-      <View>
-        <View
-          style={{
-            backgroundColor: '#C4C4C4',
-            opacity: 0.1,
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-          }}
-        />
-        {index === 0 && <View style={{height: 16}} />}
+      <View >
+        <View style={theme.viewStyles.rowTopSeperatorStyle} />
+        {index === 0 && <View style={{ height: 16 }} />}
         <View style={styles.rowStyles}>
           {item.icon}
-          <View style={{marginLeft: 18, marginTop: 17}}>
+          <View style={{ marginLeft: 18, marginTop: 17 }}>
             <Text style={styles.rowTextStyles}> {item.title}</Text>
             <Text
               style={[
@@ -185,23 +166,23 @@ export const OrderDetails = ({navigation}) => {
               Qty {item.quantity}
             </Text>
           </View>
-          <View style={{top: 16, right: 25, position: 'absolute'}}>
-            <Text style={[styles.rowTextStyles, {fontWeight: '600'}]}>
+          <View style={{ top: 16, right: 25, position: 'absolute' }}>
+            <Text style={[styles.rowTextStyles, { fontWeight: '600' }]}>
               {item.price}
             </Text>
           </View>
         </View>
         {index === cartItems.length - 1 ? (
-          <View style={{height: 16}} />
+          <View style={{ height: 16 }} />
         ) : (
-          <View
-            style={{
-              borderBottomWidth: 2,
-              borderBottomColor: theme.colors.SEPERATOR_COLOR,
-              marginHorizontal: 16,
-            }}
-          />
-        )}
+            <View
+              style={{
+                borderBottomWidth: 2,
+                borderBottomColor: theme.colors.SEPERATOR_COLOR,
+                marginHorizontal: 16,
+              }}
+            />
+          )}
       </View>
     );
   };
@@ -213,7 +194,7 @@ export const OrderDetails = ({navigation}) => {
           flex: 1,
         }}
         data={cartItems}
-        renderItem={({item, index}) => renderRow(item, index)}
+        renderItem={({ item, index }) => renderRow(item, index)}
         keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -224,70 +205,29 @@ export const OrderDetails = ({navigation}) => {
 
   const renderLedger = () => {
     return (
-      <View style={{marginHorizontal: 16}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: 23,
-          }}>
+      <View style={{ marginHorizontal: 16 }}>
+        <View style={[styles.ledgerRowTitleStyle, { marginTop: 23 }]}>
           <Text style={styles.ledgerTextStyles}>Bag Total</Text>
           <Text style={styles.ledgerTextStyles}>₹8,262</Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: 12,
-          }}>
+        <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Bag discount</Text>
-          <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
+          <Text style={[styles.ledgerTextStyles, { color: theme.colors.RED }]}>
             ₹1,377
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: 12,
-          }}>
+        <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Order Total</Text>
           <Text style={styles.ledgerTextStyles}>₹6,885</Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: 12,
-          }}>
+        <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Delivery Charges</Text>
           <Text style={styles.ledgerTextStyles}>₹99</Text>
         </View>
-        <View
-          style={{
-            backgroundColor: 'black',
-            opacity: 0.1,
-            height: 1,
-            marginTop: 20,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: 13,
-          }}>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            Total
-          </Text>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            ₹6984
-          </Text>
+        <View style={{ backgroundColor: theme.colors.BLACK, opacity: 0.1, height: 1, marginTop: 20 }} />
+        <View style={[styles.ledgerRowTitleStyle, { marginTop: 13 }]}>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>Total</Text>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>₹6984</Text>
         </View>
       </View>
     );
@@ -300,7 +240,7 @@ export const OrderDetails = ({navigation}) => {
         onPressButton={() => {
           navigation.push(ScreenNamesCustomer.TRACKORDER);
         }}
-        propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 25}}
+        propStyle={{ marginTop: 34, marginHorizontal: 17, marginBottom: 25 }}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,

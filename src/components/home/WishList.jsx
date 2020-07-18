@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 import {
   Cloth1,
   Cloth2,
@@ -20,10 +20,10 @@ import {
 } from '../../icons/Icons';
 
 import CommonHeader from '../UI/CommonHeader';
-import {Overlay} from 'react-native-elements';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { Overlay } from 'react-native-elements';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -96,17 +96,35 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     marginTop: 8,
     textAlign: 'center',
-    borderColor: 'black',
+    borderColor: theme.colors.BLACK,
     borderWidth: 2,
     borderRadius: 5,
     overflow: 'hidden',
     fontWeight: 'bold',
     fontSize: 14,
     lineHeight: 22,
-    letterSpacing: -0.41,
-    paddingTop: 10,
+    letterSpacing: - 0.41,
+    paddingTop: 10
   },
-});
+  touachableStyles: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  seperatorStyle: {
+    ...theme.viewStyles.separator
+  },
+  overlayViewStyle: {
+    padding: 0,
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+    elevation: 0,
+  }
+})
 
 const clothes = [
   {
@@ -367,7 +385,7 @@ const clothes = [
   },
 ];
 
-export const WishList = ({navigation}) => {
+export const WishList = ({ navigation }) => {
   const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
@@ -403,8 +421,8 @@ export const WishList = ({navigation}) => {
           {item.selected ? (
             <HeartSelected style={styles.iconHeartStyle} />
           ) : (
-            <HeartUnSelected style={styles.iconHeartStyle} />
-          )}
+              <HeartUnSelected style={styles.iconHeartStyle} />
+            )}
         </TouchableOpacity>
         <Text
           style={styles.addToCartStyles}
@@ -427,7 +445,7 @@ export const WishList = ({navigation}) => {
         }}
         data={arrayObjects}
         numColumns={2}
-        renderItem={({item, index}) => renderRow(item, index)}
+        renderItem={({ item, index }) => renderRow(item, index)}
         keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -445,21 +463,13 @@ export const WishList = ({navigation}) => {
       <Overlay
         onRequestClose={() => close()}
         isVisible={showSortView}
-        windowBackgroundColor={'rgba(0, 0, 0, 0.8)'}
+        windowBackgroundColor={theme.colors.BLACK_WITH_OPACITY_8}
         containerStyle={{
           marginBottom: 20,
         }}
         fullScreen
         transparent
-        overlayStyle={{
-          padding: 0,
-          margin: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'transparent',
-          overflow: 'hidden',
-          elevation: 0,
-        }}>
+        overlayStyle={styles.overlayViewStyle}>
         <View
           style={{
             flexGrow: 1,
@@ -486,10 +496,10 @@ export const WishList = ({navigation}) => {
                   setLowToHightSelected(false);
                 }}>
                 {!lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -520,12 +530,12 @@ export const WishList = ({navigation}) => {
                   setLowToHightSelected(true);
                 }}>
                 {lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
+              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
                 Price - Low to High
               </Text>
             </View>

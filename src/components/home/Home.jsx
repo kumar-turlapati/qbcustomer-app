@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 import {
   Cloth1,
   Cloth2,
@@ -20,10 +20,10 @@ import {
 } from '../../icons/Icons';
 
 import CommonHeader from '../UI/CommonHeader';
-import {Overlay} from 'react-native-elements';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { Overlay } from 'react-native-elements';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -89,9 +89,24 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: theme.colors.BLACK,
     marginLeft: 4,
-    marginTop: 4,
+    marginTop: 4
   },
-});
+  buttonTouchableStyles: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  overlayViewStyle: {
+    padding: 0,
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+    elevation: 0,
+  }
+})
 
 const clothes = [
   {
@@ -352,7 +367,7 @@ const clothes = [
   },
 ];
 
-export const Home = ({navigation}) => {
+export const Home = ({ navigation }) => {
   const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
@@ -387,7 +402,7 @@ export const Home = ({navigation}) => {
           {item.icon}
           <Text style={styles.rowTextStyle}>{item.name}</Text>
           {item.specialPrice.length !== 0 ? (
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
               <Text style={styles.originalPriceStyle}>
                 ₹{item.originalPrice}
@@ -397,8 +412,8 @@ export const Home = ({navigation}) => {
               </Text>
             </View>
           ) : (
-            <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
-          )}
+              <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
+            )}
           <TouchableOpacity
             activeOpacity={1}
             style={styles.heartIconViewStyles}
@@ -409,8 +424,8 @@ export const Home = ({navigation}) => {
             {item.selected ? (
               <HeartSelected style={styles.iconHeartStyle} />
             ) : (
-              <HeartUnSelected style={styles.iconHeartStyle} />
-            )}
+                <HeartUnSelected style={styles.iconHeartStyle} />
+              )}
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -427,7 +442,7 @@ export const Home = ({navigation}) => {
         }}
         data={arrayObjects}
         numColumns={2}
-        renderItem={({item, index}) => renderRow(item, index)}
+        renderItem={({ item, index }) => renderRow(item, index)}
         keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -445,21 +460,13 @@ export const Home = ({navigation}) => {
       <Overlay
         onRequestClose={() => close()}
         isVisible={showSortView}
-        windowBackgroundColor={'rgba(0, 0, 0, 0.8)'}
+        windowBackgroundColor={theme.colors.BLACK_WITH_OPACITY_8}
         containerStyle={{
           marginBottom: 20,
         }}
         fullScreen
         transparent
-        overlayStyle={{
-          padding: 0,
-          margin: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'transparent',
-          overflow: 'hidden',
-          elevation: 0,
-        }}>
+        overlayStyle={styles.overlayViewStyle}>
         <View
           style={{
             flexGrow: 1,
@@ -486,10 +493,10 @@ export const Home = ({navigation}) => {
                   setLowToHightSelected(false);
                 }}>
                 {!lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -520,12 +527,12 @@ export const Home = ({navigation}) => {
                   setLowToHightSelected(true);
                 }}>
                 {lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
+              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
                 Price - Low to High
               </Text>
             </View>
@@ -534,6 +541,7 @@ export const Home = ({navigation}) => {
       </Overlay>
     );
   };
+
 
   return (
     <View style={styles.container}>

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {Dimensions, StyleSheet, View, Text, TextInput} from 'react-native';
-import {theme} from '../../theme/theme';
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, View, Text, TextInput, Platform } from 'react-native';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import Carousel from 'react-native-snap-carousel';
-import {Product, ProductFullScreen, CrossIcon} from '../../icons/Icons';
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { Product, ProductFullScreen, CrossIcon } from '../../icons/Icons';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -69,9 +69,55 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 0
   },
-});
+  renderFullViewDot: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    top: 60,
+    alignSelf: 'center',
+    backgroundColor: theme.colors.WHITE,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    position: 'absolute',
+    paddingBottom: 4
+  },
+  closeViewStyles: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    right: 20,
+    top: Platform.OS === 'ios' ? 55 : 50
+  },
+  buyNowStyles: {
+    width: 150,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 3,
+    backgroundColor: theme.colors.RED,
+  },
+  addToCartStyles: {
+    width: winWidth - 260,
+    height: 46,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderLeftColor: theme.colors.BLACK,
+    borderLeftWidth: 2,
+  },
+  dotView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+  carouselFullScreenStyles: {
+    position: 'absolute',
+    width: winWidth,
+    height: winHeight,
+    backgroundColor: theme.colors.WHITE
+  }
+})
 
 const filterOptions = [
   {
@@ -92,7 +138,7 @@ const filterOptions = [
   },
 ];
 
-export const ProductDetails = ({navigation}) => {
+export const ProductDetails = ({ navigation }) => {
   const [arrayObjects, setArrayObjects] = useState(filterOptions);
   const [quantityText, setQuantityText] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
@@ -105,10 +151,10 @@ export const ProductDetails = ({navigation}) => {
         onPressLeftButton={() => {
           navigation.goBack();
         }}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => { }}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => {}}
+        onPressWishListIcon={() => { }}
       />
     );
   };
@@ -128,7 +174,7 @@ export const ProductDetails = ({navigation}) => {
     />
   );
 
-  const renderSliderItem = ({item, index}) => {
+  const renderSliderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -136,7 +182,7 @@ export const ProductDetails = ({navigation}) => {
           setShowFullScreen(true);
         }}>
         <View style={styles.onboardingViewStyles}>
-          <Product style={{height: 250, width: winWidth - 80}} />
+          <Product style={{ height: 250, width: winWidth - 80 }} />
         </View>
       </TouchableOpacity>
     );
@@ -145,36 +191,17 @@ export const ProductDetails = ({navigation}) => {
   const renderSliderFullDotView = () => {
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          top: 60,
-          alignSelf: 'center',
-          backgroundColor: 'white',
-          borderRadius: 10,
-          paddingHorizontal: 10,
-          position: 'absolute',
-          paddingBottom: 4,
-        }}>
-        {filterOptions.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
-        )}
+        style={styles.renderFullViewDot}
+      >
+        {filterOptions.map((_, index) => (index == slideIndex ? renderDot(true) : renderDot(false)))}
       </View>
     );
   };
 
   const renderSliderFullClose = () => {
     return (
-      <View
-        style={{
-          width: 30,
-          height: 30,
-          position: 'absolute',
-          right: 20,
-          top: 55,
-        }}>
-        <TouchableOpacity
-          activeOpacity={1}
+      <View style={styles.closeViewStyles}>
+        <TouchableOpacity activeOpacity={1}
           onPress={() => {
             setShowFullScreen(false);
           }}>
@@ -189,23 +216,17 @@ export const ProductDetails = ({navigation}) => {
     );
   };
 
-  const renderSliderFullView = ({item, index}) => {
+  const renderSliderFullView = ({ item, index }) => {
     return (
       <View>
-        <ProductFullScreen style={{width: winWidth, height: winHeight}} />
+        <ProductFullScreen style={{ width: winWidth, height: winHeight }} />
       </View>
     );
   };
 
   const renderImageFullScreen = () => {
     return (
-      <View
-        style={{
-          position: 'absolute',
-          width: winWidth,
-          height: winHeight,
-          backgroundColor: 'white',
-        }}>
+      <View style={styles.carouselFullScreenStyles}>
         <Carousel
           onSnapToItem={setSlideIndex}
           data={filterOptions}
@@ -246,15 +267,9 @@ export const ProductDetails = ({navigation}) => {
   const renderSliderDotView = () => {
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          marginTop: 10,
-          alignSelf: 'center',
-        }}>
-        {filterOptions.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
-        )}
+        style={styles.dotView}
+      >
+        {filterOptions.map((_, index) => (index == slideIndex ? renderDot(true) : renderDot(false)))}
       </View>
     );
   };
@@ -262,25 +277,13 @@ export const ProductDetails = ({navigation}) => {
   const renderTitleAndButton = () => {
     return (
       <View style={styles.titleViewStyle}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Text style={styles.titleStyle}>Brown Suit Clothing</Text>
           <Text style={styles.instockStyles}>Instock</Text>
         </View>
         <Text style={styles.priceStyles}>₹2,500</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 26,
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              borderWidth: 2,
-              borderColor: 'black',
-              borderRadius: 3,
-            }}>
+        <View style={{ flexDirection: 'row', marginTop: 26, alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', borderWidth: 2, borderColor: theme.colors.BLACK, borderRadius: 3 }}>
             <TextInput
               style={styles.textInputStyles}
               onChangeText={(changedText) => {
@@ -288,38 +291,23 @@ export const ProductDetails = ({navigation}) => {
               }}
               value={quantityText}
               maxLength={3}
-              onEndEditing={(e) => {}}
+              onEndEditing={(e) => { }}
             />
-            <TouchableOpacity
-              activeOpacity={1}
-              style={{
-                width: 120,
-                height: 46,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderLeftColor: 'black',
-                borderLeftWidth: 2,
-              }}
+            <TouchableOpacity activeOpacity={1}
+              style={styles.addToCartStyles}
               onPress={() => {
                 navigation.push(ScreenNamesCustomer.CARTVIEW);
               }}>
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            activeOpacity={1}
-            style={{
-              width: 150,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 3,
-              backgroundColor: theme.colors.RED,
+          <TouchableOpacity activeOpacity={1}
+            style={styles.buyNowStyles}
+            onPress={() => {
+
             }}
-            onPress={() => {}}>
-            <Text style={[styles.addToCartStyle, {color: 'white'}]}>
-              BUY NOW
-            </Text>
+          >
+            <Text style={[styles.addToCartStyle, { color: theme.colors.WHITE }]}>BUY NOW</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -331,63 +319,48 @@ export const ProductDetails = ({navigation}) => {
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
         <Text style={styles.descriptionTextStyle}>Description</Text>
-        <View
-          style={{
-            backgroundColor: 'black',
-            opacity: 0.1,
-            marginLeft: 25,
-            marginTop: 10,
-            marginRight: 15,
-            height: 1,
-          }}
-        />
-        <View style={{marginLeft: 24, marginTop: 16}}>
-          <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text>
-          <Text
-            style={[
-              styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
-            ]}>
-            {'Fabric Length 3.6m'}
-          </Text>
+        <View style={{ backgroundColor: theme.colors.BLACK, opacity: 0.1, marginLeft: 25, marginTop: 10, marginRight: 15, height: 1 }} />
+        <View style={{ marginLeft: 24, marginTop: 16 }}>
+          <Text style={styles.addToCartStyle}>{"Size & Fit"}</Text>
+          <Text style={[styles.addToCartStyle, { fontWeight: 'normal', marginTop: -5 }]}>{"Fabric Length 3.6m"}</Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 26}}>
+        <View style={{ marginLeft: 24, marginTop: 26 }}>
           <Text style={styles.addToCartStyle}>{'Magerial & Care'}</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             {'70 % Polyester, 30 % Rayon'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             {'Machine Wash'}
           </Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 24}}>
+        <View style={{ marginLeft: 24, marginTop: 24 }}>
           <Text style={styles.addToCartStyle}>{'Specifications'}</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             {'Fabric - Polyester'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             {'Fabric2 - Viscose Rayon'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             {'Type - Suit'}
           </Text>
