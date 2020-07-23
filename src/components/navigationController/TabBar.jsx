@@ -1,8 +1,7 @@
-import { Home } from '../home/Home';
-import { Catalogue } from '../catalogues/Catalogue';
-import { Order } from '../orders/Order';
-import { Profile } from '../profile/Profile';
-
+import {Home} from '../home/Home';
+import {Catalogue} from '../catalogues/Catalogue';
+import {Order} from '../orders/Order';
+import {Profile} from '../profile/Profile';
 import {
   HomeUnselected,
   CatalogueUnselected,
@@ -12,26 +11,25 @@ import {
   CatalogueSelected,
   OrdersSelected,
   ProfileSelected,
-  QLogo,
 } from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 import React from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ScreenNamesCustomer } from './ScreenNames';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {ScreenNamesCustomer} from './ScreenNames';
 
 const routeToIcon = {
-  Home: <HomeUnselected style={{ width: 20, height: 20 }} />,
-  Catalogue: <CatalogueUnselected style={{ width: 20, height: 20 }} />,
-  Order: <OrdersUnselected style={{ width: 20, height: 20 }} />,
-  Profile: <ProfileUnselected style={{ width: 20, height: 20 }} />,
+  Home: <HomeUnselected style={{width: 20, height: 20}} />,
+  Catalogue: <CatalogueUnselected style={{width: 20, height: 20}} />,
+  Order: <OrdersUnselected style={{width: 20, height: 20}} />,
+  Profile: <ProfileUnselected style={{width: 20, height: 20}} />,
 };
 
 const routeToFocusedIcon = {
-  Home: <HomeSelected style={{ width: 20, height: 20 }} />,
-  Catalogue: <CatalogueSelected style={{ width: 20, height: 20 }} />,
-  Order: <OrdersSelected style={{ width: 20, height: 20 }} />,
-  Profile: <ProfileSelected style={{ width: 20, height: 20 }} />,
+  Home: <HomeSelected style={{width: 20, height: 20}} />,
+  Catalogue: <CatalogueSelected style={{width: 20, height: 20}} />,
+  Order: <OrdersSelected style={{width: 20, height: 20}} />,
+  Profile: <ProfileSelected style={{width: 20, height: 20}} />,
 };
 
 const Tab = createBottomTabNavigator();
@@ -42,8 +40,8 @@ export const TabBar = () => {
       initialRouteName={ScreenNamesCustomer.HOME}
       backBehavior="none"
       resetOnBlur="true"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) =>
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused}) =>
           focused ? routeToFocusedIcon[route.name] : routeToIcon[route.name],
       })}
       tabBarOptions={{
@@ -51,13 +49,13 @@ export const TabBar = () => {
         inactiveTintColor: theme.colors.TAB_BAR_INACTIVE_TINT_COLOR,
         activeBackgroundColor: theme.colors.WHITE,
         style: {
-          ...theme.viewStyles.tabBarOptionStyle
+          ...theme.viewStyles.tabBarOptionStyle,
         },
         labelStyle: {
           ...theme.viewStyles.tabBarStyles,
         },
         iconStyle: {
-          ...theme.viewStyles.tabBarIconStyles
+          ...theme.viewStyles.tabBarIconStyles,
         },
       }}>
       <Tab.Screen name={ScreenNamesCustomer.HOME} component={Home} />

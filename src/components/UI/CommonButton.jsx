@@ -17,15 +17,17 @@ export default CommonButton = ({
   propStyle,
   disableButton,
   propTextStyle,
+  disabled,
 }) => {
-  const renderButtom = () => {
+  const renderButton = () => {
     return (
       <View>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
             onPressButton();
-          }}>
+          }}
+          disabled={disabled}>
           <View
             style={[
               styles.mainButtonStyle,
@@ -43,5 +45,5 @@ export default CommonButton = ({
     );
   };
 
-  return <>{renderButtom()}</>;
+  return <>{renderButton()}</>;
 };

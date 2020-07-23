@@ -62,19 +62,19 @@ const banners = [
   {
     id: 2,
     icon: <Screen2 />,
-    title: 'Order from comfart location',
+    title: 'Order from the comfort of your location',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
   {
     id: 3,
     icon: <Screen3 />,
-    title: 'Track Live Order Status',
+    title: 'Track your order',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
   {
     id: 4,
     icon: <Screen4 />,
-    title: 'View your account any time',
+    title: 'View your account at any time',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
 ];

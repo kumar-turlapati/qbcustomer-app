@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,8 +6,9 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 import {
   Cloth1,
   Cloth2,
@@ -18,12 +19,15 @@ import {
   CheckIcon,
   UnCheckIcon,
 } from '../../icons/Icons';
-
 import CommonHeader from '../UI/CommonHeader';
-import { Overlay } from 'react-native-elements';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Overlay} from 'react-native-elements';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import axios from 'axios';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {getAccessToken} from '../../utils/general';
+import {Loader} from '../Loader';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -89,13 +93,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: theme.colors.BLACK,
     marginLeft: 4,
-    marginTop: 4
+    marginTop: 4,
   },
   buttonTouchableStyles: {
     width: 30,
     height: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   overlayViewStyle: {
     padding: 0,
@@ -105,8 +109,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     overflow: 'hidden',
     elevation: 0,
-  }
-})
+  },
+});
 
 const clothes = [
   {
@@ -367,10 +371,70 @@ const clothes = [
   },
 ];
 
-export const Home = ({ navigation }) => {
+export const Home = ({navigation}) => {
   const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [defaultCatalogDetails, setDefaultCatalogDetails] = useState(null);
+  const accessToken = getAccessToken();
+  const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
+
+  const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
+    setLoading(true);
+    try {
+      await axios
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
+        .then((apiResponse) => {
+          if (apiResponse.data.status === 'success') {
+            setDefaultCatalogDetails(apiResponse.data.response);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          const errorText = error.response.data.errortext;
+          console.log(errorText);
+        });
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const getCatalogs = async (requestHeaders) => {
+      setLoading(true);
+      try {
+        await axios
+          .get(CATALOGS.URL, {headers: requestHeaders})
+          .then((apiResponse) => {
+            if (apiResponse.data.status === 'success') {
+              const defaultCatalog = apiResponse.data.response.catalogs.find(
+                (catalogDetails) => catalogDetails.isDefault === '1',
+              );
+              const defaultCatalogCode = defaultCatalog
+                ? defaultCatalog.catalogCode
+                : '';
+              getCatalogDetails(defaultCatalogCode, requestHeaders);
+            }
+            setLoading(false);
+          })
+          .catch((error) => {
+            const errorText = error.response.data.errortext;
+            console.log(errorText);
+          });
+      } catch {
+        setLoading(false);
+      }
+    };
+    if (accessToken && accessToken.length > 0) {
+      requestHeaders['Access-Token'] = accessToken;
+      getCatalogs(requestHeaders);
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    console.log(defaultCatalogDetails);
+  }, [defaultCatalogDetails]);
 
   const renderHeader = () => {
     return (
@@ -403,7 +467,7 @@ export const Home = ({ navigation }) => {
           {item.icon}
           <Text style={styles.rowTextStyle}>{item.name}</Text>
           {item.specialPrice.length !== 0 ? (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
               <Text style={styles.originalPriceStyle}>
                 ₹{item.originalPrice}
@@ -413,8 +477,8 @@ export const Home = ({ navigation }) => {
               </Text>
             </View>
           ) : (
-              <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
-            )}
+            <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
+          )}
           <TouchableOpacity
             activeOpacity={1}
             style={styles.heartIconViewStyles}
@@ -425,8 +489,8 @@ export const Home = ({ navigation }) => {
             {item.selected ? (
               <HeartSelected style={styles.iconHeartStyle} />
             ) : (
-                <HeartUnSelected style={styles.iconHeartStyle} />
-              )}
+              <HeartUnSelected style={styles.iconHeartStyle} />
+            )}
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -443,7 +507,7 @@ export const Home = ({ navigation }) => {
         }}
         data={arrayObjects}
         numColumns={2}
-        renderItem={({ item, index }) => renderRow(item, index)}
+        renderItem={({item, index}) => renderRow(item, index)}
         keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -494,10 +558,10 @@ export const Home = ({ navigation }) => {
                   setLowToHightSelected(false);
                 }}>
                 {!lowToHightSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -528,12 +592,12 @@ export const Home = ({ navigation }) => {
                   setLowToHightSelected(true);
                 }}>
                 {lowToHightSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
+              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
                 Price - Low to High
               </Text>
             </View>
@@ -543,11 +607,12 @@ export const Home = ({ navigation }) => {
     );
   };
 
-
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <View style={styles.container}>
       {renderHeader()}
-      {renderListView()}
+      {defaultCatalogDetails && renderListView()}
       {showSortView && renderSortView()}
     </View>
   );

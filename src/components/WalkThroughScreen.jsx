@@ -62,19 +62,19 @@ const banners = [
   {
     id: 2,
     icon: <Screen2 />,
-    title: 'Order from comfart location',
+    title: 'Order from the comfort of your location',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
   {
     id: 3,
     icon: <Screen3 />,
-    title: 'Track Live Order Status',
+    title: 'Track your order',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
   {
     id: 4,
     icon: <Screen4 />,
-    title: 'View your account any time',
+    title: 'View your account at any time',
     subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
   },
 ];
@@ -82,12 +82,13 @@ const banners = [
 export const WalkThroughScreen = ({navigation}) => {
   const [slideIndex, setSlideIndex] = useState(0);
 
-  const renderDot = (active) => (
+  const renderDot = (active, index) => (
     <View
       style={[
         styles.sliderDotStyle,
         {backgroundColor: active ? colors.BLACK : colors.INACTIVE_DOT_COLOR},
       ]}
+      key={index}
     />
   );
 
@@ -130,7 +131,9 @@ export const WalkThroughScreen = ({navigation}) => {
           alignSelf: 'center',
         }}>
         {banners.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
+          index == slideIndex
+            ? renderDot(true, index)
+            : renderDot(false, index),
         )}
       </View>
     );
@@ -141,7 +144,6 @@ export const WalkThroughScreen = ({navigation}) => {
       <View style={styles.skipViewStyles}>
         <TouchableOpacity
           onPress={() => {
-            console.log('skip clicked');
             navigation.push(ScreenNamesCustomer.TABBAR);
           }}>
           <SkipButton style={{width: 52, height: 26, height: 40}} />

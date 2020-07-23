@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, Text, TextInput} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import { Logo, TextBoxSelect, QLogo } from '../icons/Icons';
-import { theme } from '../theme/theme';
-import { isMobileNumberValid } from '../utils/Validators';
+import {Logo, TextBoxSelect, QLogo} from '../icons/Icons';
+import {theme} from '../theme/theme';
+import {
+  isMobileNumberValid,
+  isMobileNumberValidWithReason,
+} from '../utils/Validators';
 import CommonButton from './UI/CommonButton';
-import { colors } from '../theme/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ScreenNamesCustomer } from './navigationController/ScreenNames';
+import {colors} from '../theme/colors';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from './navigationController/ScreenNames';
+import axios from 'axios';
+import {restEndPoints, requestHeaders} from '../../qbconfig';
+import {storeItem} from '../utils/asyncStorage';
+import useAsyncStorage from '../components/customHooks/async';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +22,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     marginHorizontal: 32,
-    marginTop: 60
+    marginTop: 60,
   },
   textStyles: {
     ...theme.viewStyles.textCommonStyles,
@@ -51,17 +58,90 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Login = ({ navigation }) => {
-  const [mobileNumber, setMobileNumber] = useState(null);
-  const [otp, setOTP] = useState(null);
-  const [isMobileNumberError, setIsMobileNumberError] = useState(false);
-  const [isMobileAPIError, setIsMobileAPIError] = useState(false);
-
+export const Login = ({navigation}) => {
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [otp, setOTP] = useState('');
   const [showOTPView, setShowOTPView] = useState(false);
+  const [showLoginButton, setShowLoginButton] = useState(false);
+  const [showOtpButton, setShowOTPButton] = useState(true);
+  const [uuid, setUuid] = useState('');
+  const [apiErrorText, setApiErrorText] = useState('');
+  const {LOGIN, RESEND_OTP, GET_TOKEN} = restEndPoints;
+  const [loading, setLoading] = useState(false);
+  const {updateStorageItem: storeUuid} = useAsyncStorage('@uuid');
+  const {updateStorageItem: storeAccessToken} = useAsyncStorage('@accessToken');
+
+  const showTickMark =
+    mobileNumber.length === 10 && isMobileNumberValid(mobileNumber);
+
+  const disableLoginButton = !(mobileNumber.length === 10 && otp.length === 4);
 
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+
+  const getOtp = async () => {
+    setLoading(true);
+    try {
+      await axios
+        .post(
+          LOGIN.URL,
+          {
+            mobileNo: mobileNumber,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          setLoading(false);
+          if (apiResponse.data.status === 'success') {
+            const uuid = apiResponse.data.response.response.uuid;
+            setUuid(uuid);
+            storeUuid(uuid);
+            setShowOTPView(true);
+            setShowLoginButton(true);
+            setShowOTPButton(false);
+          }
+        })
+        .catch((error) => {
+          const errorText = error.response.data.errortext;
+          setApiErrorText(errorText);
+          setLoading(false);
+        });
+    } catch {
+      setLoading(false);
+      setApiErrorText('Network error. Please try again after some time.');
+    }
+  };
+
+  const getAccessToken = async () => {
+    setLoading(true);
+    try {
+      await axios
+        .post(
+          GET_TOKEN.URL,
+          {
+            uuid: uuid,
+            otp: otp,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          setLoading(false);
+          if (apiResponse.data.status === 'success') {
+            storeAccessToken(apiResponse.data.response.accessToken);
+            navigation.push(ScreenNamesCustomer.WALKTHROUGHSCREEN);
+          }
+        })
+        .catch((error) => {
+          const errorText = error.response.data.errortext;
+          setApiErrorText(errorText);
+          setLoading(false);
+        });
+    } catch {
+      setLoading(false);
+      setApiErrorText('Network error. Please try again after some time.');
+    }
+  };
 
   const renderWelcomeName = () => {
     return (
@@ -77,77 +157,89 @@ export const Login = ({ navigation }) => {
   const renderPhoneField = () => {
     return (
       <>
-        <Text style={styles.phoneHeaderStyle}>Phone Number</Text>
+        <Text style={styles.phoneHeaderStyle}>Mobile Number</Text>
         <View
           style={{
             marginTop: 11,
           }}>
           <TextInput
             style={styles.textInputStyles}
-            placeholder="Mobile number"
+            placeholder="Type your mobile number"
             onChangeText={(changedText) => {
+              setApiErrorText('');
+              setShowLoginButton(false);
+              setShowOTPButton(true);
+              setShowOTPView(false);
               setMobileNumber(changedText);
             }}
             maxLength={10}
             keyboardType="number-pad"
             onEndEditing={(e) => {
-              const validateMobileNumber = isMobileNumberValid(
+              const validateMobileNumber = isMobileNumberValidWithReason(
                 e.nativeEvent.text,
               );
-              if (validateMobileNumber && !validateMobileNumber.status) {
-                // setMobileNumberError(validateMobileNumber.reason);
-                setIsMobileNumberError(true);
-              } else {
-                // setMobileNumberError('');
-                setIsMobileNumberError(false);
-              }
+              if (validateMobileNumber && !validateMobileNumber.status)
+                setApiErrorText(validateMobileNumber.reason);
             }}
             textContentType="telephoneNumber"
             dataDetectorTypes="phoneNumber"
           />
-          <TextBoxSelect
-            style={{
-              width: 21,
-              height: 21,
-              top: 15,
-              right: 17,
-              position: 'absolute',
-            }}
-          />
+          {showTickMark && (
+            <TextBoxSelect
+              style={{
+                width: 21,
+                height: 21,
+                top: 15,
+                right: 17,
+                position: 'absolute',
+              }}
+            />
+          )}
         </View>
         {showOTPView && (
           <TextInput
-            style={[styles.textInputStyles, { marginTop: 15 }]}
-            placeholder="3514"
-            onChangeText={(changedText) => {
-              setOTP(changedText);
+            style={[styles.textInputStyles, {marginTop: 15}]}
+            placeholder="OTP"
+            onChangeText={(otp) => {
+              setOTP(otp);
             }}
-            maxLength={5}
+            maxLength={4}
             keyboardType="number-pad"
-            onEndEditing={(e) => { }}
+            onEndEditing={(e) => {
+              const otp = e.nativeEvent.text;
+              getAccessToken();
+            }}
+            textContentType="oneTimeCode"
           />
         )}
       </>
     );
   };
 
-  const renderButton = () => {
+  const renderButtonGetOtp = () => {
     return (
       <CommonButton
-        buttonTitle={!showOTPView ? 'GET OTP' : 'LOGIN'}
+        buttonTitle="GET OTP"
         onPressButton={() => {
-          if (!showOTPView) {
-            setIsMobileAPIError(true);
-
-            setTimeout(() => {
-              setShowOTPView(true);
-              setIsMobileAPIError(false);
-            }, 1000);
-          } else {
-            navigation.push(ScreenNamesCustomer.WALKTHROUGHSCREEN);
-          }
+          getOtp();
         }}
-        propStyle={{ marginTop: 16 }}
+        propStyle={{marginTop: 16}}
+        disabled={!showTickMark || loading}
+        disableButton={!showTickMark || loading}
+      />
+    );
+  };
+
+  const renderButtonLogin = () => {
+    return (
+      <CommonButton
+        buttonTitle="LOGIN"
+        onPressButton={() => {
+          getAccessToken();
+        }}
+        propStyle={{marginTop: 16}}
+        disabled={disableLoginButton || loading}
+        disableButton={disableLoginButton || loading}
       />
     );
   };
@@ -155,51 +247,48 @@ export const Login = ({ navigation }) => {
   const renderErrorMessage = () => {
     return (
       <>
-        {isMobileAPIError ? (
-          <Text style={styles.errorTextStyles}>
-            We are sorry. You are not authorized to use this App. Please contact
-            XXXXXXXX for your account activation.
-          </Text>
+        {apiErrorText.length > 0 ? (
+          <Text style={styles.errorTextStyles}>{apiErrorText}</Text>
         ) : (
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => {
-                console.log('resend otp cliced');
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              console.log('resend otp cliced');
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 30,
+                marginTop: 20,
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 30,
-                  marginTop: 20,
-                }}>
-                <Text
-                  style={[
-                    styles.errorTextStyles,
-                    {
-                      textAlign: 'center',
-                      color: colors.BLACK,
-                      marginTop: 0,
-                    },
-                  ]}>
-                  Didn’t receive OTP?{' '}
-                </Text>
-                <Text
-                  style={[
-                    styles.errorTextStyles,
-                    {
-                      textAlign: 'center',
-                      textDecorationLine: 'underline',
-                      fontWeight: '500',
-                      marginTop: 0,
-                    },
-                  ]}>
-                  Resend
+              <Text
+                style={[
+                  styles.errorTextStyles,
+                  {
+                    textAlign: 'center',
+                    color: colors.BLACK,
+                    marginTop: 0,
+                  },
+                ]}>
+                Didn’t receive OTP?{' '}
               </Text>
-              </View>
-            </TouchableOpacity>
-          )}
+              <Text
+                style={[
+                  styles.errorTextStyles,
+                  {
+                    textAlign: 'center',
+                    textDecorationLine: 'underline',
+                    fontWeight: '500',
+                    marginTop: 0,
+                  },
+                ]}>
+                Resend
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </>
     );
   };
@@ -260,11 +349,12 @@ export const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
-        <Logo style={{ width: 55, height: 74 }} />
+        <Logo style={{width: 55, height: 74}} />
         {renderWelcomeName()}
         {renderPhoneField()}
-        {renderButton()}
-        {isMobileAPIError && renderErrorMessage()}
+        {showOtpButton && renderButtonGetOtp()}
+        {showLoginButton && renderButtonLogin()}
+        {apiErrorText.length > 0 && renderErrorMessage()}
         {showOTPView && renderResendOTPView()}
       </View>
       {renderFooterView()}
