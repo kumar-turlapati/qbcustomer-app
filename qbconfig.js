@@ -7,6 +7,7 @@ export const requestHeaders = {
   'Org-Id': clientCode,
   Accept: 'application/json',
 };
+export const cdnUrl = 'https://dgufxvy74ps27.cloudfront.net';
 export const restEndPoints = {
   LOGIN: {URL: `${apiBaseUrl}/app/v1/login`, method: 'POST'},
   RESEND_OTP: {URL: `${apiBaseUrl}/app/v1/resend-otp`, method: 'POST'},

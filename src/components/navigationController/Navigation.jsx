@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Login} from '../Login';
 import {WalkThroughScreen} from '../WalkThroughScreen';
@@ -12,10 +12,19 @@ import {TrackOrder} from '../orders/TrackOrder';
 import {Ledger} from '../profile/Ledger';
 import {ScreenNamesCustomer} from './ScreenNames';
 import {LedgerIcon} from '../../icons/Icons';
-import {isUserLoggedIn} from '../../utils/general';
+import {getAccessToken} from '../../utils/general';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
+  const accessToken = getAccessToken();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (accessToken && accessToken.length > 0) {
+      setIsUserLoggedIn(true);
+    }
+  }, [accessToken]);
+
   return (
     <Stack.Navigator
       initialRouteName={ScreenNamesCustomer.LOGIN}
@@ -38,8 +47,14 @@ export const AppCustomerNavigator = () => {
           duration: 100,
         })
       }>
-      {!isUserLoggedIn() ? (
-        <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+      {!isUserLoggedIn ? (
+        <>
+          <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+          <Stack.Screen
+            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
+            component={WalkThroughScreen}
+          />
+        </>
       ) : (
         <>
           <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
@@ -65,10 +80,6 @@ export const AppCustomerNavigator = () => {
             component={TrackOrder}
           />
           <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
-          <Stack.Screen
-            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
-            component={WalkThroughScreen}
-          />
         </>
       )}
     </Stack.Navigator>

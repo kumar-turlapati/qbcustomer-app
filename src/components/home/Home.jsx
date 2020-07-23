@@ -23,9 +23,18 @@ import CommonHeader from '../UI/CommonHeader';
 import {Overlay} from 'react-native-elements';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import axios from 'axios';
-import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {
+  restEndPoints,
+  requestHeaders,
+  cdnUrl,
+  clientCode,
+} from '../../../qbconfig';
 import {getAccessToken} from '../../utils/general';
 import {Loader} from '../Loader';
+import _map from 'lodash/map';
+import _uniq from 'lodash/uniq';
+import _forEach from 'lodash/forEach';
+import _find from 'lodash/find';
 
 const {height, width} = Dimensions.get('window');
 
@@ -376,7 +385,12 @@ export const Home = ({navigation}) => {
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [defaultCatalogDetails, setDefaultCatalogDetails] = useState(null);
+  const [defaultCatalogDetails, setDefaultCatalogDetails] = useState([]);
+  const [catalogBrands, setCatalogBrands] = useState([]);
+  const [catalogCategories, setCatalogCategories] = useState([]);
+  const [catalogItems, setCatalogItems] = useState([]);
+  const [businessLocations, setBusinessLocations] = useState([]);
+
   const accessToken = getAccessToken();
   const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
 
@@ -433,7 +447,20 @@ export const Home = ({navigation}) => {
   }, [accessToken]);
 
   useEffect(() => {
-    console.log(defaultCatalogDetails);
+    if (defaultCatalogDetails) {
+      let businessLocations = [];
+      const catalogBrands = _uniq(
+        _map(defaultCatalogDetails.catalogItems, 'brandName'),
+      );
+      const catalogCategories = _uniq(
+        _map(defaultCatalogDetails.catalogItems, 'categoryName'),
+      );
+      const catalogItems = defaultCatalogDetails.catalogItems;
+      setCatalogBrands(catalogBrands);
+      setCatalogCategories(catalogCategories);
+      setCatalogItems(catalogItems);
+      setBusinessLocations(defaultCatalogDetails.businessLocations);
+    }
   }, [defaultCatalogDetails]);
 
   const renderHeader = () => {
@@ -456,17 +483,32 @@ export const Home = ({navigation}) => {
     );
   };
 
-  const renderRow = (item, index) => {
+  const renderRow = (productDetails) => {
+    const imageLocation = _find(
+      businessLocations,
+      (locationDetails) =>
+        locationDetails.locationID == productDetails.locationID,
+    );
+    const imageUrl = encodeURI(
+      `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${productDetails.images[0].imageName}`,
+    );
     return (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          navigation.push(ScreenNamesCustomer.PRODUCTDETAILS);
+          // navigation.push(ScreenNamesCustomer.PRODUCTDETAILS);
         }}>
         <View style={styles.rowStyles}>
-          {item.icon}
-          <Text style={styles.rowTextStyle}>{item.name}</Text>
-          {item.specialPrice.length !== 0 ? (
+          {/* {item.icon} */}
+          <Image
+            style={{
+              width: '50%',
+              height: '50%',
+            }}
+            source={{uri: imageUrl}}
+          />
+          <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
+          {/* {item.specialPrice.length !== 0 ? (
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
               <Text style={styles.originalPriceStyle}>
@@ -491,7 +533,7 @@ export const Home = ({navigation}) => {
             ) : (
               <HeartUnSelected style={styles.iconHeartStyle} />
             )}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </TouchableOpacity>
     );
@@ -505,10 +547,12 @@ export const Home = ({navigation}) => {
           marginTop: 8,
           marginBottom: 0,
         }}
-        data={arrayObjects}
+        data={catalogItems}
         numColumns={2}
-        renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.id}
+        renderItem={({item}) => {
+          renderRow(item);
+        }}
+        keyExtractor={(item) => item.itemCode}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -612,7 +656,7 @@ export const Home = ({navigation}) => {
   ) : (
     <View style={styles.container}>
       {renderHeader()}
-      {defaultCatalogDetails && renderListView()}
+      {catalogItems && catalogItems.length > 0 && renderListView()}
       {showSortView && renderSortView()}
     </View>
   );
