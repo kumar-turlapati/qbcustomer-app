@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,8 +7,9 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ImageBackground,
 } from 'react-native';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 import {
   Cloth1,
   Cloth2,
@@ -20,8 +21,8 @@ import {
   UnCheckIcon,
 } from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
-import {Overlay} from 'react-native-elements';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { Overlay } from 'react-native-elements';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 import axios from 'axios';
 import {
   restEndPoints,
@@ -29,14 +30,14 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
-import {getAccessToken} from '../../utils/general';
-import {Loader} from '../Loader';
+import { getAccessToken } from '../../utils/general';
+import { Loader } from '../Loader';
 import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
 import _find from 'lodash/find';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -380,7 +381,7 @@ const clothes = [
   },
 ];
 
-export const Home = ({navigation}) => {
+export const Home = ({ navigation }) => {
   const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
@@ -392,13 +393,13 @@ export const Home = ({navigation}) => {
   const [businessLocations, setBusinessLocations] = useState([]);
 
   const accessToken = getAccessToken();
-  const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
+  const { CATALOGS, CATALOG_DETAILS } = restEndPoints;
 
   const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode), { headers: requestHeaders })
         .then((apiResponse) => {
           if (apiResponse.data.status === 'success') {
             setDefaultCatalogDetails(apiResponse.data.response);
@@ -419,7 +420,7 @@ export const Home = ({navigation}) => {
       setLoading(true);
       try {
         await axios
-          .get(CATALOGS.URL, {headers: requestHeaders})
+          .get(CATALOGS.URL, { headers: requestHeaders })
           .then((apiResponse) => {
             if (apiResponse.data.status === 'success') {
               const defaultCatalog = apiResponse.data.response.catalogs.find(
@@ -499,13 +500,13 @@ export const Home = ({navigation}) => {
           // navigation.push(ScreenNamesCustomer.PRODUCTDETAILS);
         }}>
         <View style={styles.rowStyles}>
-          {/* {item.icon} */}
           <Image
             style={{
-              width: '50%',
-              height: '50%',
+              width: width / 2 - 24,
+              height: 164,
             }}
-            source={{uri: imageUrl}}
+            source={{ uri: imageUrl }}
+            resizeMode={'stretch'}
           />
           <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
           {/* {item.specialPrice.length !== 0 ? (
@@ -549,9 +550,7 @@ export const Home = ({navigation}) => {
         }}
         data={catalogItems}
         numColumns={2}
-        renderItem={({item}) => {
-          renderRow(item);
-        }}
+        renderItem={({ item }) => renderRow(item)}
         keyExtractor={(item) => item.itemCode}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -602,10 +601,10 @@ export const Home = ({navigation}) => {
                   setLowToHightSelected(false);
                 }}>
                 {!lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -636,12 +635,12 @@ export const Home = ({navigation}) => {
                   setLowToHightSelected(true);
                 }}>
                 {lowToHightSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
+              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
                 Price - Low to High
               </Text>
             </View>
@@ -654,10 +653,10 @@ export const Home = ({navigation}) => {
   return loading ? (
     <Loader />
   ) : (
-    <View style={styles.container}>
-      {renderHeader()}
-      {catalogItems && catalogItems.length > 0 && renderListView()}
-      {showSortView && renderSortView()}
-    </View>
-  );
+      <View style={styles.container}>
+        {renderHeader()}
+        {catalogItems && catalogItems.length > 0 && renderListView()}
+        {showSortView && renderSortView()}
+      </View>
+    );
 };
