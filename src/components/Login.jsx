@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import {Logo, TextBoxSelect, QLogo} from '../icons/Icons';
+import {Logo, TextBoxSelect, QLogo, Loader} from '../icons/Icons';
 import {theme} from '../theme/theme';
 import {
   isMobileNumberValid,
@@ -13,7 +13,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from './navigationController/ScreenNames';
 import axios from 'axios';
 import {restEndPoints, requestHeaders} from '../../qbconfig';
-import {storeItem} from '../utils/asyncStorage';
 import useAsyncStorage from '../components/customHooks/async';
 
 const styles = StyleSheet.create({
@@ -70,6 +69,9 @@ export const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const {updateStorageItem: storeUuid} = useAsyncStorage('@uuid');
   const {updateStorageItem: storeAccessToken} = useAsyncStorage('@accessToken');
+  const {storageItem: storedAccessToken, tokenLoading} = useAsyncStorage(
+    '@accessToken',
+  );
 
   const showTickMark =
     mobileNumber.length === 10 && isMobileNumberValid(mobileNumber);
@@ -79,6 +81,12 @@ export const Login = ({navigation}) => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+
+  useEffect(() => {
+    if (storedAccessToken && storeAccessToken.length > 0) {
+      navigation.push(ScreenNamesCustomer.TABBAR);
+    }
+  }, [storedAccessToken]);
 
   const getOtp = async () => {
     setLoading(true);
@@ -113,7 +121,7 @@ export const Login = ({navigation}) => {
     }
   };
 
-  const getAccessToken = async () => {
+  const getAccessTokenFromApi = async () => {
     setLoading(true);
     try {
       await axios
@@ -207,7 +215,7 @@ export const Login = ({navigation}) => {
             keyboardType="number-pad"
             onEndEditing={(e) => {
               const otp = e.nativeEvent.text;
-              getAccessToken();
+              getAccessTokenFromApi();
             }}
             textContentType="oneTimeCode"
           />
@@ -235,7 +243,7 @@ export const Login = ({navigation}) => {
       <CommonButton
         buttonTitle="LOGIN"
         onPressButton={() => {
-          getAccessToken();
+          getAccessTokenFromApi();
         }}
         propStyle={{marginTop: 16}}
         disabled={disableLoginButton || loading}
@@ -346,7 +354,9 @@ export const Login = ({navigation}) => {
     );
   };
 
-  return (
+  return tokenLoading ? (
+    <Loader />
+  ) : (
     <View style={styles.container}>
       <View style={styles.subContainer}>
         <Logo style={{width: 55, height: 74}} />

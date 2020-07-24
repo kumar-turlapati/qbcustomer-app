@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,7 +9,7 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 import {
   Cloth1,
   Cloth2,
@@ -21,8 +21,8 @@ import {
   UnCheckIcon,
 } from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
-import { Overlay } from 'react-native-elements';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Overlay} from 'react-native-elements';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import axios from 'axios';
 import {
   restEndPoints,
@@ -30,14 +30,14 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
-import { getAccessToken } from '../../utils/general';
-import { Loader } from '../Loader';
+import {getAccessToken} from '../../utils/general';
+import {Loader} from '../Loader';
 import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
 import _find from 'lodash/find';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -381,7 +381,7 @@ const clothes = [
   },
 ];
 
-export const Home = ({ navigation }) => {
+export const Home = ({navigation}) => {
   const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
@@ -393,13 +393,13 @@ export const Home = ({ navigation }) => {
   const [businessLocations, setBusinessLocations] = useState([]);
 
   const accessToken = getAccessToken();
-  const { CATALOGS, CATALOG_DETAILS } = restEndPoints;
+  const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
 
   const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOG_DETAILS.URL(defaultCatalogCode), { headers: requestHeaders })
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
         .then((apiResponse) => {
           if (apiResponse.data.status === 'success') {
             setDefaultCatalogDetails(apiResponse.data.response);
@@ -420,7 +420,7 @@ export const Home = ({ navigation }) => {
       setLoading(true);
       try {
         await axios
-          .get(CATALOGS.URL, { headers: requestHeaders })
+          .get(CATALOGS.URL, {headers: requestHeaders})
           .then((apiResponse) => {
             if (apiResponse.data.status === 'success') {
               const defaultCatalog = apiResponse.data.response.catalogs.find(
@@ -497,7 +497,10 @@ export const Home = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          // navigation.push(ScreenNamesCustomer.PRODUCTDETAILS);
+          navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
+            productDetails: productDetails,
+            productLocation: imageLocation.locationCode,
+          });
         }}>
         <View style={styles.rowStyles}>
           <Image
@@ -505,8 +508,7 @@ export const Home = ({ navigation }) => {
               width: width / 2 - 24,
               height: 164,
             }}
-            source={{ uri: imageUrl }}
-            resizeMode={'stretch'}
+            source={{uri: imageUrl}}
           />
           <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
           {/* {item.specialPrice.length !== 0 ? (
@@ -519,9 +521,11 @@ export const Home = ({ navigation }) => {
                 {item.discount.toUpperCase()}
               </Text>
             </View>
-          ) : (
-            <Text style={styles.specialPriceStyle}>₹{item.originalPrice}</Text>
-          )}
+          ) : ( */}
+          <Text style={styles.specialPriceStyle}>
+            ₹{productDetails.itemRate}
+          </Text>
+          {/* )} */}
           <TouchableOpacity
             activeOpacity={1}
             style={styles.heartIconViewStyles}
@@ -529,12 +533,12 @@ export const Home = ({ navigation }) => {
               clothes[index].selected = true;
               setArrayObjects([...clothes]);
             }}>
-            {item.selected ? (
+            {/* {item.selected ? (
               <HeartSelected style={styles.iconHeartStyle} />
-            ) : (
-              <HeartUnSelected style={styles.iconHeartStyle} />
-            )}
-          </TouchableOpacity> */}
+            ) : ( */}
+            <HeartUnSelected style={styles.iconHeartStyle} />
+            {/* )} */}
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -550,7 +554,7 @@ export const Home = ({ navigation }) => {
         }}
         data={catalogItems}
         numColumns={2}
-        renderItem={({ item }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.itemCode}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -601,10 +605,10 @@ export const Home = ({ navigation }) => {
                   setLowToHightSelected(false);
                 }}>
                 {!lowToHightSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -635,12 +639,12 @@ export const Home = ({ navigation }) => {
                   setLowToHightSelected(true);
                 }}>
                 {lowToHightSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
+              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
                 Price - Low to High
               </Text>
             </View>
@@ -653,10 +657,10 @@ export const Home = ({ navigation }) => {
   return loading ? (
     <Loader />
   ) : (
-      <View style={styles.container}>
-        {renderHeader()}
-        {catalogItems && catalogItems.length > 0 && renderListView()}
-        {showSortView && renderSortView()}
-      </View>
-    );
+    <View style={styles.container}>
+      {renderHeader()}
+      {catalogItems && catalogItems.length > 0 && renderListView()}
+      {showSortView && renderSortView()}
+    </View>
+  );
 };

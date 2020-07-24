@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View, Text, TextInput, Platform } from 'react-native';
-import { theme } from '../../theme/theme';
+import React, {useState} from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Platform,
+  Image,
+} from 'react-native';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import Carousel from 'react-native-snap-carousel';
-import { Product, ProductFullScreen, CrossIcon } from '../../icons/Icons';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Product, ProductFullScreen, CrossIcon} from '../../icons/Icons';
+import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import {cdnUrl, clientCode} from '../../../qbconfig';
 
-const { width: winWidth, height: winHeight } = Dimensions.get('window');
+const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -69,7 +78,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
   },
   renderFullViewDot: {
     flexDirection: 'row',
@@ -80,14 +89,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     position: 'absolute',
-    paddingBottom: 4
+    paddingBottom: 4,
   },
   closeViewStyles: {
     width: 30,
     height: 30,
     position: 'absolute',
     right: 20,
-    top: Platform.OS === 'ios' ? 55 : 50
+    top: Platform.OS === 'ios' ? 55 : 50,
   },
   buyNowStyles: {
     width: 150,
@@ -115,9 +124,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: winWidth,
     height: winHeight,
-    backgroundColor: theme.colors.WHITE
-  }
-})
+    backgroundColor: theme.colors.WHITE,
+  },
+});
 
 const filterOptions = [
   {
@@ -138,10 +147,17 @@ const filterOptions = [
   },
 ];
 
-export const ProductDetails = ({ navigation }) => {
+export const ProductDetails = ({route, navigation}) => {
   const [arrayObjects, setArrayObjects] = useState(filterOptions);
   const [quantityText, setQuantityText] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const productImages = route.params.productDetails.images;
+  const productLocationKey = route.params.productLocation;
+  const productRate = route.params.productDetails.itemRate;
+  const productName = route.params.productDetails.itemName;
+
+  console.log(slideIndex, productImages.length, '---------');
 
   const renderHeader = () => {
     return (
@@ -151,15 +167,13 @@ export const ProductDetails = ({ navigation }) => {
         onPressLeftButton={() => {
           navigation.goBack();
         }}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => { }}
+        onPressWishListIcon={() => {}}
       />
     );
   };
-
-  const [slideIndex, setSlideIndex] = useState(0);
 
   const renderDot = (active) => (
     <View
@@ -174,15 +188,22 @@ export const ProductDetails = ({ navigation }) => {
     />
   );
 
-  const renderSliderItem = ({ item, index }) => {
+  const renderSliderItem = ({item}) => {
+    const imageUrl = encodeURI(
+      `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
+    );
     return (
       <TouchableOpacity
         activeOpacity={1}
+        key={item.hash}
         onPress={() => {
           setShowFullScreen(true);
         }}>
         <View style={styles.onboardingViewStyles}>
-          <Product style={{ height: 250, width: winWidth - 80 }} />
+          <Image
+            source={{uri: imageUrl}}
+            style={{height: 280, width: winWidth - 80}}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -190,10 +211,10 @@ export const ProductDetails = ({ navigation }) => {
 
   const renderSliderFullDotView = () => {
     return (
-      <View
-        style={styles.renderFullViewDot}
-      >
-        {filterOptions.map((_, index) => (index == slideIndex ? renderDot(true) : renderDot(false)))}
+      <View style={styles.renderFullViewDot}>
+        {filterOptions.map((_, index) =>
+          index == slideIndex ? renderDot(true) : renderDot(false),
+        )}
       </View>
     );
   };
@@ -201,7 +222,8 @@ export const ProductDetails = ({ navigation }) => {
   const renderSliderFullClose = () => {
     return (
       <View style={styles.closeViewStyles}>
-        <TouchableOpacity activeOpacity={1}
+        <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             setShowFullScreen(false);
           }}>
@@ -216,10 +238,10 @@ export const ProductDetails = ({ navigation }) => {
     );
   };
 
-  const renderSliderFullView = ({ item, index }) => {
+  const renderSliderFullView = ({item, index}) => {
     return (
       <View>
-        <ProductFullScreen style={{ width: winWidth, height: winHeight }} />
+        <ProductFullScreen style={{width: winWidth, height: winHeight}} />
       </View>
     );
   };
@@ -250,15 +272,15 @@ export const ProductDetails = ({ navigation }) => {
       <View>
         <Carousel
           onSnapToItem={setSlideIndex}
-          data={filterOptions}
+          data={productImages}
           renderItem={renderSliderItem}
           sliderWidth={winWidth}
           itemWidth={winWidth - 80}
-          loop={true}
-          autoplay={true}
+          loop
+          autoplay
           autoplayDelay={3000}
           autoplayInterval={3000}
-          layout={'default'}
+          layout="default"
         />
       </View>
     );
@@ -266,10 +288,10 @@ export const ProductDetails = ({ navigation }) => {
 
   const renderSliderDotView = () => {
     return (
-      <View
-        style={styles.dotView}
-      >
-        {filterOptions.map((_, index) => (index == slideIndex ? renderDot(true) : renderDot(false)))}
+      <View style={styles.dotView}>
+        {productImages.map((_, index) =>
+          index == slideIndex ? renderDot(true) : renderDot(false),
+        )}
       </View>
     );
   };
@@ -277,13 +299,25 @@ export const ProductDetails = ({ navigation }) => {
   const renderTitleAndButton = () => {
     return (
       <View style={styles.titleViewStyle}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.titleStyle}>Brown Suit Clothing</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.titleStyle}>{productName}</Text>
           <Text style={styles.instockStyles}>Instock</Text>
         </View>
-        <Text style={styles.priceStyles}>₹2,500</Text>
-        <View style={{ flexDirection: 'row', marginTop: 26, alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'row', borderWidth: 2, borderColor: theme.colors.BLACK, borderRadius: 3 }}>
+        <Text style={styles.priceStyles}>₹{productRate}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 26,
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              borderWidth: 2,
+              borderColor: theme.colors.BLACK,
+              borderRadius: 3,
+            }}>
             <TextInput
               style={styles.textInputStyles}
               onChangeText={(changedText) => {
@@ -291,9 +325,10 @@ export const ProductDetails = ({ navigation }) => {
               }}
               value={quantityText}
               maxLength={3}
-              onEndEditing={(e) => { }}
+              onEndEditing={(e) => {}}
             />
-            <TouchableOpacity activeOpacity={1}
+            <TouchableOpacity
+              activeOpacity={1}
               style={styles.addToCartStyles}
               onPress={() => {
                 navigation.push(ScreenNamesCustomer.CARTVIEW);
@@ -301,13 +336,13 @@ export const ProductDetails = ({ navigation }) => {
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity activeOpacity={1}
+          <TouchableOpacity
+            activeOpacity={1}
             style={styles.buyNowStyles}
-            onPress={() => {
-
-            }}
-          >
-            <Text style={[styles.addToCartStyle, { color: theme.colors.WHITE }]}>BUY NOW</Text>
+            onPress={() => {}}>
+            <Text style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
+              BUY NOW
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -319,48 +354,63 @@ export const ProductDetails = ({ navigation }) => {
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
         <Text style={styles.descriptionTextStyle}>Description</Text>
-        <View style={{ backgroundColor: theme.colors.BLACK, opacity: 0.1, marginLeft: 25, marginTop: 10, marginRight: 15, height: 1 }} />
-        <View style={{ marginLeft: 24, marginTop: 16 }}>
-          <Text style={styles.addToCartStyle}>{"Size & Fit"}</Text>
-          <Text style={[styles.addToCartStyle, { fontWeight: 'normal', marginTop: -5 }]}>{"Fabric Length 3.6m"}</Text>
+        <View
+          style={{
+            backgroundColor: theme.colors.BLACK,
+            opacity: 0.1,
+            marginLeft: 25,
+            marginTop: 10,
+            marginRight: 15,
+            height: 1,
+          }}
+        />
+        <View style={{marginLeft: 24, marginTop: 16}}>
+          <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text>
+          <Text
+            style={[
+              styles.addToCartStyle,
+              {fontWeight: 'normal', marginTop: -5},
+            ]}>
+            {'Fabric Length 3.6m'}
+          </Text>
         </View>
-        <View style={{ marginLeft: 24, marginTop: 26 }}>
+        <View style={{marginLeft: 24, marginTop: 26}}>
           <Text style={styles.addToCartStyle}>{'Magerial & Care'}</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              { fontWeight: 'normal', marginTop: -5 },
+              {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'70 % Polyester, 30 % Rayon'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              { fontWeight: 'normal', marginTop: -5 },
+              {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'Machine Wash'}
           </Text>
         </View>
-        <View style={{ marginLeft: 24, marginTop: 24 }}>
+        <View style={{marginLeft: 24, marginTop: 24}}>
           <Text style={styles.addToCartStyle}>{'Specifications'}</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              { fontWeight: 'normal', marginTop: -5 },
+              {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'Fabric - Polyester'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              { fontWeight: 'normal', marginTop: -5 },
+              {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'Fabric2 - Viscose Rayon'}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              { fontWeight: 'normal', marginTop: -5 },
+              {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'Type - Suit'}
           </Text>

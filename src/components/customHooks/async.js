@@ -3,9 +3,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default (key) => {
   const [storageItem, setStorageItem] = useState(null);
+  const [tokenLoading, setTokenLoading] = useState(false);
+
   const getStorageItem = async () => {
     const data = await AsyncStorage.getItem(key);
     setStorageItem(data);
+    setTokenLoading(false);
   };
   const updateStorageItem = (data) => {
     if (typeof data === 'string') {
@@ -19,7 +22,8 @@ export default (key) => {
     setStorageItem(null);
   };
   useEffect(() => {
+    setTokenLoading(true);
     getStorageItem();
   }, []);
-  return {storageItem, updateStorageItem, clearStorageItem};
+  return {storageItem, tokenLoading, updateStorageItem, clearStorageItem};
 };
