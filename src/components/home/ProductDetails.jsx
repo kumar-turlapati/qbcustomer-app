@@ -128,36 +128,40 @@ const styles = StyleSheet.create({
   },
 });
 
-const filterOptions = [
-  {
-    id: 1,
-    icon: <Product />,
-  },
-  {
-    id: 2,
-    icon: <Product />,
-  },
-  {
-    id: 3,
-    icon: <Product />,
-  },
-  {
-    id: 4,
-    icon: <Product />,
-  },
-];
+// const filterOptions = [
+//   {
+//     id: 1,
+//     icon: <Product />,
+//   },
+//   {
+//     id: 2,
+//     icon: <Product />,
+//   },
+//   {
+//     id: 3,
+//     icon: <Product />,
+//   },
+//   {
+//     id: 4,
+//     icon: <Product />,
+//   },
+// ];
 
 export const ProductDetails = ({route, navigation}) => {
-  const [arrayObjects, setArrayObjects] = useState(filterOptions);
-  const [quantityText, setQuantityText] = useState('1');
+  // const [arrayObjects, setArrayObjects] = useState(filterOptions);
+  const [orderQty, setOrderQty] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
   const productRate = route.params.productDetails.itemRate;
   const productName = route.params.productDetails.itemName;
+  const productDescription = route.params.productDetails.itemDescription;
 
-  console.log(slideIndex, productImages.length, '---------');
+  const buttonDisable = parseInt(orderQty, 10) <= 0;
+
+  // console.log(slideIndex, productImages.length, '---------');
 
   const renderHeader = () => {
     return (
@@ -212,7 +216,7 @@ export const ProductDetails = ({route, navigation}) => {
   const renderSliderFullDotView = () => {
     return (
       <View style={styles.renderFullViewDot}>
-        {filterOptions.map((_, index) =>
+        {productImages.map((_, index) =>
           index == slideIndex ? renderDot(true) : renderDot(false),
         )}
       </View>
@@ -238,10 +242,16 @@ export const ProductDetails = ({route, navigation}) => {
     );
   };
 
-  const renderSliderFullView = ({item, index}) => {
+  const renderSliderFullView = ({item}) => {
+    const imageUrl = encodeURI(
+      `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
+    );
     return (
       <View>
-        <ProductFullScreen style={{width: winWidth, height: winHeight}} />
+        <Image
+          source={{uri: imageUrl}}
+          style={{width: winWidth, height: winHeight}}
+        />
       </View>
     );
   };
@@ -251,7 +261,7 @@ export const ProductDetails = ({route, navigation}) => {
       <View style={styles.carouselFullScreenStyles}>
         <Carousel
           onSnapToItem={setSlideIndex}
-          data={filterOptions}
+          data={productImages}
           renderItem={renderSliderFullView}
           sliderWidth={winWidth}
           itemWidth={winWidth}
@@ -320,26 +330,28 @@ export const ProductDetails = ({route, navigation}) => {
             }}>
             <TextInput
               style={styles.textInputStyles}
-              onChangeText={(changedText) => {
-                setQuantityText(changedText);
+              onChangeText={(qty) => {
+                setOrderQty(qty);
               }}
-              value={quantityText}
+              value={orderQty}
               maxLength={3}
               onEndEditing={(e) => {}}
+              keyboardType="numeric"
             />
             <TouchableOpacity
               activeOpacity={1}
               style={styles.addToCartStyles}
-              onPress={() => {
-                navigation.push(ScreenNamesCustomer.CARTVIEW);
-              }}>
+              onPress={() => {}}
+              disabled={buttonDisable}>
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
             activeOpacity={1}
             style={styles.buyNowStyles}
-            onPress={() => {}}>
+            onPress={() => {
+              navigation.push(ScreenNamesCustomer.CARTVIEW);
+            }}>
             <Text style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
               BUY NOW
             </Text>
@@ -354,7 +366,7 @@ export const ProductDetails = ({route, navigation}) => {
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
         <Text style={styles.descriptionTextStyle}>Description</Text>
-        <View
+        {/* <View
           style={{
             backgroundColor: theme.colors.BLACK,
             opacity: 0.1,
@@ -363,18 +375,19 @@ export const ProductDetails = ({route, navigation}) => {
             marginRight: 15,
             height: 1,
           }}
-        />
+        /> */}
         <View style={{marginLeft: 24, marginTop: 16}}>
-          <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text>
-          <Text
+          {/* <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text> */}
+          <Text style={styles.addToCartStyle}>{productDescription}</Text>
+          {/* <Text
             style={[
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
             ]}>
             {'Fabric Length 3.6m'}
-          </Text>
+          </Text> */}
         </View>
-        <View style={{marginLeft: 24, marginTop: 26}}>
+        {/* <View style={{marginLeft: 24, marginTop: 26}}>
           <Text style={styles.addToCartStyle}>{'Magerial & Care'}</Text>
           <Text
             style={[
@@ -414,7 +427,7 @@ export const ProductDetails = ({route, navigation}) => {
             ]}>
             {'Type - Suit'}
           </Text>
-        </View>
+        </View> */}
       </View>
     );
   };
