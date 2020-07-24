@@ -8,13 +8,16 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import {AppCustomerNavigator} from './navigationController/Navigation';
+import {ShoppingCartProvider} from './context/ShoppingCart';
 import React from 'react';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <AppCustomerNavigator />
-    </NavigationContainer>
+    <ShoppingCartProvider>
+      <NavigationContainer>
+        <AppCustomerNavigator />
+      </NavigationContainer>
+    </ShoppingCartProvider>
   );
 };
 

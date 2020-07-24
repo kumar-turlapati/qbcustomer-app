@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -11,10 +11,13 @@ import {
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import Carousel from 'react-native-snap-carousel';
-import {Product, ProductFullScreen, CrossIcon} from '../../icons/Icons';
+// import {Product, ProductFullScreen, CrossIcon} from '../../icons/Icons';
+import {CrossIcon} from '../../icons/Icons';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import {ShoppingCartContext} from '../context/ShoppingCart';
 import {cdnUrl, clientCode} from '../../../qbconfig';
+import CommonAlertView from '../UI/CommonAlertView';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -152,16 +155,22 @@ export const ProductDetails = ({route, navigation}) => {
   const [orderQty, setOrderQty] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
   const productRate = route.params.productDetails.itemRate;
   const productName = route.params.productDetails.itemName;
+  const productCode = route.params.productDetails.itemID;
   const productDescription = route.params.productDetails.itemDescription;
-
+  const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
+    ShoppingCartContext,
+  );
   const buttonDisable = parseInt(orderQty, 10) <= 0;
 
   // console.log(slideIndex, productImages.length, '---------');
+  // console.log(addToCart());
 
   const renderHeader = () => {
     return (
@@ -341,7 +350,13 @@ export const ProductDetails = ({route, navigation}) => {
             <TouchableOpacity
               activeOpacity={1}
               style={styles.addToCartStyles}
-              onPress={() => {}}
+              onPress={() => {
+                const cartItem = {
+                  cartItems: [{itemCode: productCode, itemQty: orderQty}],
+                };
+                setShowAlert(true);
+                addToCart(cartItem);
+              }}
               disabled={buttonDisable}>
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
@@ -446,6 +461,17 @@ export const ProductDetails = ({route, navigation}) => {
       {showFullScreen && renderImageFullScreen()}
       {showFullScreen && renderSliderFullDotView()}
       {showFullScreen && renderSliderFullClose()}
+      {showAlert && (
+        <CommonAlertView
+          showLoader={apiLoading}
+          showSuceessPopup={!apiLoading}
+          onPressSuccessButton={() => {
+            setShowSuccessAlert(false);
+            setShowAlert(false);
+          }}
+          successTitle="Item added to Cart successfully."
+        />
+      )}
     </ScrollView>
   );
 };

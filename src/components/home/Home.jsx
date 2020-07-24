@@ -415,33 +415,36 @@ export const Home = ({navigation}) => {
     }
   };
 
+  const getCatalogs = async (requestHeaders) => {
+    setLoading(true);
+    try {
+      await axios
+        .get(CATALOGS.URL, {headers: requestHeaders})
+        .then((apiResponse) => {
+          if (apiResponse.data.status === 'success') {
+            const defaultCatalog = apiResponse.data.response.catalogs.find(
+              (catalogDetails) => catalogDetails.isDefault === '1',
+            );
+            const defaultCatalogCode = defaultCatalog
+              ? defaultCatalog.catalogCode
+              : '';
+            getCatalogDetails(defaultCatalogCode, requestHeaders);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          const errorText = error.response.data.errortext;
+          console.log(errorText);
+        });
+    } catch {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getCatalogs = async (requestHeaders) => {
-      setLoading(true);
-      try {
-        await axios
-          .get(CATALOGS.URL, {headers: requestHeaders})
-          .then((apiResponse) => {
-            if (apiResponse.data.status === 'success') {
-              const defaultCatalog = apiResponse.data.response.catalogs.find(
-                (catalogDetails) => catalogDetails.isDefault === '1',
-              );
-              const defaultCatalogCode = defaultCatalog
-                ? defaultCatalog.catalogCode
-                : '';
-              getCatalogDetails(defaultCatalogCode, requestHeaders);
-            }
-            setLoading(false);
-          })
-          .catch((error) => {
-            const errorText = error.response.data.errortext;
-            console.log(errorText);
-          });
-      } catch {
-        setLoading(false);
-      }
-    };
     if (accessToken && accessToken.length > 0) {
+      // this will set access token across the app.
+      // no need of recalling it seperately in all the components
       requestHeaders['Access-Token'] = accessToken;
       getCatalogs(requestHeaders);
     }
