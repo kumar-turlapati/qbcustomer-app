@@ -26,7 +26,7 @@ export const restEndPoints = {
     method: 'PUT',
   },
   REMOVE_ITEM_FROM_CART: {
-    URL: (customerCode) => `${apiBaseUrl}/${cartUri}/${customerCode}`,
+    URL: (customerCode) => `${apiBaseUrl}/${cartUri}/delete/${customerCode}`,
     method: 'DELETE',
   },
   GET_ITEMS_FROM_CART: {

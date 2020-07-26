@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -155,8 +155,9 @@ export const ProductDetails = ({route, navigation}) => {
   const [orderQty, setOrderQty] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [disableBuyNow, setDisableBuyNow] = useState(true);
 
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
@@ -164,10 +165,19 @@ export const ProductDetails = ({route, navigation}) => {
   const productName = route.params.productDetails.itemName;
   const productCode = route.params.productDetails.itemID;
   const productDescription = route.params.productDetails.itemDescription;
-  const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
-    ShoppingCartContext,
-  );
+
+  const {
+    addToCart,
+    loading: apiLoading,
+    apiError,
+    apiErrorText,
+    cartItems,
+  } = useContext(ShoppingCartContext);
   const buttonDisable = parseInt(orderQty, 10) <= 0;
+
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
+  }, [cartItems]);
 
   // console.log(slideIndex, productImages.length, '---------');
   // console.log(addToCart());
@@ -188,7 +198,7 @@ export const ProductDetails = ({route, navigation}) => {
     );
   };
 
-  const renderDot = (active) => (
+  const renderDot = (active, index) => (
     <View
       style={[
         styles.sliderDotStyle,
@@ -198,6 +208,7 @@ export const ProductDetails = ({route, navigation}) => {
             : theme.colors.IN_ACTIVE_CAROUSEL_COLOR,
         },
       ]}
+      key={index}
     />
   );
 
@@ -226,7 +237,9 @@ export const ProductDetails = ({route, navigation}) => {
     return (
       <View style={styles.renderFullViewDot}>
         {productImages.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
+          index == slideIndex
+            ? renderDot(true, index)
+            : renderDot(false, index),
         )}
       </View>
     );
@@ -363,10 +376,13 @@ export const ProductDetails = ({route, navigation}) => {
           </View>
           <TouchableOpacity
             activeOpacity={1}
-            style={styles.buyNowStyles}
+            style={[styles.buyNowStyles, {opacity: disableBuyNow ? 0.5 : 1}]}
             onPress={() => {
-              navigation.push(ScreenNamesCustomer.CARTVIEW);
-            }}>
+              navigation.push(ScreenNamesCustomer.CARTVIEW, {
+                productLocation: productLocationKey,
+              });
+            }}
+            disabled={disableBuyNow}>
             <Text style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
               BUY NOW
             </Text>
@@ -466,7 +482,7 @@ export const ProductDetails = ({route, navigation}) => {
           showLoader={apiLoading}
           showSuceessPopup={!apiLoading}
           onPressSuccessButton={() => {
-            setShowSuccessAlert(false);
+            // setShowSuccessAlert(false);
             setShowAlert(false);
           }}
           successTitle="Item added to Cart successfully."

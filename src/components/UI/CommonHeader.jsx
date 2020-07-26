@@ -13,13 +13,13 @@ import {
   SortIcon,
   WishListIcon,
 } from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.WHITE
+    backgroundColor: theme.colors.WHITE,
   },
   headerTextStyles: {
     marginTop: 54,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    marginHorizontal: 18
+    marginHorizontal: 18,
   },
   iconStyles: {
     height: 11,
@@ -59,14 +59,14 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 5
+    marginRight: 5,
   },
   rightIconViewStyle: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginTop: 45,
-    marginRight: 5
+    marginRight: 5,
   },
   productIconStyles: {
     width: 30,
@@ -80,8 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: 2,
   },
-})
-
+});
 
 export default CommonHeader = ({
   leftSideText,
@@ -117,9 +116,9 @@ export default CommonHeader = ({
             </Text>
           </View>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           {isProduct && (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => {
@@ -141,7 +140,7 @@ export default CommonHeader = ({
             </View>
           )}
           {isWishList && (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => {
