@@ -20,21 +20,23 @@ import {ScreenNamesCustomer} from './ScreenNames';
 
 const routeToIcon = {
   Home: <HomeUnselected style={{width: 20, height: 20}} />,
-  Catalogue: <CatalogueUnselected style={{width: 20, height: 20}} />,
+  Catalog: <CatalogueUnselected style={{width: 20, height: 20}} />,
   Order: <OrdersUnselected style={{width: 20, height: 20}} />,
   Profile: <ProfileUnselected style={{width: 20, height: 20}} />,
 };
 
 const routeToFocusedIcon = {
   Home: <HomeSelected style={{width: 20, height: 20}} />,
-  Catalogue: <CatalogueSelected style={{width: 20, height: 20}} />,
+  Catalog: <CatalogueSelected style={{width: 20, height: 20}} />,
   Order: <OrdersSelected style={{width: 20, height: 20}} />,
   Profile: <ProfileSelected style={{width: 20, height: 20}} />,
 };
 
 const Tab = createBottomTabNavigator();
 
-export const TabBar = () => {
+export const TabBar = ({route}) => {
+  const catalogCode =
+    route.params && route.params.catalogCode ? route.params.catalogCode : null;
   return (
     <Tab.Navigator
       initialRouteName={ScreenNamesCustomer.HOME}
@@ -58,7 +60,11 @@ export const TabBar = () => {
           ...theme.viewStyles.tabBarIconStyles,
         },
       }}>
-      <Tab.Screen name={ScreenNamesCustomer.HOME} component={Home} />
+      <Tab.Screen
+        name={ScreenNamesCustomer.HOME}
+        component={Home}
+        initialParams={{catalogCode: catalogCode}}
+      />
       <Tab.Screen name={ScreenNamesCustomer.CATALOGUE} component={Catalogue} />
       <Tab.Screen name={ScreenNamesCustomer.ORDER} component={Order} />
       <Tab.Screen name={ScreenNamesCustomer.PROFILE} component={Profile} />

@@ -381,8 +381,8 @@ const clothes = [
   },
 ];
 
-export const Home = ({navigation}) => {
-  const [arrayObjects, setArrayObjects] = useState(clothes);
+export const Home = ({route, navigation}) => {
+  // const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHightSelected, setLowToHightSelected] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -391,9 +391,14 @@ export const Home = ({navigation}) => {
   const [catalogCategories, setCatalogCategories] = useState([]);
   const [catalogItems, setCatalogItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
-
+  const catalogCode =
+    route.params && route.params.catalogCode ? route.params.catalogCode : null;
   const accessToken = getAccessToken();
   const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
+
+  // console.log(route.params, 'in Home Screen');
+  // const catalogCode = route.params;
+  // console.log('default catalogcode$$$$$$$$$$$$$$', navigation.params);
 
   const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
     setLoading(true);
@@ -446,7 +451,9 @@ export const Home = ({navigation}) => {
       // this will set access token across the app.
       // no need of recalling it seperately in all the components
       requestHeaders['Access-Token'] = accessToken;
-      getCatalogs(requestHeaders);
+      if (catalogCode && catalogCode.length > 0)
+        getCatalogDetails(catalogCode, requestHeaders);
+      else getCatalogs(requestHeaders);
     }
   }, [accessToken]);
 
@@ -534,7 +541,7 @@ export const Home = ({navigation}) => {
             style={styles.heartIconViewStyles}
             onPress={() => {
               clothes[index].selected = true;
-              setArrayObjects([...clothes]);
+              // setArrayObjects([...clothes]);
             }}>
             {/* {item.selected ? (
               <HeartSelected style={styles.iconHeartStyle} />

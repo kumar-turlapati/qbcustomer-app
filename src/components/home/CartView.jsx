@@ -18,7 +18,7 @@ import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {ShoppingCartContext} from '../context/ShoppingCart';
 import {cdnUrl, clientCode} from '../../../qbconfig';
 import {Loader} from '../Loader';
-import {AppCustomerNavigator} from '../navigationController/Navigation';
+// import {AppCustomerNavigator} from '../navigationController/Navigation';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 

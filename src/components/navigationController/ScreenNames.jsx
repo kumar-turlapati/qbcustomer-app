@@ -3,7 +3,7 @@ export const ScreenNamesCustomer = {
   WALKTHROUGHSCREEN: 'WalkThroughScreen',
   TABBAR: 'TabBar',
   HOME: 'Home',
-  CATALOGUE: 'Catalogue',
+  CATALOGUE: 'Catalog',
   ORDER: 'Order',
   PROFILE: 'Profile',
   FILTER: 'Filter',
