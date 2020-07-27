@@ -89,7 +89,7 @@ export const ShoppingCartProvider = (props) => {
 
   const updateCart = async (itemDetails) => {
     setLoading(true);
-    console.log(itemDetails, 'itemDetails in updateCart');
+    // console.log(itemDetails, 'itemDetails in updateCart');
     try {
       await axios
         .put(

@@ -114,11 +114,18 @@ export default CommonAlertView = ({
       <View style={styles.alertView}>
         <ActivityIndicator
           size="large"
-          color="#00ff00"
-          style={{width: 39, height: 39, marginTop: 10, marginLeft: 5}}
+          color={theme.colors.RED}
+          style={{
+            width: 39,
+            height: 39,
+            marginTop: 5,
+            marginLeft: 5,
+            marginRight: 5,
+            marginBottom: 5,
+          }}
         />
         {/* <Loader style={{width: 39, height: 39, marginTop: 10, marginLeft: 5}} /> */}
-        <Text style={styles.titleStyle}>{'Loading...'}</Text>
+        {/* <Text style={styles.titleStyle}>{'Loading...'}</Text> */}
       </View>
     );
   };

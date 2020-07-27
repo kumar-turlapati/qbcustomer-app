@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -14,6 +14,7 @@ import {
   WishListIcon,
 } from '../../icons/Icons';
 import {theme} from '../../theme/theme';
+import {ShoppingCartContext} from '../context/ShoppingCart';
 
 const {height, width} = Dimensions.get('window');
 
@@ -93,6 +94,8 @@ export default CommonHeader = ({
   isWishList,
   onPressWishListIcon,
 }) => {
+  const {cartItems} = useContext(ShoppingCartContext);
+
   const renderHeader = () => {
     return (
       <View style={styles.headerStyles}>
@@ -152,15 +155,19 @@ export default CommonHeader = ({
               </TouchableOpacity>
             </View>
           )}
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              onPressRightButton();
-            }}>
-            <View style={styles.iconViewStyles}>
-              <CartIcon style={styles.iconStyles} />
-            </View>
-          </TouchableOpacity>
+
+          {cartItems && cartItems.length > 0 && (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                console.log(onPressRightButton, 'in commonheader....');
+                onPressRightButton();
+              }}>
+              <View style={styles.iconViewStyles}>
+                <CartIcon style={styles.iconStyles} />
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );

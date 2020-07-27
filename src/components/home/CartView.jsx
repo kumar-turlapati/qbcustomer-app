@@ -129,10 +129,10 @@ export const CartView = ({route, navigation}) => {
     businessLocations,
   } = useContext(ShoppingCartContext);
 
-  console.log(
-    businessLocations,
-    'businesslocations in cartview component.....',
-  );
+  // console.log(
+  //   businessLocations,
+  //   'businesslocations in cartview component.....',
+  // );
 
   // const productLocationKey = route.params.productLocation;
 

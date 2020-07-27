@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -164,7 +164,9 @@ export const ProductDetails = ({route, navigation}) => {
         onPressLeftButton={() => {
           navigation.goBack();
         }}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => {
+          navigation.push(ScreenNamesCustomer.CARTVIEW);
+        }}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {}}
