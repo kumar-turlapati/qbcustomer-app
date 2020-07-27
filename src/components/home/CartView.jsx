@@ -18,7 +18,7 @@ import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {ShoppingCartContext} from '../context/ShoppingCart';
 import {cdnUrl, clientCode} from '../../../qbconfig';
 import {Loader} from '../Loader';
-// import {AppCustomerNavigator} from '../navigationController/Navigation';
+import _find from 'lodash/find';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -114,48 +114,23 @@ const styles = StyleSheet.create({
   },
 });
 
-// const cartItems = [
-//   {
-//     id: 1,
-//     icon: <Product style={{height: 95, width: 90}} />,
-//     title: 'Grey Solid Suit 1',
-//     price: '₹2,754',
-//     quantity: 1,
-//     discount: '',
-//     inStock: true,
-//   },
-//   {
-//     id: 2,
-//     icon: <Product style={{height: 95, width: 90}} />,
-//     title: 'Grey Solid Suit 2',
-//     price: '₹2,754',
-//     quantity: 1,
-//     discount: '50% OFF',
-//     inStock: true,
-//   },
-//   {
-//     id: 3,
-//     icon: <Product style={{height: 95, width: 90}} />,
-//     title: 'Grey Solid Suit 3',
-//     price: '₹2,754',
-//     quantity: 1,
-//     discount: '',
-//     inStock: false,
-//   },
-// ];
-
 export const CartView = ({route, navigation}) => {
   const [couponText, setCouponText] = useState('');
   const [showLoader, setShowLoader] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const {fetchCart, cartItems, removeItemFromCart, loading} = useContext(
-    ShoppingCartContext,
-  );
+  const [alertMessage, setShowAlertMessage] = useState('');
+  const {
+    fetchCart,
+    cartItems,
+    removeItemFromCart,
+    loading,
+    updateCart,
+  } = useContext(ShoppingCartContext);
 
   const productLocationKey = route.params.productLocation;
 
-  // console.log(cartItems.length, 'cartItems in CartView.jsx');
+  console.log(cartItems.length, 'cartItems in CartView.jsx');
 
   useEffect(() => {
     fetchCart();
@@ -194,19 +169,52 @@ export const CartView = ({route, navigation}) => {
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
         {index === 0 && <View style={{height: 16}} />}
         <View style={styles.rowStyles}>
-          {/* {item.icon} */}
           <Image source={{uri: imageUrl}} style={{height: 95, width: 90}} />
           <View style={{marginLeft: 18, marginTop: 17}}>
             <Text style={styles.rowTextStyles}> {item.itemName}</Text>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.rowSubViewStyles}>
-                <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  disabled={loading}
+                  onPress={() => {
+                    const itemQty = parseInt(item.itemQty, 10);
+                    if (itemQty > 1) {
+                      const cartItem = {
+                        cartItems: [
+                          {
+                            cartItemCode: item.cartItemID,
+                            itemQty: parseInt(item.itemQty, 10) - 1,
+                          },
+                        ],
+                      };
+                      updateCart(cartItem);
+                    } else {
+                      setShowAlert(true);
+                      setShowAlertMessage(
+                        'Minimum one unit is required to place the Order. If you wish to delete the item from Cart click on Bin icon.',
+                      );
+                    }
+                  }}>
                   <Text style={{paddingLeft: 8, paddingTop: 4}}>-</Text>
                 </TouchableOpacity>
-                <Text style={{paddingLeft: 4, paddingTop: 4}}>
+                <TextInput style={{paddingLeft: 4, paddingTop: 4}}>
                   {parseInt(item.itemQty, 10).toFixed(0)}
-                </Text>
-                <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+                </TextInput>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  disabled={loading}
+                  onPress={() => {
+                    const cartItem = {
+                      cartItems: [
+                        {
+                          cartItemCode: item.cartItemID,
+                          itemQty: parseInt(item.itemQty, 10) + 1,
+                        },
+                      ],
+                    };
+                    updateCart(cartItem);
+                  }}>
                   <Text style={{paddingRight: 8, paddingTop: 4}}>+</Text>
                 </TouchableOpacity>
               </View>
@@ -349,10 +357,10 @@ export const CartView = ({route, navigation}) => {
         buttonTitle={'PLACE ORDER'}
         onPressButton={() => {
           setShowLoader(true);
-          setShowSuccessAlert(false);
+          // setShowSuccessAlert(false);
           setShowAlert(true);
           setTimeout(() => {
-            setShowSuccessAlert(true);
+            // setShowSuccessAlert(true);
             setShowLoader(false);
           }, 1000);
         }}
@@ -370,16 +378,12 @@ export const CartView = ({route, navigation}) => {
   const renderAlert = () => {
     return (
       <CommonAlertView
-        showLoader={showLoader}
-        showSuceessPopup={showSuccessAlert}
+        showLoader={false}
+        showSuceessPopup
         onPressSuccessButton={() => {
-          setShowSuccessAlert(false);
           setShowAlert(false);
-          navigation.navigate(ScreenNamesCustomer.HOME);
         }}
-        successTitle={
-          'Sorry, Order failed due technical reason. Please try again after some time'
-        }
+        successTitle={alertMessage}
       />
     );
   };

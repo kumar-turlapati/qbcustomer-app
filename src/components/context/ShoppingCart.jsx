@@ -77,9 +77,35 @@ export const ShoppingCartProvider = (props) => {
     }
   };
 
-  const updateCart = async () => {
+  const updateCart = async (itemDetails) => {
+    setLoading(true);
+    console.log(itemDetails, 'itemDetails in updateCart');
     try {
-    } catch (e) {}
+      await axios
+        .put(
+          UPDATE_ITEM_TO_CART.URL(uuid),
+          {
+            ...itemDetails,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          setLoading(false);
+          if (apiResponse.data.status === 'success') {
+            setLoading(false);
+            fetchCart();
+          }
+        })
+        .catch((error) => {
+          const errorText = error.response.data.errortext;
+          setLoading(false);
+          setApiError(true);
+          setApiErrorText(errorText);
+        });
+    } catch (e) {
+      setLoading(false);
+      setApiErrorText('Network error. Please try again.');
+    }
   };
 
   const removeItemFromCart = async (itemDetails) => {

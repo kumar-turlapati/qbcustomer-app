@@ -131,33 +131,11 @@ const styles = StyleSheet.create({
   },
 });
 
-// const filterOptions = [
-//   {
-//     id: 1,
-//     icon: <Product />,
-//   },
-//   {
-//     id: 2,
-//     icon: <Product />,
-//   },
-//   {
-//     id: 3,
-//     icon: <Product />,
-//   },
-//   {
-//     id: 4,
-//     icon: <Product />,
-//   },
-// ];
-
 export const ProductDetails = ({route, navigation}) => {
-  // const [arrayObjects, setArrayObjects] = useState(filterOptions);
   const [orderQty, setOrderQty] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
-  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [disableBuyNow, setDisableBuyNow] = useState(true);
 
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
@@ -166,17 +144,13 @@ export const ProductDetails = ({route, navigation}) => {
   const productCode = route.params.productDetails.itemID;
   const productDescription = route.params.productDetails.itemDescription;
 
-  const {
-    addToCart,
-    loading: apiLoading,
-    apiError,
-    apiErrorText,
-    cartItems,
-  } = useContext(ShoppingCartContext);
+  const {addToCart, loading: apiLoading, cartItems} = useContext(
+    ShoppingCartContext,
+  );
   const buttonDisable = parseInt(orderQty, 10) <= 0;
 
   useEffect(() => {
-    if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
+    // if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
   }, [cartItems]);
 
   // console.log(slideIndex, productImages.length, '---------');
@@ -376,13 +350,14 @@ export const ProductDetails = ({route, navigation}) => {
           </View>
           <TouchableOpacity
             activeOpacity={1}
-            style={[styles.buyNowStyles, {opacity: disableBuyNow ? 0.5 : 1}]}
+            style={[styles.buyNowStyles]}
             onPress={() => {
               navigation.push(ScreenNamesCustomer.CARTVIEW, {
                 productLocation: productLocationKey,
               });
             }}
-            disabled={disableBuyNow}>
+            // disabled={disableBuyNow}
+          >
             <Text style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
               BUY NOW
             </Text>
