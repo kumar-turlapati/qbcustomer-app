@@ -126,11 +126,17 @@ export const CartView = ({route, navigation}) => {
     removeItemFromCart,
     loading,
     updateCart,
+    businessLocations,
   } = useContext(ShoppingCartContext);
 
-  const productLocationKey = route.params.productLocation;
+  console.log(
+    businessLocations,
+    'businesslocations in cartview component.....',
+  );
 
-  console.log(cartItems.length, 'cartItems in CartView.jsx');
+  // const productLocationKey = route.params.productLocation;
+
+  // console.log(cartItems.length, 'cartItems in CartView.jsx');
 
   useEffect(() => {
     fetchCart();
@@ -161,9 +167,21 @@ export const CartView = ({route, navigation}) => {
   const renderRow = (item, index) => {
     // console.log(item, 'item......');
     // console.log(imageUrl, '---------------', item);
-    const imageUrl = encodeURI(
-      `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
+    // const imageUrl = encodeURI(
+    //   `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
+    // );
+    // console.log(businessLocations, '.................................', item);
+    const imageLocation = _find(
+      businessLocations,
+      (locationDetails) =>
+        parseInt(locationDetails.locationID, 10) ===
+        parseInt(item.locationID, 10),
     );
+    const imageUrl = imageLocation
+      ? encodeURI(
+          `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
+        )
+      : '';
     return (
       <View>
         <View style={theme.viewStyles.rowTopSeperatorStyle} />

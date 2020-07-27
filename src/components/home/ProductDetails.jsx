@@ -149,9 +149,9 @@ export const ProductDetails = ({route, navigation}) => {
   );
   const buttonDisable = parseInt(orderQty, 10) <= 0;
 
-  useEffect(() => {
-    // if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
-  }, [cartItems]);
+  // useEffect(() => {
+  //   // if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
+  // }, [cartItems]);
 
   // console.log(slideIndex, productImages.length, '---------');
   // console.log(addToCart());
@@ -352,9 +352,7 @@ export const ProductDetails = ({route, navigation}) => {
             activeOpacity={1}
             style={[styles.buyNowStyles]}
             onPress={() => {
-              navigation.push(ScreenNamesCustomer.CARTVIEW, {
-                productLocation: productLocationKey,
-              });
+              navigation.push(ScreenNamesCustomer.CARTVIEW);
             }}
             // disabled={disableBuyNow}
           >

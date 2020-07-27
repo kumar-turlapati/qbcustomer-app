@@ -11,6 +11,7 @@ export const ShoppingCartProvider = (props) => {
   const [apiErrorText, setApiErrorText] = useState('');
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const [cartItems, setCartItems] = useState([]);
+  const [businessLocations, setBusinessLocations] = useState([]);
 
   const {
     ADD_ITEM_TO_CART,
@@ -19,7 +20,7 @@ export const ShoppingCartProvider = (props) => {
     GET_ITEMS_FROM_CART,
   } = restEndPoints;
 
-  const fetchCart = async (stringFunction) => {
+  const fetchCart = async () => {
     setLoading(true);
     // console.log(
     //   'in fetch cart----------------------------------------------------------',
@@ -31,14 +32,23 @@ export const ShoppingCartProvider = (props) => {
         .get(GET_ITEMS_FROM_CART.URL(uuid), {headers: requestHeaders})
         .then((apiResponse) => {
           setLoading(false);
+          // console.log(
+          //   apiResponse.data.response.businessLocations,
+          //   'business Locations',
+          // );
           if (apiResponse.data.status === 'success') {
-            setCartItems([...apiResponse.data.response]);
+            setCartItems([...apiResponse.data.response.cartItems]);
+            setBusinessLocations([
+              ...apiResponse.data.response.businessLocations,
+            ]);
           } else {
             setCartItems([]);
+            setBusinessLocations([]);
           }
         })
         .catch((error) => {
-          console.log(error, 'hello world....');
+          // console.log(error, 'hello world....');
+          setApiErrorText('Something went wrong. Please try again.');
           setLoading(false);
         });
     } catch (e) {
@@ -132,7 +142,7 @@ export const ShoppingCartProvider = (props) => {
           setLoading(false);
           setApiError(true);
           setApiErrorText(errorText);
-          fetchCart('from removeItemFromCart....');
+          fetchCart();
         });
     } catch (e) {
       setLoading(false);
@@ -150,8 +160,9 @@ export const ShoppingCartProvider = (props) => {
         addToCart,
         updateCart,
         removeItemFromCart,
-        cartItems,
         fetchCart,
+        cartItems,
+        businessLocations,
         loading,
         apiError,
         apiErrorText,
