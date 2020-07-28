@@ -11,6 +11,9 @@ import {CheckIcon, UnCheckIcon} from '../../icons/Icons';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import {Slider} from 'react-native-elements';
+import _findIndex from 'lodash/findIndex';
+import _uniq from 'lodash/uniq';
+import _remove from 'lodash/remove';
 
 const {height, width} = Dimensions.get('window');
 
@@ -85,52 +88,94 @@ const styles = StyleSheet.create({
   },
 });
 
-const filterOptions = [
-  {
-    title: 'CATEGORY',
-    data: [
-      {
-        id: 1,
-        name: 'Suiting',
-        selected: false,
-      },
-      {
-        id: 2,
-        name: 'Shirting',
-        selected: false,
-      },
-      {
-        id: 3,
-        name: 'Shirts',
-        selected: false,
-      },
-    ],
-  },
-  {
-    title: 'BRANDS',
-    data: [
-      {
-        id: 1,
-        name: 'RAYMONDS',
-        selected: false,
-      },
-      {
-        id: 2,
-        name: 'LINEN',
-        selected: false,
-      },
-      {
-        id: 3,
-        name: 'MINSITER WHITE',
-        selected: false,
-      },
-    ],
-  },
-];
+export const Filter = ({route, navigation}) => {
+  const {
+    catalogBrands,
+    catalogCategories,
+    setBrandSelected,
+    setCategorySelected,
+    pricing,
+    setPricingFilterValue,
+  } = route.params;
 
-export const Filter = ({navigation}) => {
-  const [arrayObjects, setArrayObjects] = useState(filterOptions);
+  // console.log(setBrandSelected, setCategorySelected);
+
+  const filterData = [
+    {
+      title: 'CATEGORY',
+      data: catalogCategories,
+    },
+    {
+      title: 'BRANDS',
+      data: catalogBrands,
+    },
+  ];
+  let selectedBrandStates = new Array();
+  let selectedCategoryStates = new Array();
+  catalogBrands.map((brandName) => {
+    selectedBrandStates.push({brandName: brandName, status: false});
+  });
+  catalogCategories.map((categoryName) => {
+    selectedCategoryStates.push({categoryName: categoryName, status: false});
+  });
+
+  const [filterOptions] = useState(filterData);
   const [sliderValue, setSliderValue] = useState(0);
+  const [brandStates, setBrandStates] = useState(selectedBrandStates);
+  const [categoryStates, setCategoryStates] = useState(selectedCategoryStates);
+  const [brandsSelected, setBrandsSelected] = useState([]);
+  const [categoriesSelected, setCategoriesSelected] = useState([]);
+
+  // console.log(brandStates, 'brand states..............');
+
+  const selectedBrandFilter = (brandName) => {
+    const currentValue = _findIndex(
+      brandStates,
+      (brandDetails) => brandDetails.brandName === brandName,
+    );
+    const newValues = [...brandStates];
+    newValues[currentValue] = {
+      ...newValues[currentValue],
+      status: !newValues[currentValue].status,
+    };
+    setBrandStates([...newValues]);
+
+    if (!newValues[currentValue].status) {
+      _remove(
+        brandsSelected,
+        (brandNameRemove) => brandNameRemove === brandName,
+      );
+    } else {
+      setBrandsSelected([...brandsSelected, brandName]);
+    }
+  };
+
+  const selectedCategoryFilter = (categoryName) => {
+    const currentValue = _findIndex(
+      categoryStates,
+      (categoryDetails) => categoryDetails.categoryName === categoryName,
+    );
+    const newValues = [...categoryStates];
+    newValues[currentValue] = {
+      ...newValues[currentValue],
+      status: !newValues[currentValue].status,
+    };
+    setCategoryStates([...newValues]);
+    if (!newValues[currentValue].status) {
+      _remove(
+        categoriesSelected,
+        (categoryRemove) => categoryRemove === categoryName,
+      );
+    } else {
+      setCategoriesSelected([...categoriesSelected, categoryName]);
+    }
+  };
+
+  // console.log(
+  //   route.params.catalogBrands,
+  //   route.params.catalogCategories,
+  //   'params in filter.........',
+  // );
 
   const renderHeader = () => {
     return (
@@ -152,15 +197,24 @@ export const Filter = ({navigation}) => {
           activeOpacity={1}
           style={{width: 30, height: 30}}
           onPress={() => {
-            console.log('arrayObjects', title);
-          }}>
-          {item.selected ? (
+            title === 'BRANDS'
+              ? selectedBrandFilter(item)
+              : selectedCategoryFilter(item);
+          }}
+          value={item}>
+          {title === 'BRANDS' ? (
+            brandStates[index].status ? (
+              <CheckIcon style={styles.iconHeartStyle} />
+            ) : (
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
+          ) : categoryStates[index].status ? (
             <CheckIcon style={styles.iconHeartStyle} />
           ) : (
             <UnCheckIcon style={styles.iconHeartStyle} />
           )}
         </TouchableOpacity>
-        <Text style={styles.rowTextStyle}>{item.name}</Text>
+        <Text style={styles.rowTextStyle}>{item}</Text>
       </View>
     );
   };
@@ -169,7 +223,7 @@ export const Filter = ({navigation}) => {
     return (
       <View style={{height: 400}}>
         <SectionList
-          sections={arrayObjects}
+          sections={filterOptions}
           keyExtractor={(item, index) => item + index}
           renderItem={({item, index, section: {title}}) =>
             renderRow(item, index, title)
@@ -201,19 +255,20 @@ export const Filter = ({navigation}) => {
           ]}>
           PRICE RANGE
         </Text>
-        <Text style={[styles.rowTextStyle, {marginTop: 11}]}>₹0 - ₹10,000</Text>
+        <Text style={[styles.rowTextStyle, {marginTop: 11}]}>
+          ₹{pricing.minimum} - ₹{pricing.maximum}
+        </Text>
         <Slider
           value={sliderValue}
           onValueChange={(value) => {
             setSliderValue(value);
-            console.log('value', value);
           }}
           thumbTintColor={theme.colors.SLIDER_THUMB_COLOR}
           style={{
             marginVertical: 5,
           }}
-          minimumValue={0}
-          maximumValue={10000}
+          minimumValue={pricing.minimum}
+          maximumValue={pricing.maximum}
         />
       </View>
     );
@@ -244,6 +299,16 @@ export const Filter = ({navigation}) => {
               },
             ]}
             onPress={() => {
+              const brands = _uniq(brandsSelected);
+              const categories = _uniq(categoriesSelected);
+              // console.log(
+              //   brands.join(),
+              //   categories.join(),
+              //   '+++++++++++++++++++++',
+              // );
+              setBrandSelected(brands.join());
+              setCategorySelected(categories.join());
+              setPricingFilterValue(sliderValue.toFixed(2));
               navigation.goBack();
             }}>
             <Text style={[styles.buttonTextStyle, {color: theme.colors.WHITE}]}>

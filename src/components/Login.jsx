@@ -63,6 +63,7 @@ export const Login = ({navigation}) => {
   const [showOTPView, setShowOTPView] = useState(false);
   const [showLoginButton, setShowLoginButton] = useState(false);
   const [showOtpButton, setShowOTPButton] = useState(true);
+  const [disableResendOtp, setDisableResendOtp] = useState(false);
   const [uuid, setUuid] = useState('');
   const [apiErrorText, setApiErrorText] = useState('');
   const {LOGIN, RESEND_OTP, GET_TOKEN} = restEndPoints;
@@ -117,6 +118,36 @@ export const Login = ({navigation}) => {
         });
     } catch {
       setLoading(false);
+      setApiErrorText('Network error. Please try again after some time.');
+    }
+  };
+
+  const resendOtp = async () => {
+    setLoading(true);
+    try {
+      await axios
+        .post(
+          RESEND_OTP.URL,
+          {
+            uuid: uuid,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          setLoading(false);
+          // console.log(apiResponse, 'apiResponse Resend Otp');
+          // if (apiResponse.data.status === 'success') {
+          // }
+        })
+        .catch((error) => {
+          // console.log(error, 'error in Resend Otp');
+          const errorText = error.response.data.errortext;
+          setApiErrorText(errorText);
+          setLoading(false);
+        });
+    } catch (e) {
+      setLoading(false);
+      // console.log(e, 'error in Resend Otp Catch block');
       setApiErrorText('Network error. Please try again after some time.');
     }
   };
@@ -302,13 +333,19 @@ export const Login = ({navigation}) => {
   };
 
   const renderResendOTPView = () => {
+    console.log('disableResendOtp', disableResendOtp);
     return (
       <>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            console.log('resend otp cliced');
-          }}>
+            setDisableResendOtp(true);
+            resendOtp();
+            setTimeout(() => {
+              setDisableResendOtp(false);
+            }, 5000);
+          }}
+          disabled={disableResendOtp}>
           <View
             style={{
               flexDirection: 'row',
@@ -326,7 +363,7 @@ export const Login = ({navigation}) => {
                   marginTop: 0,
                 },
               ]}>
-              Didn’t receive OTP?{' '}
+              Didn't receive OTP?{' '}
             </Text>
             <Text
               style={[

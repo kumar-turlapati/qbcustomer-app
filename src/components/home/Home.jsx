@@ -36,6 +36,7 @@ import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
 import _find from 'lodash/find';
+import _orderBy from 'lodash/orderBy';
 
 const {height, width} = Dimensions.get('window');
 
@@ -384,13 +385,18 @@ const clothes = [
 export const Home = ({route, navigation}) => {
   // const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
-  const [lowToHightSelected, setLowToHightSelected] = useState(true);
+  const [lowToHighSelected, setLowToHighSelected] = useState(true);
+  const [highToLowSelected, setHighToLowSelected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [defaultCatalogDetails, setDefaultCatalogDetails] = useState([]);
   const [catalogBrands, setCatalogBrands] = useState([]);
   const [catalogCategories, setCatalogCategories] = useState([]);
+  const [brandSelected, setBrandSelected] = useState('');
+  const [categorySelected, setCategorySelected] = useState('');
   const [catalogItems, setCatalogItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
+  const [pricing, setPricing] = useState({});
+  const [pricingFilterValue, setPricingFilterValue] = useState(0);
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
   const accessToken = getAccessToken();
@@ -399,6 +405,8 @@ export const Home = ({route, navigation}) => {
   // console.log(route.params, 'in Home Screen');
   // const catalogCode = route.params;
   // console.log('default catalogcode$$$$$$$$$$$$$$', navigation.params);
+  // console.log(brandSelected, categorySelected, '--------------------------');
+  // console.log(pricingFilterValue, 'pricing filter value...........');
 
   const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
     setLoading(true);
@@ -413,7 +421,7 @@ export const Home = ({route, navigation}) => {
         })
         .catch((error) => {
           const errorText = error.response.data.errortext;
-          console.log(errorText);
+          // console.log(errorText);
         });
     } catch {
       setLoading(false);
@@ -439,10 +447,22 @@ export const Home = ({route, navigation}) => {
         })
         .catch((error) => {
           const errorText = error.response.data.errortext;
-          console.log(errorText);
+          // console.log(errorText);
         });
     } catch {
       setLoading(false);
+    }
+  };
+
+  const sortItems = (orderBy = '') => {
+    // console.log(orderBy, 'orderBy.........');
+    if (orderBy !== '') {
+      const sortedItems = _orderBy(
+        catalogItems,
+        [(catalogItems) => parseInt(catalogItems.itemRate, 10)],
+        [orderBy],
+      );
+      setCatalogItems([...sortedItems]);
     }
   };
 
@@ -467,10 +487,26 @@ export const Home = ({route, navigation}) => {
         _map(defaultCatalogDetails.catalogItems, 'categoryName'),
       );
       const catalogItems = defaultCatalogDetails.catalogItems;
+      const catalogItemsSorted = _orderBy(
+        catalogItems,
+        [(catalogItems) => parseInt(catalogItems.itemRate, 10)],
+        ['asc'],
+      );
+      const maxItemPrice = Math.max(
+        ...catalogItemsSorted.map((o) => parseInt(o.itemRate)),
+        1,
+      );
+      const minItemPrice = Math.min(
+        ...catalogItemsSorted.map((o) => parseInt(o.itemRate)),
+      );
+      // console.log(minItemPrice, '-----------------');
+      // const maxItemPrice = 10000;
+      // const minItemPrice = 0;
       setCatalogBrands(catalogBrands);
       setCatalogCategories(catalogCategories);
-      setCatalogItems(catalogItems);
+      setCatalogItems(catalogItemsSorted);
       setBusinessLocations(defaultCatalogDetails.businessLocations);
+      setPricing({minimum: minItemPrice, maximum: maxItemPrice});
     }
   }, [defaultCatalogDetails]);
 
@@ -485,7 +521,17 @@ export const Home = ({route, navigation}) => {
         isProduct={true}
         onPressFilterIcon={() => {
           setShowSortView(false);
-          navigation.push(ScreenNamesCustomer.FILTER);
+          navigation.push(ScreenNamesCustomer.FILTER, {
+            catalogBrands: catalogBrands,
+            setBrandSelected: (brandSelected) =>
+              setBrandSelected(brandSelected),
+            catalogCategories: catalogCategories,
+            setCategorySelected: (categorySelected) =>
+              setCategorySelected(categorySelected),
+            pricing: pricing,
+            setPricingFilterValue: (pricingFilterValue) =>
+              setPricingFilterValue(pricingFilterValue),
+          });
         }}
         onPressSortIcon={() => {
           setShowSortView(!showSortView);
@@ -495,6 +541,32 @@ export const Home = ({route, navigation}) => {
   };
 
   const renderRow = (productDetails) => {
+    let brandsSelectedArray = [];
+    let categoriesSelectedArray = [];
+    const minimumValue = pricing.minimum;
+    if (brandSelected.length > 0)
+      brandsSelectedArray = brandSelected.split(',');
+    if (categorySelected.length > 0)
+      categoriesSelectedArray = categorySelected.split(',');
+    const isBrandFiltered =
+      brandsSelectedArray.length > 0
+        ? brandsSelectedArray.includes(productDetails.brandName)
+        : true;
+    const isCategoryFiltered =
+      categoriesSelectedArray.length > 0
+        ? categoriesSelectedArray.includes(productDetails.categoryName)
+        : true;
+    const isPricingFilterValidated =
+      parseFloat(pricingFilterValue) > 0
+        ? parseFloat(productDetails.itemRate) >= minimumValue &&
+          parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
+        : true;
+    // console.log(
+    //   isPricingFilterValidated,
+    //   pricingFilterValue,
+    //   parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue),
+    //   productDetails.itemRate,
+    // );
     const imageLocation = _find(
       businessLocations,
       (locationDetails) =>
@@ -503,7 +575,7 @@ export const Home = ({route, navigation}) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${productDetails.images[0].imageName}`,
     );
-    return (
+    return isCategoryFiltered && isBrandFiltered && isPricingFilterValidated ? (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
@@ -551,6 +623,8 @@ export const Home = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
+    ) : (
+      <></>
     );
   };
 
@@ -612,9 +686,14 @@ export const Home = ({route, navigation}) => {
                   alignItems: 'center',
                 }}
                 onPress={() => {
-                  setLowToHightSelected(false);
+                  // console.log(highToLowSelected);
+                  setHighToLowSelected(!highToLowSelected);
+                  if (!highToLowSelected) {
+                    sortItems('desc');
+                    setLowToHighSelected(false);
+                  }
                 }}>
-                {!lowToHightSelected ? (
+                {highToLowSelected ? (
                   <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
                   <UnCheckIcon style={{width: 16, height: 16}} />
@@ -646,9 +725,13 @@ export const Home = ({route, navigation}) => {
                   alignItems: 'center',
                 }}
                 onPress={() => {
-                  setLowToHightSelected(true);
+                  setLowToHighSelected(!lowToHighSelected);
+                  if (!lowToHighSelected) {
+                    sortItems('asc');
+                    setHighToLowSelected(false);
+                  }
                 }}>
-                {lowToHightSelected ? (
+                {lowToHighSelected ? (
                   <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
                   <UnCheckIcon style={{width: 16, height: 16}} />
