@@ -150,7 +150,9 @@ export const Catalogue = ({navigation}) => {
         onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => {}}
+        onPressWishListIcon={() => {
+          navigation.push(ScreenNamesCustomer.WISHLIST);
+        }}
       />
     );
   };

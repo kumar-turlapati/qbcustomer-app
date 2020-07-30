@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -16,8 +16,15 @@ import {CrossIcon} from '../../icons/Icons';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {ShoppingCartContext} from '../context/ShoppingCart';
-import {cdnUrl, clientCode} from '../../../qbconfig';
+import {
+  cdnUrl,
+  clientCode,
+  restEndPoints,
+  requestHeaders,
+} from '../../../qbconfig';
 import CommonAlertView from '../UI/CommonAlertView';
+import useAsyncStorage from '../customHooks/async';
+import axios from 'axios';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -136,25 +143,99 @@ export const ProductDetails = ({route, navigation}) => {
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-
+  const [isItemInWishlist, setIsItemInWishlist] = useState(
+    route.params.isItemInWishlist,
+  );
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [alertText, setAlertText] = useState('');
+  const [showAlertWishList, setShowAlertWishList] = useState(false);
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
   const productRate = route.params.productDetails.itemRate;
   const productName = route.params.productDetails.itemName;
   const productCode = route.params.productDetails.itemID;
   const productDescription = route.params.productDetails.itemDescription;
+  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
 
-  const {addToCart, loading: apiLoading, cartItems} = useContext(
+  // console.log(route.params.isItemInWishlist);
+
+  const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
     ShoppingCartContext,
   );
+
+  useEffect(() => {
+    if (apiError) {
+      showAlert(true);
+      setAlertText(apiErrorText);
+    }
+  }, [apiError]);
+
   const buttonDisable = parseInt(orderQty, 10) <= 0;
 
-  // useEffect(() => {
-  //   // if (cartItems && cartItems.length > 0) setDisableBuyNow(false);
-  // }, [cartItems]);
-
-  // console.log(slideIndex, productImages.length, '---------');
-  // console.log(addToCart());
+  const manageItemInWishlist = async (itemID, wishlistState) => {
+    setWishlistLoading(true);
+    setShowAlertWishList(true);
+    if (wishlistState) {
+      // console.log('in delete state', wishlistState);
+      // delete the wishlist item
+      try {
+        await axios
+          .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
+            headers: requestHeaders,
+            data: {wishListItems: [{wlItemCode: itemID}]},
+          })
+          .then((apiResponse) => {
+            // console.log(apiResponse.data.status);
+            setWishlistLoading(false);
+            if (apiResponse.data.status === 'success') {
+              setAlertText('Product removed from Wishlist successfully :)');
+              setIsItemInWishlist(false);
+            }
+          })
+          .catch((error) => {
+            setAlertText('Oops, something went wrong.');
+            setWishlistLoading(false);
+          });
+      } catch (e) {
+        // console.log(e);
+        setWishlistLoading(false);
+        setAlertText('Network error. Please try again.');
+      }
+    } else {
+      // add wishlist item
+      // console.log('in add state', wishlistState);
+      try {
+        await axios
+          .post(
+            ADD_ITEM_TO_WISHLIST.URL(uuid),
+            {
+              wishListItems: [{itemCode: itemID}],
+            },
+            {headers: requestHeaders},
+          )
+          .then((apiResponse) => {
+            setWishlistLoading(false);
+            if (apiResponse.data.status === 'success') {
+              setIsItemInWishlist(true);
+              setAlertText('Product added to Wishlist successfully :)');
+            }
+          })
+          .catch((error) => {
+            setAlertText('Oops, something went wrong.');
+            // console.log(error, 'error text.............');
+            // setApiError(true);
+            // setApiErrorText(errorText);
+            // console.log(errorText);
+          });
+      } catch (e) {
+        setWishlistLoading(false);
+        setAlertText('Network error. Please try again.');
+        // console.log(e);
+        // setApiErrorText('Network error. Please try again.');
+      }
+    }
+  };
 
   const renderHeader = () => {
     return (
@@ -168,8 +249,11 @@ export const ProductDetails = ({route, navigation}) => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
         }}
         isProduct={false}
-        isWishList={true}
-        onPressWishListIcon={() => {}}
+        isWishList
+        isItemInWishlist={isItemInWishlist}
+        onPressWishListIcon={() =>
+          manageItemInWishlist(productCode, isItemInWishlist)
+        }
       />
     );
   };
@@ -457,10 +541,19 @@ export const ProductDetails = ({route, navigation}) => {
           showLoader={apiLoading}
           showSuceessPopup={!apiLoading}
           onPressSuccessButton={() => {
-            // setShowSuccessAlert(false);
             setShowAlert(false);
           }}
-          successTitle="Item added to Cart successfully."
+          successTitle="Product added to Cart successfully."
+        />
+      )}
+      {showAlertWishList && (
+        <CommonAlertView
+          showLoader={wishlistLoading}
+          showSuceessPopup={!wishlistLoading}
+          onPressSuccessButton={() => {
+            setShowAlertWishList(false);
+          }}
+          successTitle={alertText}
         />
       )}
     </ScrollView>

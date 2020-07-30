@@ -159,7 +159,9 @@ export const CartView = ({route, navigation}) => {
         onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => {}}
+        onPressWishListIcon={() => {
+          navigation.push(ScreenNamesCustomer.WISHLIST);
+        }}
       />
     );
   };
@@ -196,6 +198,7 @@ export const CartView = ({route, navigation}) => {
                   activeOpacity={1}
                   disabled={loading}
                   onPress={() => {
+                    setShowAlert(true);
                     const itemQty = parseInt(item.itemQty, 10);
                     if (itemQty > 1) {
                       const cartItem = {
@@ -207,8 +210,8 @@ export const CartView = ({route, navigation}) => {
                         ],
                       };
                       updateCart(cartItem);
+                      setShowAlertMessage('Qty. updated successfully');
                     } else {
-                      setShowAlert(true);
                       setShowAlertMessage(
                         'Minimum one unit is required to place the Order. If you wish to delete the item from Cart click on Bin icon.',
                       );
@@ -223,6 +226,7 @@ export const CartView = ({route, navigation}) => {
                   activeOpacity={1}
                   disabled={loading}
                   onPress={() => {
+                    setShowAlert(true);
                     const cartItem = {
                       cartItems: [
                         {
@@ -231,6 +235,7 @@ export const CartView = ({route, navigation}) => {
                         },
                       ],
                     };
+                    setShowAlertMessage('Qty. updated successfully');
                     updateCart(cartItem);
                   }}>
                   <Text style={{paddingRight: 8, paddingTop: 4}}>+</Text>
@@ -240,10 +245,12 @@ export const CartView = ({route, navigation}) => {
                 activeOpacity={1}
                 style={styles.touchableViewStyles}
                 onPress={() => {
+                  setShowAlert(true);
                   const cartItems = {
                     cartItems: [{cartItemCode: item.cartItemID}],
                   };
                   removeItemFromCart(cartItems);
+                  setShowAlertMessage('Item removed from Cart successfully.');
                 }}>
                 <DeleteIcon style={{width: 16, height: 16, marginTop: 15}} />
               </TouchableOpacity>
@@ -396,8 +403,8 @@ export const CartView = ({route, navigation}) => {
   const renderAlert = () => {
     return (
       <CommonAlertView
-        showLoader={false}
-        showSuceessPopup
+        showLoader={loading}
+        showSuceessPopup={!loading}
         onPressSuccessButton={() => {
           setShowAlert(false);
         }}
@@ -406,9 +413,7 @@ export const CartView = ({route, navigation}) => {
     );
   };
 
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <ScrollView
       style={styles.container}
       bounces={false}

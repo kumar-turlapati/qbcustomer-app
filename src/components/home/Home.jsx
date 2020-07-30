@@ -37,6 +37,9 @@ import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
 import _find from 'lodash/find';
 import _orderBy from 'lodash/orderBy';
+import _remove from 'lodash/remove';
+import useAsyncStorage from '../customHooks/async';
+import {useIsFocused} from '@react-navigation/native';
 
 const {height, width} = Dimensions.get('window');
 
@@ -123,264 +126,264 @@ const styles = StyleSheet.create({
   },
 });
 
-const clothes = [
-  {
-    id: 1,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth1
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 2,
-    name: 'Brown Suit Clothing',
-    originalPrice: '2,500',
-    discount: '',
-    specialPrice: '',
-    selected: false,
-    icon: (
-      <Cloth2
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 3,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,500',
-    discount: '',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth3
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 4,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,574',
-    selected: false,
-    icon: (
-      <Cloth4
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 5,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth1
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 6,
-    name: 'Brown Suit Clothing',
-    originalPrice: '2,500',
-    discount: '',
-    specialPrice: '',
-    selected: false,
-    icon: (
-      <Cloth2
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 7,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,500',
-    discount: '',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth3
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 8,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,574',
-    selected: false,
-    icon: (
-      <Cloth4
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 9,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth1
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 10,
-    name: 'Brown Suit Clothing',
-    originalPrice: '2,500',
-    discount: '',
-    specialPrice: '',
-    selected: false,
-    icon: (
-      <Cloth2
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 11,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,500',
-    discount: '',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth3
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 12,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,574',
-    selected: false,
-    icon: (
-      <Cloth4
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 13,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth1
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 14,
-    name: 'Brown Suit Clothing',
-    originalPrice: '2,500',
-    discount: '',
-    specialPrice: '',
-    selected: false,
-    icon: (
-      <Cloth2
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 15,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,500',
-    discount: '',
-    specialPrice: '2,754',
-    selected: false,
-    icon: (
-      <Cloth3
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-  {
-    id: 16,
-    name: 'Grey Solid Suit  Clothing',
-    originalPrice: '3,000',
-    discount: '20% off',
-    specialPrice: '2,574',
-    selected: false,
-    icon: (
-      <Cloth4
-        style={{
-          width: width / 2 - 24,
-          height: 164,
-        }}
-      />
-    ),
-  },
-];
+// const clothes = [
+//   {
+//     id: 1,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth1
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 2,
+//     name: 'Brown Suit Clothing',
+//     originalPrice: '2,500',
+//     discount: '',
+//     specialPrice: '',
+//     selected: false,
+//     icon: (
+//       <Cloth2
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 3,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,500',
+//     discount: '',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth3
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 4,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,574',
+//     selected: false,
+//     icon: (
+//       <Cloth4
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 5,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth1
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 6,
+//     name: 'Brown Suit Clothing',
+//     originalPrice: '2,500',
+//     discount: '',
+//     specialPrice: '',
+//     selected: false,
+//     icon: (
+//       <Cloth2
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 7,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,500',
+//     discount: '',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth3
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 8,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,574',
+//     selected: false,
+//     icon: (
+//       <Cloth4
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 9,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth1
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 10,
+//     name: 'Brown Suit Clothing',
+//     originalPrice: '2,500',
+//     discount: '',
+//     specialPrice: '',
+//     selected: false,
+//     icon: (
+//       <Cloth2
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 11,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,500',
+//     discount: '',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth3
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 12,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,574',
+//     selected: false,
+//     icon: (
+//       <Cloth4
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 13,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth1
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 14,
+//     name: 'Brown Suit Clothing',
+//     originalPrice: '2,500',
+//     discount: '',
+//     specialPrice: '',
+//     selected: false,
+//     icon: (
+//       <Cloth2
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 15,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,500',
+//     discount: '',
+//     specialPrice: '2,754',
+//     selected: false,
+//     icon: (
+//       <Cloth3
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     id: 16,
+//     name: 'Grey Solid Suit  Clothing',
+//     originalPrice: '3,000',
+//     discount: '20% off',
+//     specialPrice: '2,574',
+//     selected: false,
+//     icon: (
+//       <Cloth4
+//         style={{
+//           width: width / 2 - 24,
+//           height: 164,
+//         }}
+//       />
+//     ),
+//   },
+// ];
 
 export const Home = ({route, navigation}) => {
   // const [arrayObjects, setArrayObjects] = useState(clothes);
@@ -397,10 +400,21 @@ export const Home = ({route, navigation}) => {
   const [businessLocations, setBusinessLocations] = useState([]);
   const [pricing, setPricing] = useState({});
   const [pricingFilterValue, setPricingFilterValue] = useState(0);
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState('');
+  const {storageItem: uuid} = useAsyncStorage('@uuid');
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
   const accessToken = getAccessToken();
-  const {CATALOGS, CATALOG_DETAILS} = restEndPoints;
+  const {
+    CATALOGS,
+    CATALOG_DETAILS,
+    ADD_ITEM_TO_WISHLIST,
+    REMOVE_ITEM_FROM_WISHLIST,
+  } = restEndPoints;
+  const isFocused = useIsFocused();
 
   // console.log(route.params, 'in Home Screen');
   // const catalogCode = route.params;
@@ -467,6 +481,12 @@ export const Home = ({route, navigation}) => {
   };
 
   useEffect(() => {
+    if (isFocused && catalogCode && catalogCode.length === 0)
+      getCatalogs(requestHeaders);
+    // console.log('here are ..........', isFocused, catalogCode);
+  }, [isFocused, catalogCode]);
+
+  useEffect(() => {
     if (accessToken && accessToken.length > 0) {
       // this will set access token across the app.
       // no need of recalling it seperately in all the components
@@ -502,10 +522,15 @@ export const Home = ({route, navigation}) => {
       // console.log(minItemPrice, '-----------------');
       // const maxItemPrice = 10000;
       // const minItemPrice = 0;
+      // console.log(
+      //   defaultCatalogDetails.wishlistItems,
+      //   'wishlist items.........',
+      // );
       setCatalogBrands(catalogBrands);
       setCatalogCategories(catalogCategories);
       setCatalogItems(catalogItemsSorted);
       setBusinessLocations(defaultCatalogDetails.businessLocations);
+      setWishlistItems(defaultCatalogDetails.wishlistItems);
       setPricing({minimum: minItemPrice, maximum: maxItemPrice});
     }
   }, [defaultCatalogDetails]);
@@ -561,11 +586,19 @@ export const Home = ({route, navigation}) => {
         ? parseFloat(productDetails.itemRate) >= minimumValue &&
           parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
         : true;
+    const isItemInWishlist = _find(wishlistItems, {
+      itemID: String(productDetails.itemID),
+    });
     // console.log(
     //   isPricingFilterValidated,
     //   pricingFilterValue,
     //   parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue),
     //   productDetails.itemRate,
+    // );
+    // console.log(
+    //   isItemInWishlist,
+    //   'isItemInWishList...........',
+    //   productDetails.itemID,
     // );
     const imageLocation = _find(
       businessLocations,
@@ -582,6 +615,7 @@ export const Home = ({route, navigation}) => {
           navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
             productDetails: productDetails,
             productLocation: imageLocation.locationCode,
+            isItemInWishlist: isItemInWishlist ? true : false,
           });
         }}>
         <View style={styles.rowStyles}>
@@ -605,21 +639,24 @@ export const Home = ({route, navigation}) => {
             </View>
           ) : ( */}
           <Text style={styles.specialPriceStyle}>
-            ₹{productDetails.itemRate}
+            ₹{productDetails.itemRate}/{productDetails.uomName}
           </Text>
           {/* )} */}
           <TouchableOpacity
             activeOpacity={1}
             style={styles.heartIconViewStyles}
             onPress={() => {
-              clothes[index].selected = true;
-              // setArrayObjects([...clothes]);
-            }}>
-            {/* {item.selected ? (
+              manageItemInWishlist(
+                productDetails.itemID,
+                isItemInWishlist ? true : false,
+              );
+            }}
+            disabled={wishlistLoading}>
+            {isItemInWishlist ? (
               <HeartSelected style={styles.iconHeartStyle} />
-            ) : ( */}
-            <HeartUnSelected style={styles.iconHeartStyle} />
-            {/* )} */}
+            ) : (
+              <HeartUnSelected style={styles.iconHeartStyle} />
+            )}
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -747,6 +784,90 @@ export const Home = ({route, navigation}) => {
     );
   };
 
+  const manageItemInWishlist = async (itemID, wishlistState) => {
+    setWishlistLoading(true);
+    setShowAlert(true);
+    if (wishlistState) {
+      // console.log('in delete state', wishlistState);
+      // delete the wishlist item
+      try {
+        await axios
+          .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
+            headers: requestHeaders,
+            data: {wishListItems: [{wlItemCode: itemID}]},
+          })
+          .then((apiResponse) => {
+            setWishlistLoading(false);
+            // console.log(apiResponse.data.status);
+            if (apiResponse.data.status === 'success') {
+              const updatedWishlist = wishlistItems;
+              _remove(
+                updatedWishlist,
+                (wishlistItemDetails) =>
+                  parseInt(wishlistItemDetails.itemID, 10) ===
+                  parseInt(itemID, 10),
+              );
+              setAlertText('Product removed from Wishlist successfully :)');
+              // console.log(
+              //   updatedWishlist,
+              //   'updated wishlist is................',
+              //   removedItems,
+              // );
+              setWishlistItems([...updatedWishlist]);
+            }
+          })
+          .catch((error) => {
+            setWishlistLoading(false);
+            setAlertText('Oops, something went wrong.');
+            // console.log(errorText);
+            // const errorText = error.response.data.errortext;
+            // setApiError(true);
+          });
+      } catch (e) {
+        setWishlistLoading(false);
+        setAlertText('Network error. Please try again.');
+      }
+    } else {
+      // add wishlist item
+      // console.log('in add state', wishlistState);
+      try {
+        await axios
+          .post(
+            ADD_ITEM_TO_WISHLIST.URL(uuid),
+            {
+              wishListItems: [{itemCode: itemID}],
+            },
+            {headers: requestHeaders},
+          )
+          .then((apiResponse) => {
+            setWishlistLoading(false);
+            if (apiResponse.data.status === 'success') {
+              const updatedWishlist = wishlistItems;
+              updatedWishlist.push({
+                wlItemID: '',
+                itemID: itemID,
+              });
+              setWishlistItems([...updatedWishlist]);
+              setAlertText('Product added to Wishlist successfully :)');
+            }
+          })
+          .catch((error) => {
+            // console.log(error, 'error text.............');
+            setAlertText('Oops, something went wrong.');
+            setWishlistLoading(false);
+            // setApiError(true);
+            // setApiErrorText(errorText);
+            // console.log(errorText);
+          });
+      } catch (e) {
+        setWishlistLoading(false);
+        setAlertText('Network error. Please try again.');
+        // console.log(e);
+        // setApiErrorText('Network error. Please try again.');
+      }
+    }
+  };
+
   return loading ? (
     <Loader />
   ) : (
@@ -754,6 +875,17 @@ export const Home = ({route, navigation}) => {
       {renderHeader()}
       {catalogItems && catalogItems.length > 0 && renderListView()}
       {showSortView && renderSortView()}
+      {showAlert && (
+        <CommonAlertView
+          showLoader={wishlistLoading}
+          showSuceessPopup={!wishlistLoading}
+          onPressSuccessButton={() => {
+            // setShowSuccessAlert(false);
+            setShowAlert(false);
+          }}
+          successTitle={alertText}
+        />
+      )}
     </View>
   );
 };

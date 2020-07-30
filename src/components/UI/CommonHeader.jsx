@@ -12,6 +12,8 @@ import {
   FilterIcon,
   SortIcon,
   WishListIcon,
+  HeartSelected,
+  HeartUnSelected,
 } from '../../icons/Icons';
 import {theme} from '../../theme/theme';
 import {ShoppingCartContext} from '../context/ShoppingCart';
@@ -93,6 +95,7 @@ export default CommonHeader = ({
   onPressSortIcon,
   isWishList,
   onPressWishListIcon,
+  isItemInWishlist,
 }) => {
   const {cartItems} = useContext(ShoppingCartContext);
 
@@ -142,19 +145,34 @@ export default CommonHeader = ({
               </TouchableOpacity>
             </View>
           )}
-          {isWishList && (
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => {
-                  onPressWishListIcon();
-                }}>
-                <View style={styles.productIconStyles}>
-                  <WishListIcon style={styles.iconWishListStyles} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
+
+          {isWishList ? (
+            isItemInWishlist ? (
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    onPressWishListIcon();
+                  }}>
+                  <View style={styles.productIconStyles}>
+                    <HeartSelected style={styles.iconWishListStyles} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    onPressWishListIcon();
+                  }}>
+                  <View style={styles.productIconStyles}>
+                    <WishListIcon style={styles.iconWishListStyles} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )
+          ) : null}
 
           {cartItems && cartItems.length > 0 && (
             <TouchableOpacity
