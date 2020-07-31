@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -178,7 +178,6 @@ export default CommonHeader = ({
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
-                console.log(onPressRightButton, 'in commonheader....');
                 onPressRightButton();
               }}>
               <View style={styles.iconViewStyles}>

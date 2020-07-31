@@ -11,10 +11,6 @@ import {
 } from 'react-native';
 import {theme} from '../../theme/theme';
 import {
-  Cloth1,
-  Cloth2,
-  Cloth3,
-  Cloth4,
   HeartUnSelected,
   HeartSelected,
   CheckIcon,
@@ -40,6 +36,8 @@ import _orderBy from 'lodash/orderBy';
 import _remove from 'lodash/remove';
 import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
+import CommonAlertView from '../UI/CommonAlertView';
+import Reactotron from 'reactotron-react-native';
 
 const {height, width} = Dimensions.get('window');
 
@@ -448,6 +446,7 @@ export const Home = ({route, navigation}) => {
       await axios
         .get(CATALOGS.URL, {headers: requestHeaders})
         .then((apiResponse) => {
+          Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
           if (apiResponse.data.status === 'success') {
             const defaultCatalog = apiResponse.data.response.catalogs.find(
               (catalogDetails) => catalogDetails.isDefault === '1',
@@ -499,7 +498,6 @@ export const Home = ({route, navigation}) => {
 
   useEffect(() => {
     if (defaultCatalogDetails) {
-      let businessLocations = [];
       const catalogBrands = _uniq(
         _map(defaultCatalogDetails.catalogItems, 'brandName'),
       );
@@ -880,7 +878,6 @@ export const Home = ({route, navigation}) => {
           showLoader={wishlistLoading}
           showSuceessPopup={!wishlistLoading}
           onPressSuccessButton={() => {
-            // setShowSuccessAlert(false);
             setShowAlert(false);
           }}
           successTitle={alertText}

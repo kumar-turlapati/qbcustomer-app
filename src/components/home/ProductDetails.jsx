@@ -166,7 +166,7 @@ export const ProductDetails = ({route, navigation}) => {
 
   useEffect(() => {
     if (apiError) {
-      showAlert(true);
+      setShowAlert(true);
       setAlertText(apiErrorText);
     }
   }, [apiError]);
