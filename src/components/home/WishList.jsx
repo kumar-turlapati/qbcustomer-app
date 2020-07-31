@@ -401,67 +401,101 @@ export const WishList = ({navigation}) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
   const [showAddToCartAlert, setShowAddToCartAlert] = useState(false);
-  const {GET_ITEMS_FROM_WISHLIST} = restEndPoints;
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [wishlistAlert, setWishlistAlert] = useState(false);
+  const [wishlistAlertText, setWishlistAlertText] = useState('');
+  const {GET_ITEMS_FROM_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const [loading, setLoading] = useState(false);
   const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
     ShoppingCartContext,
   );
 
-  useEffect(() => {
-    const getWishlistItems = async () => {
-      setLoading(true);
-      try {
-        await axios
-          .get(GET_ITEMS_FROM_WISHLIST.URL(uuid), {headers: requestHeaders})
-          .then((apiResponse) => {
-            setLoading(false);
-            // console.log(apiResponse.data.response, 'response.........');
-            if (apiResponse.data.status === 'success') {
-              const wlItems = apiResponse.data.response.wlItems;
-              if (wlItems && wlItems.length > 0) {
-                setWishlistItems(apiResponse.data.response.wlItems);
-                setBusinessLocations(
-                  apiResponse.data.response.businessLocations,
-                );
-              } else {
-                setShowAlert(true);
-                setAlertText('No products are available in your Wishlist');
-              }
+  const getWishlistItems = async () => {
+    setLoading(true);
+    try {
+      await axios
+        .get(GET_ITEMS_FROM_WISHLIST.URL(uuid), {headers: requestHeaders})
+        .then((apiResponse) => {
+          setLoading(false);
+          // console.log(apiResponse.data.response, 'response.........');
+          if (apiResponse.data.status === 'success') {
+            const wlItems = apiResponse.data.response.wlItems;
+            if (wlItems && wlItems.length > 0) {
+              setWishlistItems(apiResponse.data.response.wlItems);
+              setBusinessLocations(apiResponse.data.response.businessLocations);
             } else {
               setShowAlert(true);
-              setAlertText('No products are available in Wishlist');
+              setAlertText('No products are available in your Wishlist');
             }
-          })
-          .catch((error) => {
-            setLoading(false);
+          } else {
             setShowAlert(true);
-            setAlertText(
-              'Unable to fetch Items from your Wishlist at this moment.',
-            );
-            // console.log(error);
-          });
-      } catch (e) {
-        // console.log(e);
-        setLoading(false);
-        setShowAlert(true);
-        setAlertText('Network error. Please try again.');
-      }
-    };
+            setAlertText('No products are available in Wishlist');
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          setShowAlert(true);
+          setAlertText(
+            'Unable to fetch Items from your Wishlist at this moment.',
+          );
+          // console.log(error);
+        });
+    } catch (e) {
+      // console.log(e);
+      setLoading(false);
+      setShowAlert(true);
+      setAlertText('Network error. Please try again.');
+    }
+  };
+
+  const manageItemInWishlist = async (itemID) => {
+    setWishlistLoading(true);
+    setWishlistAlert(true);
+    try {
+      await axios
+        .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
+          headers: requestHeaders,
+          data: {wishListItems: [{wlItemCode: itemID}]},
+        })
+        .then((apiResponse) => {
+          setWishlistLoading(false);
+          // console.log(apiResponse.data.status);
+          if (apiResponse.data.status === 'success') {
+            getWishlistItems();
+            setWishlistAlertText('Product removed from Wishlist.');
+          }
+        })
+        .catch((error) => {
+          // console.log(error);
+          setWishlistLoading(false);
+          setWishlistAlertText('Oops, something went wrong.');
+          // console.log(errorText);
+          // const errorText = error.response.data.errortext;
+          // setApiError(true);
+        });
+    } catch (e) {
+      // console.log(e);
+      setWishlistLoading(false);
+      setWishlistAlertText('Network error. Please try again.');
+    }
+  };
+
+  useEffect(() => {
     if (uuid && uuid.length > 0) {
       getWishlistItems();
     }
   }, [uuid]);
 
-  useEffect(() => {
-    if (!apiLoading) {
-      if (apiError && apiErrorText && apiErrorText.length > 0) {
-        setAlertText(apiErrorText);
-      } else {
-        setAlertText('Product added to Cart successfully :)');
-      }
-    }
-  }, [apiError, apiLoading, apiErrorText]);
+  // useEffect(() => {
+  //   if (!apiLoading && !wishlistAlert) {
+  //     if (apiError && apiErrorText && apiErrorText.length > 0) {
+  //       setAlertText(apiErrorText);
+  //     } else {
+  //       setAlertText('Product added to Cart successfully :)');
+  //     }
+  //   }
+  // }, [apiError, apiLoading, apiErrorText, wishlistAlert]);
 
   const renderHeader = () => {
     return (
@@ -478,7 +512,7 @@ export const WishList = ({navigation}) => {
     );
   };
 
-  const renderRow = (item, index) => {
+  const renderRow = (item) => {
     const imageLocation = _find(
       businessLocations,
       (locationDetails) =>
@@ -490,7 +524,7 @@ export const WishList = ({navigation}) => {
           `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
         )
       : '';
-    return (
+    return businessLocations && businessLocations.length > 0 ? (
       <View style={styles.rowStyles}>
         <Image
           source={{uri: imageUrl}}
@@ -505,8 +539,7 @@ export const WishList = ({navigation}) => {
           activeOpacity={1}
           style={styles.heartIconViewStyles}
           onPress={() => {
-            // clothes[index].selected = true;
-            // setArrayObjects([...clothes]);
+            manageItemInWishlist(item.itemID);
           }}>
           <HeartSelected style={styles.iconHeartStyle} />
         </TouchableOpacity>
@@ -523,7 +556,7 @@ export const WishList = ({navigation}) => {
           ADD TO CART
         </Text>
       </View>
-    );
+    ) : null;
   };
 
   const renderListView = () => {
@@ -550,7 +583,7 @@ export const WishList = ({navigation}) => {
   ) : (
     <View style={styles.container}>
       {renderHeader()}
-      {renderListView()}
+      {wishlistItems && wishlistItems.length > 0 && renderListView()}
       {showAlert && (
         <CommonAlertView
           showLoader={false}
@@ -570,6 +603,16 @@ export const WishList = ({navigation}) => {
             setShowAddToCartAlert(false);
           }}
           successTitle={alertText}
+        />
+      )}
+      {wishlistAlert && (
+        <CommonAlertView
+          showLoader={wishlistLoading}
+          showSuceessPopup={!wishlistLoading}
+          onPressSuccessButton={() => {
+            setWishlistAlert(false);
+          }}
+          successTitle={wishlistAlertText}
         />
       )}
     </View>

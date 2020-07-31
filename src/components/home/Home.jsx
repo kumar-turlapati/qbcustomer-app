@@ -6,8 +6,6 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  Image,
-  ImageBackground,
 } from 'react-native';
 import {theme} from '../../theme/theme';
 import {
@@ -38,6 +36,7 @@ import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
+import {Image} from 'react-native-elements';
 
 const {height, width} = Dimensions.get('window');
 
@@ -623,6 +622,7 @@ export const Home = ({route, navigation}) => {
               height: 164,
             }}
             source={{uri: imageUrl}}
+            PlaceholderContent={<Loader />}
           />
           <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
           {/* {item.specialPrice.length !== 0 ? (

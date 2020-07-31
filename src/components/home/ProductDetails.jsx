@@ -25,6 +25,8 @@ import {
 import CommonAlertView from '../UI/CommonAlertView';
 import useAsyncStorage from '../customHooks/async';
 import axios from 'axios';
+import _startCase from 'lodash/startCase';
+import _lowerCase from 'lodash/lowerCase';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -155,10 +157,12 @@ export const ProductDetails = ({route, navigation}) => {
   const productName = route.params.productDetails.itemName;
   const productCode = route.params.productDetails.itemID;
   const productDescription = route.params.productDetails.itemDescription;
+  const productCategory = route.params.productDetails.categoryName;
+  const productBrand = route.params.productDetails.brandName;
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
 
-  // console.log(route.params.isItemInWishlist);
+  console.log(route.params.productDetails, '---------------------');
 
   const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
     ShoppingCartContext,
@@ -353,7 +357,7 @@ export const ProductDetails = ({route, navigation}) => {
           autoplay={true}
           autoplayDelay={3000}
           autoplayInterval={3000}
-          layout={'default'}
+          layout="default"
         />
       </View>
     );
@@ -469,55 +473,48 @@ export const ProductDetails = ({route, navigation}) => {
         <View style={{marginLeft: 24, marginTop: 16}}>
           {/* <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text> */}
           <Text style={styles.addToCartStyle}>{productDescription}</Text>
-          {/* <Text
+          <Text
             style={[
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
-            ]}>
-            {'Fabric Length 3.6m'}
-          </Text> */}
+            ]}></Text>
         </View>
-        {/* <View style={{marginLeft: 24, marginTop: 26}}>
-          <Text style={styles.addToCartStyle}>{'Magerial & Care'}</Text>
+        <View style={{marginLeft: 24, marginTop: 26}}>
+          <Text style={styles.addToCartStyle}>Specifications</Text>
           <Text
             style={[
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
             ]}>
-            {'70 % Polyester, 30 % Rayon'}
+            Packed Qty. - {}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
             ]}>
-            {'Machine Wash'}
+            Brand - {_startCase(_lowerCase(productBrand))}
+          </Text>
+          <Text
+            style={[
+              styles.addToCartStyle,
+              {fontWeight: 'normal', marginTop: -5},
+            ]}>
+            Category - {_startCase(_lowerCase(productCategory))}
           </Text>
         </View>
         <View style={{marginLeft: 24, marginTop: 24}}>
-          <Text style={styles.addToCartStyle}>{'Specifications'}</Text>
+          <Text style={styles.addToCartStyle}>Billing Information</Text>
           <Text
             style={[
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
             ]}>
-            {'Fabric - Polyester'}
+            {
+              'This item will be billed as per the above packed qty. given in the specification. When you add 1 to the cart it will be multiplied with packed qty. and the value will be generated accordingly. Packed qty. may subject to change at the time of billing.'
+            }
           </Text>
-          <Text
-            style={[
-              styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
-            ]}>
-            {'Fabric2 - Viscose Rayon'}
-          </Text>
-          <Text
-            style={[
-              styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
-            ]}>
-            {'Type - Suit'}
-          </Text>
-        </View> */}
+        </View>
       </View>
     );
   };

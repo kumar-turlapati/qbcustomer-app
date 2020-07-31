@@ -62,7 +62,7 @@ const catalogue = [
   {
     id: 3,
     title: 'Ledger',
-    description: 'Check your transaction & Balance',
+    description: 'Check your Transactions & Balance',
     icon: (
       <LedgerIcon
         style={{
@@ -102,7 +102,9 @@ export const Profile = ({navigation}) => {
         onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => {}}
+        onPressWishListIcon={() => {
+          navigation.push(ScreenNamesCustomer.WISHLIST);
+        }}
       />
     );
   };
