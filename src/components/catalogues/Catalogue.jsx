@@ -145,7 +145,7 @@ export const Catalogue = ({navigation}) => {
   const renderHeader = () => {
     return (
       <CommonHeader
-        leftSideText={'Catalogue'}
+        leftSideText="Catalogs"
         isTabView={true}
         onPressRightButton={() => {}}
         isProduct={false}

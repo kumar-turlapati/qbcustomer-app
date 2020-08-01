@@ -6,7 +6,6 @@ import {
   Text,
   TextInput,
   Platform,
-  Image,
 } from 'react-native';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
@@ -27,6 +26,7 @@ import useAsyncStorage from '../customHooks/async';
 import axios from 'axios';
 import _startCase from 'lodash/startCase';
 import _lowerCase from 'lodash/lowerCase';
+import {Image} from 'react-native-elements';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -162,7 +162,7 @@ export const ProductDetails = ({route, navigation}) => {
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
 
-  console.log(route.params.productDetails, '---------------------');
+  // console.log(route.params.productDetails, '---------------------');
 
   const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
     ShoppingCartContext,
@@ -353,8 +353,8 @@ export const ProductDetails = ({route, navigation}) => {
           itemWidth={winWidth}
           sliderHeight={winHeight}
           itemHeight={winHeight}
-          loop={true}
-          autoplay={true}
+          loop
+          autoplay
           autoplayDelay={3000}
           autoplayInterval={3000}
           layout="default"
@@ -508,10 +508,10 @@ export const ProductDetails = ({route, navigation}) => {
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              {fontWeight: 'normal', marginTop: -5, textAlign: 'justify'},
             ]}>
             {
-              'This item will be billed as per the above packed qty. given in the specification. When you add 1 to the cart it will be multiplied with packed qty. and the value will be generated accordingly. Packed qty. may subject to change at the time of billing.'
+              'This item will be billed as per the packed qty. given in the specifications. When you add 1 to the cart it will be multiplied with packed qty. and the value will be generated accordingly. Packed qty. may subject to change at the time of billing.'
             }
           </Text>
         </View>

@@ -11,15 +11,22 @@ import {OrderDetails} from '../orders/OrderDetails';
 import {TrackOrder} from '../orders/TrackOrder';
 import {Ledger} from '../profile/Ledger';
 import {ScreenNamesCustomer} from './ScreenNames';
-import {LedgerIcon} from '../../icons/Icons';
+import useAsyncStorage from '../customHooks/async';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
+  const {storageItem: accessToken} = useAsyncStorage('@accessToken');
+  // console.log(
+  //   'access token,',
+  //   accessToken,
+  //   accessToken && accessToken.length > 0,
+  // );
+
   return (
     <Stack.Navigator
-      initialRouteName={ScreenNamesCustomer.HOME}
+      initialRouteName={ScreenNamesCustomer.TABBAR}
       headerMode="none"
-      screenOptions={({route, navigation}) => ({
+      screenOptions={() => ({
         headerShown: false,
         gestureEnabled: false,
         // cardOverlayEnabled: true,
@@ -37,28 +44,47 @@ export const AppCustomerNavigator = () => {
           duration: 100,
         })
       }>
-      <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
-      <Stack.Screen
-        name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
-        component={WalkThroughScreen}
-      />
-      <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
-      <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
-      <Stack.Screen
-        name={ScreenNamesCustomer.PRODUCTDETAILS}
-        component={ProductDetails}
-      />
-      <Stack.Screen name={ScreenNamesCustomer.CARTVIEW} component={CartView} />
-      <Stack.Screen name={ScreenNamesCustomer.WISHLIST} component={WishList} />
-      <Stack.Screen
-        name={ScreenNamesCustomer.ORDERDETAILS}
-        component={OrderDetails}
-      />
-      <Stack.Screen
-        name={ScreenNamesCustomer.TRACKORDER}
-        component={TrackOrder}
-      />
-      <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
+      {accessToken ? (
+        <>
+          <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
+          <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
+          <Stack.Screen
+            name={ScreenNamesCustomer.PRODUCTDETAILS}
+            component={ProductDetails}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.CARTVIEW}
+            component={CartView}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.WISHLIST}
+            component={WishList}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.ORDERDETAILS}
+            component={OrderDetails}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.TRACKORDER}
+            component={TrackOrder}
+          />
+          <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
+          <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+          <Stack.Screen
+            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
+            component={WalkThroughScreen}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+          <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
+          <Stack.Screen
+            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
+            component={WalkThroughScreen}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

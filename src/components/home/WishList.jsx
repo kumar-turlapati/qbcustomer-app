@@ -6,17 +6,9 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import {theme} from '../../theme/theme';
-import {
-  Cloth1,
-  Cloth2,
-  Cloth3,
-  Cloth4,
-  HeartUnSelected,
-  HeartSelected,
-} from '../../icons/Icons';
+import {HeartSelected} from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {
@@ -31,6 +23,7 @@ import axios from 'axios';
 import CommonAlertView from '../UI/CommonAlertView';
 import _find from 'lodash/find';
 import {ShoppingCartContext} from '../context/ShoppingCart';
+import {Image} from 'react-native-elements';
 
 const {height, width} = Dimensions.get('window');
 
@@ -532,6 +525,7 @@ export const WishList = ({navigation}) => {
             width: width / 2 - 24,
             height: 164,
           }}
+          PlaceholderContent={<Loader />}
         />
         <Text style={styles.rowTextStyle}>{item.itemName}</Text>
         <Text style={styles.specialPriceStyle}>₹{item.itemRate}</Text>
@@ -551,6 +545,7 @@ export const WishList = ({navigation}) => {
             };
             // console.log(cartItem);
             setShowAddToCartAlert(true);
+            setAlertText('Product add to Cart successfully :)');
             addToCart(cartItem);
           }}>
           ADD TO CART

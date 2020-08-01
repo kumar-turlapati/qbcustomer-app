@@ -11,13 +11,12 @@ import {
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {Product, DeleteIcon} from '../../icons/Icons';
+import {DeleteIcon} from '../../icons/Icons';
 import {useState} from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {ShoppingCartContext} from '../context/ShoppingCart';
 import {cdnUrl, clientCode} from '../../../qbconfig';
-import {Loader} from '../Loader';
 import _find from 'lodash/find';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');

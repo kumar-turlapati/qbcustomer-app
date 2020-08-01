@@ -74,6 +74,8 @@ export const Login = ({navigation}) => {
     '@accessToken',
   );
 
+  console.log(tokenLoading, 'tokent loading..........');
+
   const showTickMark =
     mobileNumber.length === 10 && isMobileNumberValid(mobileNumber);
 
@@ -333,7 +335,7 @@ export const Login = ({navigation}) => {
   };
 
   const renderResendOTPView = () => {
-    console.log('disableResendOtp', disableResendOtp);
+    // console.log('disableResendOtp', disableResendOtp);
     return (
       <>
         <TouchableOpacity
