@@ -159,6 +159,8 @@ export const ProductDetails = ({route, navigation}) => {
   const productDescription = route.params.productDetails.itemDescription;
   const productCategory = route.params.productDetails.categoryName;
   const productBrand = route.params.productDetails.brandName;
+  const packedQty = route.params.productDetails.packedQty;
+  const productUomName = route.params.productDetails.uomName;
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
 
@@ -486,7 +488,10 @@ export const ProductDetails = ({route, navigation}) => {
               styles.addToCartStyle,
               {fontWeight: 'normal', marginTop: -5},
             ]}>
-            Packed Qty. - {}
+            Packed Qty. -{' '}
+            {`${parseFloat(packedQty).toFixed(2)} ${_lowerCase(
+              productUomName,
+            )}`}
           </Text>
           <Text
             style={[

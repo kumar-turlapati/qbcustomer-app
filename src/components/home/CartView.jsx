@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   textInputStyles: {
     height: 45,
-    width: 150,
+    width: 250,
     fontWeight: 'bold',
     fontSize: 12,
     color: theme.colors.BLACK,
@@ -115,9 +115,15 @@ const styles = StyleSheet.create({
 
 export const CartView = ({route, navigation}) => {
   const [couponText, setCouponText] = useState('');
-  const [showLoader, setShowLoader] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  // const [showLoader, setShowLoader] = useState(false);
+  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [orderValues, setOrderValues] = useState({
+    cartTotal: 0,
+    cartDiscount: 0,
+    totalAmount: 0,
+  });
+  const [discountPercent, setDiscountPercent] = useState(0);
   const [alertMessage, setShowAlertMessage] = useState('');
   const {
     fetchCart,
@@ -137,13 +143,44 @@ export const CartView = ({route, navigation}) => {
 
   // console.log(cartItems.length, 'cartItems in CartView.jsx');
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
+  // useEffect(() => {
+  //   fetchCart();
+  // }, []);
+
+  const calculateCart = () => {
+    let cartTotal = 0;
+    cartItems.forEach((cartItemDetails) => {
+      console.log(cartItemDetails, '----------------');
+      const itemQty = parseFloat(cartItemDetails.itemQty);
+      const itemRate = parseFloat(cartItemDetails.itemRate);
+      const packedQty = parseFloat(cartItemDetails.packedQty);
+      cartTotal += parseFloat(itemQty * itemRate * packedQty);
+    });
+    const discountAmount = parseFloat((cartTotal * discountPercent) / 100);
+    const itemTotalAfterRounding =
+      Math.round((cartTotal + Number.EPSILON) * 100) / 100;
+    const discountAmountAfterRounding =
+      Math.round((discountAmount + Number.EPSILON) * 100) / 100;
+    const totalAmountAfterRounding =
+      Math.round(
+        (itemTotalAfterRounding -
+          discountAmountAfterRounding +
+          Number.EPSILON) *
+          100,
+      ) / 100;
+
+    setOrderValues({
+      cartTotal: itemTotalAfterRounding,
+      cartDiscount: discountAmountAfterRounding,
+      totalAmount: totalAmountAfterRounding,
+    });
+  };
 
   useEffect(() => {
     if (cartItems && cartItems.length <= 0) {
       navigation.push(ScreenNamesCustomer.TABBAR);
+    } else if (cartItems && cartItems.length > 0) {
+      calculateCart();
     }
   }, [cartItems]);
 
@@ -210,6 +247,7 @@ export const CartView = ({route, navigation}) => {
                       };
                       updateCart(cartItem);
                       setShowAlertMessage('Qty. updated successfully');
+                      calculateCart();
                     } else {
                       setShowAlertMessage(
                         'Minimum one unit is required to place the Order. If you wish to delete the item from Cart click on Bin icon.',
@@ -236,6 +274,7 @@ export const CartView = ({route, navigation}) => {
                     };
                     setShowAlertMessage('Qty. updated successfully');
                     updateCart(cartItem);
+                    calculateCart();
                   }}>
                   <Text style={{paddingRight: 8, paddingTop: 4}}>+</Text>
                 </TouchableOpacity>
@@ -305,11 +344,11 @@ export const CartView = ({route, navigation}) => {
   const renderCouponView = () => {
     return (
       <View style={{marginTop: 5, marginHorizontal: 16}}>
-        <Text style={styles.couponStyle}>COUPON</Text>
+        <Text style={styles.couponStyle}>COUPON CODE</Text>
         <View style={styles.couponViewStyles}>
           <TextInput
             style={styles.textInputStyles}
-            placeholder={'Enter Coupon Code'}
+            placeholder="Enter the coupon code if you have"
             onChangeText={(changedText) => {
               setCouponText(changedText);
             }}
@@ -318,14 +357,17 @@ export const CartView = ({route, navigation}) => {
             onEndEditing={(e) => {}}
           />
           <Text
-            onPress={() => {}}
+            onPress={() => {
+              alert('hello world.....');
+            }}
             style={{
               fontSize: 16,
               lineHeight: 19,
               color: theme.colors.RED,
               paddingVertical: 12,
               paddingHorizontal: 20,
-            }}>
+            }}
+            disabled={couponText.length === 0}>
             Apply
           </Text>
           <View style={styles.seperatorViewStyle} />
@@ -338,20 +380,22 @@ export const CartView = ({route, navigation}) => {
     return (
       <View style={{marginHorizontal: 16}}>
         <View style={[styles.ledgerRowViewStyles, {marginTop: 23}]}>
-          <Text style={styles.ledgerTextStyles}>Cart Total</Text>
-          <Text style={styles.ledgerTextStyles}>₹8,262</Text>
+          <Text style={styles.ledgerTextStyles}>Cart total</Text>
+          <Text style={styles.ledgerTextStyles}>
+            ₹{orderValues.totalAmount.toFixed(2)}
+          </Text>
         </View>
         <View style={styles.ledgerRowViewStyles}>
           <Text style={styles.ledgerTextStyles}>Discount (-)</Text>
           <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
-            ₹1,377
+            ₹{orderValues.cartDiscount.toFixed(2)}
           </Text>
         </View>
-        <View style={styles.ledgerRowViewStyles}>
+        {/* <View style={styles.ledgerRowViewStyles}>
           <Text style={styles.ledgerTextStyles}>Gross</Text>
           <Text style={styles.ledgerTextStyles}>₹6,885</Text>
         </View>
-        {/* <View style={styles.ledgerRowViewStyles}>
+        <View style={styles.ledgerRowViewStyles}>
           <Text style={styles.ledgerTextStyles}>Delivery Charges</Text>
           <Text style={styles.ledgerTextStyles}>₹99</Text>
         </View> */}
@@ -365,10 +409,16 @@ export const CartView = ({route, navigation}) => {
         />
         <View style={[styles.ledgerRowViewStyles, {marginTop: 13}]}>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            Total Amount
+            Total amount*
           </Text>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            ₹6984
+            ₹{orderValues.totalAmount.toFixed(2)}
+          </Text>
+        </View>
+        <View style={[styles.ledgerRowViewStyles, {marginTop: 10}]}>
+          <Text style={[styles.ledgerTextStyles, {fontSize: 14}]}>
+            **Amount shown here is exclusive of applicable taxes and duties and
+            may change at the time of Billing.
           </Text>
         </View>
       </View>
@@ -380,13 +430,13 @@ export const CartView = ({route, navigation}) => {
       <CommonButton
         buttonTitle={'PLACE ORDER'}
         onPressButton={() => {
-          setShowLoader(true);
+          // setShowLoader(true);
           // setShowSuccessAlert(false);
-          setShowAlert(true);
-          setTimeout(() => {
-            // setShowSuccessAlert(true);
-            setShowLoader(false);
-          }, 1000);
+          // setShowAlert(true);
+          // setTimeout(() => {
+          //   setShowSuccessAlert(true);
+          //   setShowLoader(false);
+          // }, 1000);
         }}
         propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 25}}
         propTextStyle={{

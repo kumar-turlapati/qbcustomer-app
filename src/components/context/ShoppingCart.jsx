@@ -13,6 +13,10 @@ export const ShoppingCartProvider = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
 
+  useEffect(() => {
+    if (uuid && uuid.length > 0) fetchCart();
+  }, [uuid]);
+
   const {
     ADD_ITEM_TO_CART,
     UPDATE_ITEM_TO_CART,
