@@ -106,7 +106,6 @@ export const ShoppingCartProvider = (props) => {
         .then((apiResponse) => {
           setLoading(false);
           if (apiResponse.data.status === 'success') {
-            setLoading(false);
             fetchCart();
           }
         })

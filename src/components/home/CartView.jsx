@@ -16,8 +16,15 @@ import {useState} from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {ShoppingCartContext} from '../context/ShoppingCart';
-import {cdnUrl, clientCode} from '../../../qbconfig';
+import {
+  cdnUrl,
+  clientCode,
+  restEndPoints,
+  requestHeaders,
+} from '../../../qbconfig';
 import _find from 'lodash/find';
+import _upperCase from 'lodash/upperCase';
+import axios from 'axios';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -125,14 +132,19 @@ export const CartView = ({route, navigation}) => {
   });
   const [discountPercent, setDiscountPercent] = useState(0);
   const [alertMessage, setShowAlertMessage] = useState('');
+  const [showCouponAlert, setCouponAlert] = useState(false);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponAlertText, setCouponAlertText] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
   const {
-    fetchCart,
     cartItems,
     removeItemFromCart,
     loading,
     updateCart,
     businessLocations,
   } = useContext(ShoppingCartContext);
+
+  const {VALIDATE_COUPON} = restEndPoints;
 
   // console.log(
   //   businessLocations,
@@ -150,7 +162,7 @@ export const CartView = ({route, navigation}) => {
   const calculateCart = () => {
     let cartTotal = 0;
     cartItems.forEach((cartItemDetails) => {
-      console.log(cartItemDetails, '----------------');
+      // console.log(cartItemDetails, '----------------');
       const itemQty = parseFloat(cartItemDetails.itemQty);
       const itemRate = parseFloat(cartItemDetails.itemRate);
       const packedQty = parseFloat(cartItemDetails.packedQty);
@@ -176,6 +188,52 @@ export const CartView = ({route, navigation}) => {
     });
   };
 
+  const validateCoupon = async () => {
+    setCouponAlert(true);
+    setCouponLoading(true);
+    let orderDetails = [];
+    cartItems.forEach((cartItemDetails) => {
+      const itemQty = cartItemDetails.itemQty;
+      const itemID = cartItemDetails.itemID;
+      orderDetails.push({itemID: itemID, itemQty: itemQty});
+    });
+
+    try {
+      await axios
+        .post(
+          VALIDATE_COUPON.URL,
+          {
+            couponCode: couponText,
+            orderDetails: orderDetails,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          console.log(apiResponse, 'apiResponse........');
+          setCouponLoading(false);
+          if (apiResponse.data.status === 'success') {
+            setCouponAlertText('Coupon applied successfully :)');
+            setDiscountPercent(apiResponse.data.response.discountPercent);
+            setCouponApplied(true);
+          } else {
+            setCouponAlertText(
+              'Unable to apply the Coupon. Please try again :(',
+            );
+          }
+        })
+        .catch((error) => {
+          // console.log(error, 'error..................', error.response.data);
+          const errorText = error.response.data.errortext;
+          setCouponLoading(false);
+          setCouponAlertText(`${errorText} :(`);
+        });
+    } catch (e) {
+      // console.log(e, 'e..................');
+      setLoading(false);
+      setCouponAlertText('Network error. Please try again.');
+    }
+  };
+
   useEffect(() => {
     if (cartItems && cartItems.length <= 0) {
       navigation.push(ScreenNamesCustomer.TABBAR);
@@ -183,6 +241,23 @@ export const CartView = ({route, navigation}) => {
       calculateCart();
     }
   }, [cartItems]);
+
+  useEffect(() => {
+    if (couponApplied) {
+      calculateCart();
+    }
+  }, [couponApplied]);
+
+  useEffect(() => {
+    if (couponText.length === 0) {
+      setDiscountPercent(0);
+      setCouponApplied(false);
+    }
+  }, [couponText]);
+
+  useEffect(() => {
+    calculateCart();
+  }, [discountPercent]);
 
   const renderHeader = () => {
     return (
@@ -348,17 +423,18 @@ export const CartView = ({route, navigation}) => {
         <View style={styles.couponViewStyles}>
           <TextInput
             style={styles.textInputStyles}
-            placeholder="Enter the coupon code if you have"
+            placeholder="Enter the coupon code if you have any"
             onChangeText={(changedText) => {
               setCouponText(changedText);
             }}
             value={couponText}
             maxLength={20}
-            onEndEditing={(e) => {}}
+            autoCorrect={false}
+            autoCapitalize="none"
           />
           <Text
             onPress={() => {
-              alert('hello world.....');
+              validateCoupon();
             }}
             style={{
               fontSize: 16,
@@ -367,7 +443,7 @@ export const CartView = ({route, navigation}) => {
               paddingVertical: 12,
               paddingHorizontal: 20,
             }}
-            disabled={couponText.length === 0}>
+            disabled={couponText.length < 10}>
             Apply
           </Text>
           <View style={styles.seperatorViewStyle} />
@@ -462,6 +538,19 @@ export const CartView = ({route, navigation}) => {
     );
   };
 
+  const renderAlertForCouponApply = () => {
+    return (
+      <CommonAlertView
+        showLoader={couponLoading}
+        showSuceessPopup={!couponLoading}
+        onPressSuccessButton={() => {
+          setCouponAlert(false);
+        }}
+        successTitle={couponAlertText}
+      />
+    );
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -474,6 +563,7 @@ export const CartView = ({route, navigation}) => {
       {renderLedger()}
       {renderButton()}
       {showAlert && renderAlert()}
+      {showCouponAlert && renderAlertForCouponApply()}
     </ScrollView>
   );
 };
