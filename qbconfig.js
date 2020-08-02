@@ -1,5 +1,6 @@
 const apiBaseUrl = 'http://api-retail-clothing.qwikbills.com';
 const cartUri = 'app/v1/cart';
+const ordersUri = 'app/v1/order';
 const wishlistUri = 'app/v1/wishlist';
 export const clientCode = 'nVlnoRYkRCGWulS';
 export const requestHeaders = {
@@ -40,5 +41,17 @@ export const restEndPoints = {
   },
   VALIDATE_COUPON: {
     URL: `${apiBaseUrl}/app/v1/validate-coupon`,
+  },
+  NEW_ORDER: {
+    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+  },
+  CANCEL_ORDER: {
+    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+  },
+  ORDER_DETAILS: {
+    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+  },
+  GET_ALL_ORDERS: {
+    URL: `${apiBaseUrl}/app/v1/orders`,
   },
 };

@@ -302,7 +302,7 @@ export const CartView = ({route, navigation}) => {
         <View style={styles.rowStyles}>
           <Image source={{uri: imageUrl}} style={{height: 95, width: 90}} />
           <View style={{marginLeft: 18, marginTop: 17}}>
-            <Text style={styles.rowTextStyles}> {item.itemName}</Text>
+            <Text style={styles.rowTextStyles}>{item.itemName}</Text>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.rowSubViewStyles}>
                 <TouchableOpacity
@@ -408,7 +408,7 @@ export const CartView = ({route, navigation}) => {
         }}
         data={cartItems}
         renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.itemID}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
