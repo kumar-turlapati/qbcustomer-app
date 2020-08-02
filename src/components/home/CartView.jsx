@@ -486,7 +486,7 @@ export const CartView = ({route, navigation}) => {
         />
         <View style={[styles.ledgerRowViewStyles, {marginTop: 13}]}>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            Total amount*
+            Total amount**
           </Text>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
             ₹{orderValues.totalAmount.toFixed(2)}
@@ -522,6 +522,7 @@ export const CartView = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
+        disabled
       />
     );
   };
