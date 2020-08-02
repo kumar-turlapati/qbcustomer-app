@@ -459,7 +459,7 @@ export const CartView = ({route, navigation}) => {
         <View style={[styles.ledgerRowViewStyles, {marginTop: 23}]}>
           <Text style={styles.ledgerTextStyles}>Cart total</Text>
           <Text style={styles.ledgerTextStyles}>
-            ₹{orderValues.totalAmount.toFixed(2)}
+            ₹{orderValues.cartTotal.toFixed(2)}
           </Text>
         </View>
         <View style={styles.ledgerRowViewStyles}>
