@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Login} from '../Login';
 import {WalkThroughScreen} from '../WalkThroughScreen';
@@ -16,11 +16,16 @@ import useAsyncStorage from '../customHooks/async';
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
   const {storageItem: accessToken} = useAsyncStorage('@accessToken');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   // console.log(
   //   'access token,',
   //   accessToken,
   //   accessToken && accessToken.length > 0,
   // );
+
+  useEffect(() => {
+    if (accessToken && accessToken.length > 0) setIsLoggedIn(true);
+  }, [accessToken]);
 
   return (
     <Stack.Navigator
@@ -44,7 +49,7 @@ export const AppCustomerNavigator = () => {
           duration: 100,
         })
       }>
-      {accessToken ? (
+      {isLoggedIn ? (
         <>
           <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
           <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />

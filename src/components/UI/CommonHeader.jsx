@@ -96,6 +96,7 @@ export default CommonHeader = ({
   isWishList,
   onPressWishListIcon,
   isItemInWishlist,
+  disableCart,
 }) => {
   const {cartItems} = useContext(ShoppingCartContext);
 

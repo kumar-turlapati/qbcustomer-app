@@ -486,7 +486,7 @@ export const ProductDetails = ({route, navigation}) => {
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              {fontWeight: 'normal', marginTop: 1},
             ]}>
             Packed Qty. -{' '}
             {`${parseFloat(packedQty).toFixed(2)} ${_lowerCase(
@@ -513,7 +513,7 @@ export const ProductDetails = ({route, navigation}) => {
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5, textAlign: 'justify'},
+              {fontWeight: 'normal', marginTop: 1, textAlign: 'justify'},
             ]}>
             {
               'This item will be billed as per the packed qty. given in the specifications. When you add 1 to the cart it will be multiplied with packed qty. and the value will be generated accordingly. Packed qty. may subject to change at the time of billing.'
