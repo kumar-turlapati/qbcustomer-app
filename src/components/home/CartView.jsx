@@ -373,13 +373,13 @@ export const CartView = ({route, navigation}) => {
             <Text style={[styles.rowTextStyles, {fontWeight: '600'}]}>
               {item.itemRate}
             </Text>
-            <Text
+            {/* <Text
               style={[
                 styles.rowTextStyles,
                 {color: theme.colors.RED, marginTop: 10},
               ]}>
               {item.discount}
-            </Text>
+            </Text> */}
           </View>
           {/* {!item.inStock && (
             <Text style={styles.outOfStockView}>{'Out of stock'}</Text>
@@ -439,12 +439,13 @@ export const CartView = ({route, navigation}) => {
             style={{
               fontSize: 16,
               lineHeight: 19,
-              color: theme.colors.RED,
+              color:
+                couponText.length < 10 ? theme.colors.BLACK : theme.colors.RED,
               paddingVertical: 12,
               paddingHorizontal: 20,
             }}
-            disabled={couponText.length < 10}>
-            Apply
+            disabled={couponText.length < 10 || couponApplied}>
+            {couponApplied ? 'Applied' : 'Apply'}
           </Text>
           <View style={styles.seperatorViewStyle} />
         </View>
