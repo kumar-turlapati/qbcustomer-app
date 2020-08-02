@@ -209,7 +209,7 @@ export const CartView = ({route, navigation}) => {
           {headers: requestHeaders},
         )
         .then((apiResponse) => {
-          console.log(apiResponse, 'apiResponse........');
+          // console.log(apiResponse, 'apiResponse........');
           setCouponLoading(false);
           if (apiResponse.data.status === 'success') {
             setCouponAlertText('Coupon applied successfully :)');
