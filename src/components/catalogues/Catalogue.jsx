@@ -5,12 +5,7 @@ import CommonHeader from '../UI/CommonHeader';
 import {SideArrowIcon} from '../../icons/Icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import axios from 'axios';
-import {
-  restEndPoints,
-  requestHeaders,
-  cdnUrl,
-  clientCode,
-} from '../../../qbconfig';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
 import CommonAlertView from '../UI/CommonAlertView';
 import {Loader} from '../Loader';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';

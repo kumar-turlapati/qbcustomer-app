@@ -21,10 +21,12 @@ import {
   clientCode,
   restEndPoints,
   requestHeaders,
+  billingRate,
 } from '../../../qbconfig';
 import _find from 'lodash/find';
 import _upperCase from 'lodash/upperCase';
 import axios from 'axios';
+import _remove from 'lodash/remove';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -122,8 +124,6 @@ const styles = StyleSheet.create({
 
 export const CartView = ({route, navigation}) => {
   const [couponText, setCouponText] = useState('');
-  // const [showLoader, setShowLoader] = useState(false);
-  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [orderValues, setOrderValues] = useState({
     cartTotal: 0,
@@ -136,6 +136,10 @@ export const CartView = ({route, navigation}) => {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponAlertText, setCouponAlertText] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [showOrderAlert, setShowOrderAlert] = useState(false);
+  const [showOrderAlertText, setShowOrderAlertText] = useState(false);
+  const [stockOutItems, setStockOutItems] = useState([]);
   const {
     cartItems,
     removeItemFromCart,
@@ -144,7 +148,7 @@ export const CartView = ({route, navigation}) => {
     businessLocations,
   } = useContext(ShoppingCartContext);
 
-  const {VALIDATE_COUPON} = restEndPoints;
+  const {VALIDATE_COUPON, NEW_ORDER} = restEndPoints;
 
   // console.log(
   //   businessLocations,
@@ -158,6 +162,8 @@ export const CartView = ({route, navigation}) => {
   // useEffect(() => {
   //   fetchCart();
   // }, []);
+
+  // console.log(stockOutItems, 'stock out items..........');
 
   const calculateCart = () => {
     let cartTotal = 0;
@@ -186,6 +192,63 @@ export const CartView = ({route, navigation}) => {
       cartDiscount: discountAmountAfterRounding,
       totalAmount: totalAmountAfterRounding,
     });
+  };
+
+  const newOrder = async () => {
+    setOrderLoading(true);
+    setShowOrderAlert(true);
+    orderDetails = new Array();
+    cartItems.forEach((cartItemDetails) => {
+      const orderItem = {
+        itemID: cartItemDetails.itemID,
+        itemQty: cartItemDetails.itemQty,
+        packedQty: cartItemDetails.packedQty,
+        itemRate: cartItemDetails.itemRate,
+      };
+      orderDetails.push(orderItem);
+    });
+    // console.log(orderDetails, '---------------------');
+    try {
+      await axios
+        .post(
+          NEW_ORDER.URL,
+          {
+            couponCode: couponText,
+            orderDetails: orderDetails,
+            billingRate: billingRate,
+          },
+          {headers: requestHeaders},
+        )
+        .then((apiResponse) => {
+          console.log(apiResponse, 'apiResponse........');
+          setOrderLoading(false);
+          if (apiResponse.data.status === 'success') {
+            setShowOrderAlertText(
+              `Order successfully placed with Order No. ${apiResponse.data.response.orderNo} :)`,
+            );
+          } else {
+            setShowOrderAlertText(
+              `An error occurred while placing your order. Please try again. ):`,
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error, 'error..................', error.response);
+          setOrderLoading(false);
+          if (Array.isArray(error.response.data.errortext)) {
+            setStockOutItems(error.response.data.errortext);
+            setShowOrderAlertText(
+              `One or more items were out of stock! Please remove out of the stock items and place the order again.`,
+            );
+          } else {
+            setShowOrderAlertText(`${error.response.data.errortext} ):`);
+          }
+        });
+    } catch (e) {
+      console.log(e, 'e..................');
+      setLoading(false);
+      setShowOrderAlertText('Network error. Please try again.');
+    }
   };
 
   const validateCoupon = async () => {
@@ -295,6 +358,8 @@ export const CartView = ({route, navigation}) => {
           `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
         )
       : '';
+    const isOutofStock = stockOutItems.includes(item.itemID);
+    // console.log(isOutofStock, stockOutItems);
     return (
       <View>
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
@@ -362,6 +427,15 @@ export const CartView = ({route, navigation}) => {
                   const cartItems = {
                     cartItems: [{cartItemCode: item.cartItemID}],
                   };
+                  if (stockOutItems.includes(String(item.itemID))) {
+                    const newValues = stockOutItems;
+                    _remove(
+                      newValues,
+                      (itemID) =>
+                        parseInt(item.itemID, 10) === parseInt(itemID, 10),
+                    );
+                    setStockOutItems([...newValues]);
+                  }
                   removeItemFromCart(cartItems);
                   setShowAlertMessage('Item removed from Cart successfully.');
                 }}>
@@ -381,9 +455,9 @@ export const CartView = ({route, navigation}) => {
               {item.discount}
             </Text> */}
           </View>
-          {/* {!item.inStock && (
-            <Text style={styles.outOfStockView}>{'Out of stock'}</Text>
-          )} */}
+          {isOutofStock && (
+            <Text style={styles.outOfStockView}>Out of stock</Text>
+          )}
         </View>
         {index === cartItems.length - 1 ? (
           <View style={{height: 16}} />
@@ -486,7 +560,7 @@ export const CartView = ({route, navigation}) => {
         />
         <View style={[styles.ledgerRowViewStyles, {marginTop: 13}]}>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            Total amount**
+            Total amount
           </Text>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
             ₹{orderValues.totalAmount.toFixed(2)}
@@ -494,8 +568,9 @@ export const CartView = ({route, navigation}) => {
         </View>
         <View style={[styles.ledgerRowViewStyles, {marginTop: 10}]}>
           <Text style={[styles.ledgerTextStyles, {fontSize: 14}]}>
-            **Amount shown here is exclusive of applicable taxes and duties and
-            may change at the time of Billing.
+            Note: Amount shown here is exclusive of applicable taxes and duties
+            and may change at the time of Billing. We reserve the right, at our
+            sole discretion, to reject or refuse any order for any reason.
           </Text>
         </View>
       </View>
@@ -505,15 +580,9 @@ export const CartView = ({route, navigation}) => {
   const renderButton = () => {
     return (
       <CommonButton
-        buttonTitle={'PLACE ORDER'}
+        buttonTitle="PLACE ORDER"
         onPressButton={() => {
-          // setShowLoader(true);
-          // setShowSuccessAlert(false);
-          // setShowAlert(true);
-          // setTimeout(() => {
-          //   setShowSuccessAlert(true);
-          //   setShowLoader(false);
-          // }, 1000);
+          newOrder();
         }}
         propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 25}}
         propTextStyle={{
@@ -522,7 +591,8 @@ export const CartView = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
-        disabled
+        disabled={orderLoading || stockOutItems.length > 0}
+        disableButton={orderLoading || stockOutItems.length > 0}
       />
     );
   };
@@ -553,6 +623,19 @@ export const CartView = ({route, navigation}) => {
     );
   };
 
+  const renderAlertForOrder = () => {
+    return (
+      <CommonAlertView
+        showLoader={orderLoading}
+        showSuceessPopup={!orderLoading}
+        onPressSuccessButton={() => {
+          setShowOrderAlert(false);
+        }}
+        successTitle={showOrderAlertText}
+      />
+    );
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -566,6 +649,7 @@ export const CartView = ({route, navigation}) => {
       {renderButton()}
       {showAlert && renderAlert()}
       {showCouponAlert && renderAlertForCouponApply()}
+      {showOrderAlert && renderAlertForOrder()}
     </ScrollView>
   );
 };

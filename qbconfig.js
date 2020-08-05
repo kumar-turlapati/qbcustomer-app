@@ -8,7 +8,7 @@ export const requestHeaders = {
   'Org-Id': clientCode,
   Accept: 'application/json',
 };
-export const billMethod = 'wholesale';
+export const billingRate = 'wholesale';
 export const cdnUrl = 'https://dgufxvy74ps27.cloudfront.net';
 export const restEndPoints = {
   LOGIN: {URL: `${apiBaseUrl}/app/v1/login`, method: 'POST'},
@@ -43,15 +43,15 @@ export const restEndPoints = {
     URL: `${apiBaseUrl}/app/v1/validate-coupon`,
   },
   NEW_ORDER: {
-    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+    URL: `${apiBaseUrl}/${ordersUri}`,
   },
   CANCEL_ORDER: {
-    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+    URL: `${apiBaseUrl}/${ordersUri}`,
   },
   ORDER_DETAILS: {
-    URL: `${apiBaseUrl}/app/v1/${ordersUri}`,
+    URL: (orderCode) => `${apiBaseUrl}/${ordersUri}/${orderCode}`,
   },
   GET_ALL_ORDERS: {
-    URL: `${apiBaseUrl}/app/v1/orders`,
+    URL: (uuid) => `${apiBaseUrl}/app/v1/orders/${uuid}`,
   },
 };
