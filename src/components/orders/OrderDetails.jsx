@@ -287,7 +287,11 @@ export const OrderDetails = ({route, navigation}) => {
         {index === 0 && <View style={{height: 16}} />}
         <View style={styles.rowStyles}>
           {/* {item.icon} */}
-          <Image source={{uri: imageUrl}} style={{height: 90, width: 90}} />
+          <Image
+            source={{uri: imageUrl}}
+            style={{height: 90, width: 90}}
+            PlaceholderContent={<Loader />}
+          />
           <View style={{marginLeft: 18, marginTop: 17}}>
             <Text style={styles.rowTextStyles}> {item.itemName}</Text>
             <Text

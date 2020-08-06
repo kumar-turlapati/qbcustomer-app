@@ -2,12 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {
-  SideArrowIcon,
-  OrderIcon,
-  WishListIcon,
-  LedgerIcon,
-} from '../../icons/Icons';
+import {SideArrowIcon} from '../../icons/Icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import axios from 'axios';
@@ -94,10 +89,14 @@ export const Order = ({navigation}) => {
       <CommonHeader
         leftSideText={'Orders'}
         isTabView={true}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => {
+          navigation.push(ScreenNamesCustomer.CARTVIEW);
+        }}
         isProduct={false}
         isWishList={true}
-        onPressWishListIcon={() => {}}
+        onPressWishListIcon={() => {
+          navigation.push(ScreenNamesCustomer.WISHLIST);
+        }}
       />
     );
   };

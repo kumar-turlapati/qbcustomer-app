@@ -6,7 +6,6 @@ import {
   Text,
   FlatList,
   TextInput,
-  Image,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {theme} from '../../theme/theme';
@@ -27,6 +26,8 @@ import _find from 'lodash/find';
 import _upperCase from 'lodash/upperCase';
 import axios from 'axios';
 import _remove from 'lodash/remove';
+import {Image} from 'react-native-elements';
+import {Loader} from '../Loader';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -365,7 +366,11 @@ export const CartView = ({route, navigation}) => {
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
         {index === 0 && <View style={{height: 16}} />}
         <View style={styles.rowStyles}>
-          <Image source={{uri: imageUrl}} style={{height: 95, width: 90}} />
+          <Image
+            source={{uri: imageUrl}}
+            style={{height: 95, width: 90}}
+            PlaceholderContent={<Loader />}
+          />
           <View style={{marginLeft: 18, marginTop: 17}}>
             <Text style={styles.rowTextStyles}>{item.itemName}</Text>
             <View style={{flexDirection: 'row'}}>
@@ -437,7 +442,7 @@ export const CartView = ({route, navigation}) => {
                     setStockOutItems([...newValues]);
                   }
                   removeItemFromCart(cartItems);
-                  setShowAlertMessage('Item removed from Cart successfully.');
+                  setShowAlertMessage('Item removed from Cart successfully :)');
                 }}>
                 <DeleteIcon style={{width: 16, height: 16, marginTop: 15}} />
               </TouchableOpacity>
