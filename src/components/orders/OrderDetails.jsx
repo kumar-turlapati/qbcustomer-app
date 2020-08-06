@@ -3,8 +3,8 @@ import {Dimensions, StyleSheet, View, Text, FlatList} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {Product} from '../../icons/Icons';
-import CommonAlertView from '../UI/CommonAlertView';
+import CommonButton from '../UI/CommonButton';
+// import {Product} from '../../icons/Icons';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {
   restEndPoints,
@@ -15,6 +15,9 @@ import {
 import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
 import axios from 'axios';
+import _find from 'lodash/find';
+import {Image} from 'react-native-elements';
+import _toLower from 'lodash/toLower';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -86,50 +89,97 @@ const styles = StyleSheet.create({
   },
 });
 
-const cartItems = [
-  {
-    id: 1,
-    icon: <Product style={{height: 90, width: 90}} />,
-    title: 'Grey Solid Suit 1',
-    price: '₹2,754',
-    quantity: 1,
-    discount: '',
-    inStock: true,
-  },
-  {
-    id: 2,
-    icon: <Product style={{height: 90, width: 90}} />,
-    title: 'Grey Solid Suit 2',
-    price: '₹2,754',
-    quantity: 1,
-    discount: '50% OFF',
-    inStock: true,
-  },
-  {
-    id: 3,
-    icon: <Product style={{height: 90, width: 90}} />,
-    title: 'Grey Solid Suit 3',
-    price: '₹2,754',
-    quantity: 1,
-    discount: '',
-    inStock: false,
-  },
-];
+// const cartItems = [
+//   {
+//     id: 1,
+//     icon: <Product style={{height: 90, width: 90}} />,
+//     title: 'Grey Solid Suit 1',
+//     price: '₹2,754',
+//     quantity: 1,
+//     discount: '',
+//     inStock: true,
+//   },
+//   {
+//     id: 2,
+//     icon: <Product style={{height: 90, width: 90}} />,
+//     title: 'Grey Solid Suit 2',
+//     price: '₹2,754',
+//     quantity: 1,
+//     discount: '50% OFF',
+//     inStock: true,
+//   },
+//   {
+//     id: 3,
+//     icon: <Product style={{height: 90, width: 90}} />,
+//     title: 'Grey Solid Suit 3',
+//     price: '₹2,754',
+//     quantity: 1,
+//     discount: '',
+//     inStock: false,
+//   },
+// ];
 
 export const OrderDetails = ({route, navigation}) => {
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
-  // const [showAlert, setShowAlert] = useState(false);
-  // const [alertText, setAlertText] = useState('');
   const [orderDetails, setOrderDetails] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [orderValues, setOrderValues] = useState({
+    cartTotal: 0,
+    cartDiscount: 0,
+    totalAmount: 0,
+  });
   const {ORDER_DETAILS} = restEndPoints;
 
   const orderCode = route.params.orderCode;
 
-  console.log(orderCode, orderDetails, orderItems);
+  // console.log(orderCode, orderDetails, orderItems);
+  // console.log(orderItems);
+  // console.log(orderDetails);
+  // console.log(parseFloat(orderDetails.discount), 'order details......');
+
+  const calculateCart = () => {
+    let cartTotal = 0;
+    orderItems.forEach((orderItemDetails) => {
+      // console.log(cartItemDetails, '----------------');
+      const itemQty = parseFloat(orderItemDetails.itemQty);
+      const itemRate = parseFloat(orderItemDetails.itemRate);
+      const packedQty = parseFloat(orderItemDetails.packedQty);
+      cartTotal += parseFloat(itemQty * itemRate * packedQty);
+    });
+    const discountAmount = parseFloat(orderDetails.discount);
+    const itemTotalAfterRounding =
+      Math.round((cartTotal + Number.EPSILON) * 100) / 100;
+    const discountAmountAfterRounding =
+      Math.round((discountAmount + Number.EPSILON) * 100) / 100;
+    const totalAmountAfterRounding =
+      Math.round(
+        (itemTotalAfterRounding -
+          discountAmountAfterRounding +
+          Number.EPSILON) *
+          100,
+      ) / 100;
+
+    // console.log(
+    //   cartTotal,
+    //   discountAmount,
+    //   itemTotalAfterRounding,
+    //   discountAmountAfterRounding,
+    //   totalAmountAfterRounding,
+    // );
+
+    setOrderValues({
+      cartTotal: itemTotalAfterRounding,
+      cartDiscount: discountAmountAfterRounding,
+      totalAmount: totalAmountAfterRounding,
+    });
+  };
+
+  useEffect(() => {
+    if (orderItems.length > 0) calculateCart();
+  }, [orderItems]);
 
   useEffect(() => {
     const getOrderDetails = async () => {
@@ -139,7 +189,7 @@ export const OrderDetails = ({route, navigation}) => {
           .get(ORDER_DETAILS.URL(orderCode), {headers: requestHeaders})
           .then((apiResponse) => {
             setOrderDetailsLoading(false);
-            // console.log(apiResponse.data.response, 'response.........');
+            console.log(apiResponse.data.response, 'response.........');
             if (apiResponse.data.status === 'success') {
               const orderDetails =
                 apiResponse.data.response.orderDetails.tranDetails;
@@ -156,12 +206,12 @@ export const OrderDetails = ({route, navigation}) => {
             }
           })
           .catch((error) => {
-            // console.log(error.response.data);
+            console.log(error.response.data);
             setErrorMessage(error.response.data.errortext);
             setShowNoDataMessage(true);
           });
       } catch (e) {
-        // console.log(e);
+        console.log(e);
         setOrderDetailsLoading(false);
         setShowNoDataMessage(true);
         setErrorMessage('Network error. Please try again :(');
@@ -199,7 +249,9 @@ export const OrderDetails = ({route, navigation}) => {
           borderTopWidth: 1,
           borderTopColor: theme.colors.BORDER_COLOR,
         }}>
-        <Text style={styles.tileTextStyles}>Order ID 1234XYZ</Text>
+        <Text style={styles.tileTextStyles}>
+          Order No {orderDetails.indentNo}
+        </Text>
         <Text
           style={[
             styles.tileTextStyles,
@@ -218,14 +270,26 @@ export const OrderDetails = ({route, navigation}) => {
   };
 
   const renderRow = (item, index) => {
+    const imageLocation = _find(
+      businessLocations,
+      (locationDetails) =>
+        parseInt(locationDetails.locationID, 10) ===
+        parseInt(item.locationID, 10),
+    );
+    const imageUrl = imageLocation
+      ? encodeURI(
+          `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
+        )
+      : '';
     return (
       <View>
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
         {index === 0 && <View style={{height: 16}} />}
         <View style={styles.rowStyles}>
-          {item.icon}
+          {/* {item.icon} */}
+          <Image source={{uri: imageUrl}} style={{height: 90, width: 90}} />
           <View style={{marginLeft: 18, marginTop: 17}}>
-            <Text style={styles.rowTextStyles}> {item.title}</Text>
+            <Text style={styles.rowTextStyles}> {item.itemName}</Text>
             <Text
               style={[
                 styles.rowTextStyles,
@@ -235,16 +299,17 @@ export const OrderDetails = ({route, navigation}) => {
                   marginLeft: 4,
                 },
               ]}>
-              Qty {item.quantity}
+              Qty - {parseFloat(item.itemQty).toFixed(0)} *{' '}
+              {parseFloat(item.packedQty).toFixed(2)} {_toLower(item.uomName)}
             </Text>
           </View>
           <View style={{top: 16, right: 25, position: 'absolute'}}>
             <Text style={[styles.rowTextStyles, {fontWeight: '600'}]}>
-              {item.price}
+              {parseFloat(item.itemRate).toFixed(2)}/{_toLower(item.uomName)}
             </Text>
           </View>
         </View>
-        {index === cartItems.length - 1 ? (
+        {index === orderItems.length - 1 ? (
           <View style={{height: 16}} />
         ) : (
           <View
@@ -265,9 +330,9 @@ export const OrderDetails = ({route, navigation}) => {
         style={{
           flex: 1,
         }}
-        data={cartItems}
+        data={orderItems}
         renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.galleryID}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -275,27 +340,29 @@ export const OrderDetails = ({route, navigation}) => {
     );
   };
 
-  const renderLedger = () => {
+  const renderTotals = () => {
     return (
       <View style={{marginHorizontal: 16}}>
         <View style={[styles.ledgerRowTitleStyle, {marginTop: 23}]}>
-          <Text style={styles.ledgerTextStyles}>Bag Total</Text>
-          <Text style={styles.ledgerTextStyles}>₹8,262</Text>
-        </View>
-        <View style={styles.ledgerRowTitleStyle}>
-          <Text style={styles.ledgerTextStyles}>Bag discount</Text>
-          <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
-            ₹1,377
+          <Text style={styles.ledgerTextStyles}>Order total</Text>
+          <Text style={styles.ledgerTextStyles}>
+            ₹{orderValues.cartTotal.toFixed(2)}
           </Text>
         </View>
         <View style={styles.ledgerRowTitleStyle}>
+          <Text style={styles.ledgerTextStyles}>Discount (-)</Text>
+          <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
+            ₹{orderValues.cartDiscount.toFixed(2)}
+          </Text>
+        </View>
+        {/* <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Order Total</Text>
           <Text style={styles.ledgerTextStyles}>₹6,885</Text>
         </View>
         <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Delivery Charges</Text>
           <Text style={styles.ledgerTextStyles}>₹99</Text>
-        </View>
+        </View> */}
         <View
           style={{
             backgroundColor: theme.colors.BLACK,
@@ -306,20 +373,20 @@ export const OrderDetails = ({route, navigation}) => {
         />
         <View style={[styles.ledgerRowTitleStyle, {marginTop: 13}]}>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            Total
+            Total amount
           </Text>
           <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
-            ₹6984
+            ₹{orderValues.totalAmount.toFixed(2)}
           </Text>
         </View>
       </View>
     );
   };
 
-  const renderButton = () => {
+  const renderButtonCancelOrder = () => {
     return (
       <CommonButton
-        buttonTitle={'TRACK ORDER'}
+        buttonTitle="CANCEL ORDER"
         onPressButton={() => {
           navigation.push(ScreenNamesCustomer.TRACKORDER);
         }}
@@ -330,22 +397,51 @@ export const OrderDetails = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
+        disabled={parseInt(orderDetails.indentStatus, 10) > 0}
+        disableButton={parseInt(orderDetails.indentStatus, 10) > 0}
       />
     );
   };
 
-  // const renderAlert = () => {
-  //   return (
-  //     <CommonAlertView
-  //       showLoader={orderDetailsLoading}
-  //       showSuceessPopup={!orderDetailsLoading}
-  //       onPressSuccessButton={() => {
-  //         setShowAlert(false);
-  //       }}
-  //       successTitle={alertMessage}
-  //     />
-  //   );
-  // };
+  const renderButtonTrackOrder = () => {
+    return (
+      <CommonButton
+        buttonTitle="TRACK ORDER"
+        onPressButton={() => {
+          navigation.push(ScreenNamesCustomer.TRACKORDER, {
+            orderDetails: orderDetails,
+          });
+        }}
+        propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
+        propTextStyle={{
+          fontWeight: 'bold',
+          fontSize: 12,
+          lineHeight: 22,
+          letterSpacing: -0.5,
+        }}
+      />
+    );
+  };
+
+  const renderButtonViewInvoice = () => {
+    return (
+      <CommonButton
+        buttonTitle="VIEW INVOICE"
+        onPressButton={() => {
+          navigation.push(ScreenNamesCustomer.TRACKORDER);
+        }}
+        propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
+        propTextStyle={{
+          fontWeight: 'bold',
+          fontSize: 12,
+          lineHeight: 22,
+          letterSpacing: -0.5,
+        }}
+        disabled
+        disableButton
+      />
+    );
+  };
 
   return orderDetailsLoading ? (
     <Loader />
@@ -360,8 +456,10 @@ export const OrderDetails = ({route, navigation}) => {
       {renderHeader()}
       {renderOrderID()}
       {renderListView()}
-      {renderLedger()}
-      {renderButton()}
+      {renderTotals()}
+      {renderButtonCancelOrder()}
+      {renderButtonTrackOrder()}
+      {renderButtonViewInvoice()}
       {/* {showAlert && renderAlert()} */}
     </ScrollView>
   );

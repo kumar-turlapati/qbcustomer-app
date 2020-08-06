@@ -44,39 +44,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// const catalogue = [
-//   {
-//     id: 1,
-//     title: 'Order ID 1234XYZ',
-//     description: 'Your order has been confirmed',
-//     amount: '₹6984',
-//   },
-//   {
-//     id: 2,
-//     title: 'Order ID 1234XYZ',
-//     description: 'Your order has been confirmed',
-//     amount: '₹6984',
-//   },
-//   {
-//     id: 3,
-//     title: 'Order ID 1234XYZ',
-//     description: 'Your order has been confirmed',
-//     amount: '₹6984',
-//   },
-//   {
-//     id: 4,
-//     title: 'Order ID 1234XYZ',
-//     description: 'Your order has been confirmed',
-//     amount: '₹6984',
-//   },
-//   {
-//     id: 5,
-//     title: 'Order ID 1234XYZ',
-//     description: 'Your order has been confirmed',
-//     amount: '₹6984',
-//   },
-// ];
-
 export const Order = ({navigation}) => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
@@ -107,7 +74,8 @@ export const Order = ({navigation}) => {
             // console.log(error, '@@@@@@@@@@@@@@@@@@@@@@@@@@', requestHeaders);
             setOrdersLoading(false);
             setShowNoDataMessage(true);
-            setErrorMessage(error.response.data.errortext);
+            setErrorMessage('No Orders found :(');
+            // setErrorMessage(error.response.data.errortext);
             // setErrorText(error.response.data.errortext);
             // setShowAlert(true);
           });
@@ -192,11 +160,12 @@ export const Order = ({navigation}) => {
 
   return ordersLoading ? (
     <Loader />
+  ) : showNoDataMessage ? (
+    <NoDataMessage message={errorMessage} />
   ) : (
     <View style={styles.container}>
       {renderHeader()}
       {renderListView()}
-      {showNoDataMessage && <NoDataMessage message={errorMessage} />}
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {theme} from '../theme/theme';
 
 export const NoDataMessage = (props) => {
@@ -7,9 +7,15 @@ export const NoDataMessage = (props) => {
 
   return (
     <View style={[styles.container, styles.horizontal]}>
-      <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
-        {message && message.length > 0 ? message : 'No Data found :('}
-      </Text>
+      {message && message.length > 0 ? (
+        <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
+          {message}
+        </Text>
+      ) : (
+        <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
+          No Data found :(
+        </Text>
+      )}
     </View>
   );
 };

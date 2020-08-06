@@ -220,7 +220,7 @@ export const CartView = ({route, navigation}) => {
           {headers: requestHeaders},
         )
         .then((apiResponse) => {
-          console.log(apiResponse, 'apiResponse........');
+          // console.log(apiResponse, 'apiResponse........');
           setOrderLoading(false);
           if (apiResponse.data.status === 'success') {
             setShowOrderAlertText(
@@ -233,7 +233,7 @@ export const CartView = ({route, navigation}) => {
           }
         })
         .catch((error) => {
-          console.log(error, 'error..................', error.response);
+          // console.log(error, 'error..................', error.response);
           setOrderLoading(false);
           if (Array.isArray(error.response.data.errortext)) {
             setStockOutItems(error.response.data.errortext);
@@ -245,7 +245,7 @@ export const CartView = ({route, navigation}) => {
           }
         });
     } catch (e) {
-      console.log(e, 'e..................');
+      // console.log(e, 'e..................');
       setLoading(false);
       setShowOrderAlertText('Network error. Please try again.');
     }
