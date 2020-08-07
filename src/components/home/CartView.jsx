@@ -141,6 +141,7 @@ export const CartView = ({route, navigation}) => {
   const [showOrderAlert, setShowOrderAlert] = useState(false);
   const [showOrderAlertText, setShowOrderAlertText] = useState(false);
   const [stockOutItems, setStockOutItems] = useState([]);
+  const [orderSuccess, setOrderSuccess] = useState(false);
   const {
     cartItems,
     removeItemFromCart,
@@ -635,7 +636,7 @@ export const CartView = ({route, navigation}) => {
         showSuceessPopup={!orderLoading}
         onPressSuccessButton={() => {
           setShowOrderAlert(false);
-          navigation.navigate(ScreenNamesCustomer.ORDER);
+          if (orderSuccess) navigation.navigate(ScreenNamesCustomer.ORDER);
         }}
         successTitle={showOrderAlertText}
       />
