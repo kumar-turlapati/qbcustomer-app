@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   renderFullViewDot: {
     flexDirection: 'row',
     justifyContent: 'center',
-    top: 600,
+    top: 60,
     alignSelf: 'center',
     backgroundColor: theme.colors.WHITE,
     borderRadius: 10,
@@ -166,6 +166,8 @@ export const ProductDetails = ({route, navigation}) => {
   const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
 
   // console.log(route.params.productDetails, '---------------------');
+
+  console.log(slideIndex, 'slide index is....................');
 
   const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
     ShoppingCartContext,
@@ -364,10 +366,11 @@ export const ProductDetails = ({route, navigation}) => {
           sliderHeight={winHeight}
           itemHeight={winHeight}
           loop
-          autoplay
-          autoplayDelay={3000}
-          autoplayInterval={3000}
+          // autoplay
+          // autoplayDelay={3000}
+          // autoplayInterval={3000}
           layout="default"
+          firstItem={slideIndex}
         />
       </View>
     );
@@ -377,15 +380,15 @@ export const ProductDetails = ({route, navigation}) => {
     return (
       <View>
         <Carousel
-          onSnapToItem={setSlideIndex}
+          onSnapToItem={(slideIndex) => setSlideIndex(slideIndex)}
           data={productImages}
           renderItem={renderSliderItem}
           sliderWidth={winWidth}
           itemWidth={winWidth - 80}
           loop
-          autoplay
-          autoplayDelay={3000}
-          autoplayInterval={3000}
+          // autoplay
+          // autoplayDelay={3000}
+          // autoplayInterval={3000}
           layout="default"
         />
       </View>
@@ -544,7 +547,7 @@ export const ProductDetails = ({route, navigation}) => {
       {renderTitleAndButton()}
       {renderDiscription()}
       {showFullScreen && renderImageFullScreen()}
-      {showFullScreen && renderSliderFullDotView()}
+      {/* {showFullScreen && renderSliderFullDotView()} */}
       {showFullScreen && renderSliderFullClose()}
       {showAlert && (
         <CommonAlertView

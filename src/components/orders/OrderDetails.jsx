@@ -394,7 +394,7 @@ export const OrderDetails = ({route, navigation}) => {
         onPressButton={() => {
           navigation.push(ScreenNamesCustomer.TRACKORDER);
         }}
-        propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 25}}
+        propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 15}}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,

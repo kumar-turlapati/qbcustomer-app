@@ -635,6 +635,7 @@ export const CartView = ({route, navigation}) => {
         showSuceessPopup={!orderLoading}
         onPressSuccessButton={() => {
           setShowOrderAlert(false);
+          navigation.navigate(ScreenNamesCustomer.ORDER);
         }}
         successTitle={showOrderAlertText}
       />
