@@ -27,6 +27,7 @@ import axios from 'axios';
 import _startCase from 'lodash/startCase';
 import _lowerCase from 'lodash/lowerCase';
 import {Image} from 'react-native-elements';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   renderFullViewDot: {
     flexDirection: 'row',
     justifyContent: 'center',
-    top: 60,
+    top: 600,
     alignSelf: 'center',
     backgroundColor: theme.colors.WHITE,
     borderRadius: 10,
@@ -288,7 +289,8 @@ export const ProductDetails = ({route, navigation}) => {
         key={item.hash}
         onPress={() => {
           setShowFullScreen(true);
-        }}>
+        }}
+        key={item.itemID}>
         <View style={styles.onboardingViewStyles}>
           <Image
             source={{uri: imageUrl}}
@@ -336,10 +338,16 @@ export const ProductDetails = ({route, navigation}) => {
     );
     return (
       <View>
-        <Image
-          source={{uri: imageUrl}}
-          style={{width: winWidth, height: winHeight}}
-        />
+        <ImageZoom
+          cropWidth={Dimensions.get('window').width}
+          cropHeight={Dimensions.get('window').height}
+          imageWidth={winWidth}
+          imageHeight={winHeight}>
+          <Image
+            source={{uri: imageUrl}}
+            style={{width: winWidth, height: winHeight}}
+          />
+        </ImageZoom>
       </View>
     );
   };
