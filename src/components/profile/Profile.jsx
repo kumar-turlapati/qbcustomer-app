@@ -97,7 +97,7 @@ export const Profile = ({navigation}) => {
   const renderHeader = () => {
     return (
       <CommonHeader
-        leftSideText={'Profile'}
+        leftSideText="My Account"
         isTabView={true}
         onPressRightButton={() => {}}
         isProduct={false}

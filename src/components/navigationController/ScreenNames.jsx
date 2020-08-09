@@ -5,7 +5,7 @@ export const ScreenNamesCustomer = {
   HOME: 'Home',
   CATALOGUE: 'Catalogs',
   ORDER: 'Orders',
-  PROFILE: 'Profile',
+  PROFILE: 'My Account',
   FILTER: 'Filter',
   PRODUCTDETAILS: 'ProductDetails',
   CARTVIEW: 'CartView',

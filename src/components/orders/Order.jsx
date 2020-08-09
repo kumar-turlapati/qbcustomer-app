@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
@@ -10,6 +10,8 @@ import {restEndPoints, requestHeaders} from '../../../qbconfig';
 import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
 import useAsyncStorage from '../customHooks/async';
+import {useIsFocused} from '@react-navigation/native';
+import {ShoppingCartContext} from '../context/ShoppingCart';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,10 +45,15 @@ export const Order = ({navigation}) => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
   const [orders, setOrders] = useState([]);
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {GET_ALL_ORDERS} = restEndPoints;
+  const isFocused = useIsFocused();
+  const {fetchCart} = useContext(ShoppingCartContext);
+
+  useEffect(() => {
+    fetchCart();
+  }, [isFocused]);
 
   // console.log(orders, 'orders of the customer........');
 

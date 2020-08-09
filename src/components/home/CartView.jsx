@@ -228,6 +228,7 @@ export const CartView = ({route, navigation}) => {
             setShowOrderAlertText(
               `Order successfully placed with Order No. ${apiResponse.data.response.orderNo} :)`,
             );
+            setOrderSuccess(true);
           } else {
             setShowOrderAlertText(
               `An error occurred while placing your order. Please try again. ):`,

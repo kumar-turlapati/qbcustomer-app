@@ -22,14 +22,14 @@ const routeToIcon = {
   Home: <HomeUnselected style={{width: 20, height: 20}} />,
   Catalogs: <CatalogueUnselected style={{width: 20, height: 20}} />,
   Orders: <OrdersUnselected style={{width: 20, height: 20}} />,
-  Profile: <ProfileUnselected style={{width: 20, height: 20}} />,
+  'My Account': <ProfileUnselected style={{width: 20, height: 20}} />,
 };
 
 const routeToFocusedIcon = {
   Home: <HomeSelected style={{width: 20, height: 20}} />,
   Catalogs: <CatalogueSelected style={{width: 20, height: 20}} />,
   Orders: <OrdersSelected style={{width: 20, height: 20}} />,
-  Profile: <ProfileSelected style={{width: 20, height: 20}} />,
+  'My Account': <ProfileSelected style={{width: 20, height: 20}} />,
 };
 
 const Tab = createBottomTabNavigator();
