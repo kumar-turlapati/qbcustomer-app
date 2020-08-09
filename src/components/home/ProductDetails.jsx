@@ -152,6 +152,7 @@ export const ProductDetails = ({route, navigation}) => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [alertText, setAlertText] = useState('');
   const [showAlertWishList, setShowAlertWishList] = useState(false);
+  const [disableViewCart, setDisableViewCart] = useState(true);
   const productImages = route.params.productDetails.images;
   const productLocationKey = route.params.productLocation;
   const productRate = route.params.productDetails.itemRate;
@@ -167,11 +168,17 @@ export const ProductDetails = ({route, navigation}) => {
 
   // console.log(route.params.productDetails, '---------------------');
 
-  console.log(slideIndex, 'slide index is....................');
+  // console.log(slideIndex, 'slide index is....................');
 
-  const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
-    ShoppingCartContext,
-  );
+  console.log(disableViewCart, 'disable view cart is.......................');
+
+  const {
+    addToCart,
+    loading: apiLoading,
+    apiError,
+    apiErrorText,
+    cartItems,
+  } = useContext(ShoppingCartContext);
 
   useEffect(() => {
     if (apiError) {
@@ -179,6 +186,11 @@ export const ProductDetails = ({route, navigation}) => {
       setAlertText(apiErrorText);
     }
   }, [apiError]);
+
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) setDisableViewCart(false);
+    // console.log(cartItems);
+  }, [cartItems]);
 
   const buttonDisable = parseInt(orderQty, 10) <= 0;
 
@@ -451,24 +463,26 @@ export const ProductDetails = ({route, navigation}) => {
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            activeOpacity={1}
-            style={[styles.buyNowStyles]}
-            onPress={() => {
-              navigation.push(ScreenNamesCustomer.CARTVIEW);
-            }}
-            // disabled={disableBuyNow}
-          >
-            <Text style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
-              BUY NOW
-            </Text>
-          </TouchableOpacity>
+          <View style={{opacity: disableViewCart ? 0.5 : 1}}>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={[styles.buyNowStyles]}
+              onPress={() => {
+                navigation.push(ScreenNamesCustomer.CARTVIEW);
+              }}
+              disabled={disableViewCart}>
+              <Text
+                style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
+                VIEW CART
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
   };
 
-  const renderDiscription = () => {
+  const renderDescription = () => {
     return (
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
@@ -545,7 +559,7 @@ export const ProductDetails = ({route, navigation}) => {
       {renderCarouselView()}
       {renderSliderDotView()}
       {renderTitleAndButton()}
-      {renderDiscription()}
+      {renderDescription()}
       {showFullScreen && renderImageFullScreen()}
       {/* {showFullScreen && renderSliderFullDotView()} */}
       {showFullScreen && renderSliderFullClose()}
