@@ -91,6 +91,28 @@ export const AppCustomerNavigator = () => {
             name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
             component={WalkThroughScreen}
           />
+          <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
+          <Stack.Screen
+            name={ScreenNamesCustomer.PRODUCTDETAILS}
+            component={ProductDetails}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.CARTVIEW}
+            component={CartView}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.WISHLIST}
+            component={WishList}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.ORDERDETAILS}
+            component={OrderDetails}
+          />
+          <Stack.Screen
+            name={ScreenNamesCustomer.TRACKORDER}
+            component={TrackOrder}
+          />
+          <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
         </>
       )}
       {/* <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
