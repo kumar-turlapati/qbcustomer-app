@@ -401,8 +401,10 @@ export const OrderDetails = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
-        disabled={parseInt(orderDetails.indentStatus, 10) > 0}
-        disableButton={parseInt(orderDetails.indentStatus, 10) > 0}
+        // disabled={parseInt(orderDetails.indentStatus, 10) > 0}
+        // disableButton={parseInt(orderDetails.indentStatus, 10) > 0}
+        disabled={true}
+        disableButton={true}
       />
     );
   };
