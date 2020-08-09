@@ -1,15 +1,15 @@
 import React from 'react';
-import { Image, ImageProps } from 'react-native';
+import {Image, ImageProps} from 'react-native';
 
 const getIconStyle = (size) => {
-  if (size === 'sm') return { width: 24, height: 24 };
-  if (size === 'sm_l') return { width: 18, height: 21 };
-  if (size === 'md_l') return { width: 54, height: 54 };
-  if (size === 'lg') return { width: 64, height: 64 };
-  return { width: 48, height: 48 };
+  if (size === 'sm') return {width: 24, height: 24};
+  if (size === 'sm_l') return {width: 18, height: 21};
+  if (size === 'md_l') return {width: 54, height: 54};
+  if (size === 'lg') return {width: 64, height: 64};
+  return {width: 48, height: 48};
 };
 
-export const IconBase = ({ size, style, ...props }) => (
+export const IconBase = ({size, style, ...props}) => (
   <Image style={[getIconStyle(size), style]} {...props} />
 );
 
@@ -28,7 +28,7 @@ export const TextBoxSelect = (props) => (
 export const QLogo = (props) => (
   <IconBase
     {...props}
-    style={{ width: 121, height: 54 }}
+    style={{width: 121, height: 54}}
     source={require('./QLogo.png')}
     resizeMode={'contain'}
   />
@@ -37,7 +37,7 @@ export const QLogo = (props) => (
 export const Screen1 = (props) => (
   <IconBase
     {...props}
-    style={{ width: 119, height: 154 }}
+    style={{width: 119, height: 154}}
     source={require('./Screen1.png')}
     resizeMode={'contain'}
   />
@@ -46,7 +46,7 @@ export const Screen1 = (props) => (
 export const Screen2 = (props) => (
   <IconBase
     {...props}
-    style={{ width: 119, height: 154 }}
+    style={{width: 119, height: 154}}
     source={require('./Screen1.png')}
     resizeMode={'contain'}
   />
@@ -55,7 +55,7 @@ export const Screen2 = (props) => (
 export const Screen3 = (props) => (
   <IconBase
     {...props}
-    style={{ width: 66, height: 126 }}
+    style={{width: 66, height: 126}}
     source={require('./Screen4.png')}
     resizeMode={'contain'}
   />
@@ -64,7 +64,7 @@ export const Screen3 = (props) => (
 export const Screen4 = (props) => (
   <IconBase
     {...props}
-    style={{ width: 66, height: 126 }}
+    style={{width: 66, height: 126}}
     source={require('./Screen4.png')}
     resizeMode={'contain'}
   />
@@ -149,7 +149,7 @@ export const HeartUnSelected = (props) => (
 export const SortIcon = (props) => (
   <IconBase
     {...props}
-    style={{ width: 21, height: 24 }}
+    style={{width: 21, height: 24}}
     source={require('./Sort.png')}
     resizeMode={'contain'}
   />
@@ -158,7 +158,7 @@ export const SortIcon = (props) => (
 export const FilterIcon = (props) => (
   <IconBase
     {...props}
-    style={{ width: 21, height: 23 }}
+    style={{width: 21, height: 23}}
     source={require('./Filter.png')}
     resizeMode={'contain'}
   />
@@ -167,26 +167,42 @@ export const FilterIcon = (props) => (
 export const CartIcon = (props) => (
   <IconBase
     {...props}
-    style={{ width: 20, height: 22 }}
+    style={{width: 20, height: 22}}
     source={require('./Cart.png')}
     resizeMode={'contain'}
   />
 );
 
 export const Cloth1 = (props) => (
-  <IconBase {...props} source={require('./Cloth1.png')} resizeMode={'stretch'} />
+  <IconBase
+    {...props}
+    source={require('./Cloth1.png')}
+    resizeMode={'stretch'}
+  />
 );
 
 export const Cloth2 = (props) => (
-  <IconBase {...props} source={require('./Cloth2.png')} resizeMode={'stretch'} />
+  <IconBase
+    {...props}
+    source={require('./Cloth2.png')}
+    resizeMode={'stretch'}
+  />
 );
 
 export const Cloth3 = (props) => (
-  <IconBase {...props} source={require('./Cloth3.png')} resizeMode={'stretch'} />
+  <IconBase
+    {...props}
+    source={require('./Cloth3.png')}
+    resizeMode={'stretch'}
+  />
 );
 
 export const Cloth4 = (props) => (
-  <IconBase {...props} source={require('./Cloth4.png')} resizeMode={'stretch'} />
+  <IconBase
+    {...props}
+    source={require('./Cloth4.png')}
+    resizeMode={'stretch'}
+  />
 );
 
 export const BackIcon = (props) => (
@@ -265,6 +281,14 @@ export const LedgerIcon = (props) => (
   <IconBase
     {...props}
     source={require('./Ledger.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const LogoutIcon = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Logout.png')}
     resizeMode={'contain'}
   />
 );

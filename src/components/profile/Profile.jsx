@@ -7,6 +7,7 @@ import {
   OrderIcon,
   WishListIcon,
   LedgerIcon,
+  LogoutIcon,
 } from '../../icons/Icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
@@ -80,7 +81,7 @@ const catalogue = [
     title: 'Logout',
     description: 'Exit from the app',
     icon: (
-      <LedgerIcon
+      <LogoutIcon
         style={{
           width: 24,
           height: 26,
