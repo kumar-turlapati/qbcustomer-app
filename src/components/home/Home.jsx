@@ -32,12 +32,14 @@ import _forEach from 'lodash/forEach';
 import _find from 'lodash/find';
 import _orderBy from 'lodash/orderBy';
 import _remove from 'lodash/remove';
+import _compact from 'lodash/compact';
 import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
 import {Image} from 'react-native-elements';
 import {ShoppingCartContext} from '../context/ShoppingCart';
+import {NoDataMessage} from '../NoDataMessage';
 
 const {height, width} = Dimensions.get('window');
 
@@ -388,7 +390,7 @@ export const Home = ({route, navigation}) => {
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHighSelected, setLowToHighSelected] = useState(true);
   const [highToLowSelected, setHighToLowSelected] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [defaultCatalogDetails, setDefaultCatalogDetails] = useState([]);
   const [catalogBrands, setCatalogBrands] = useState([]);
   const [catalogCategories, setCatalogCategories] = useState([]);
@@ -502,26 +504,44 @@ export const Home = ({route, navigation}) => {
   }, [accessToken]);
 
   useEffect(() => {
-    if (defaultCatalogDetails) {
+    if (
+      defaultCatalogDetails &&
+      defaultCatalogDetails.catalogItems &&
+      Object.keys(defaultCatalogDetails.catalogItems).length > 0
+    ) {
+      // console.log(
+      //   Object.keys(defaultCatalogDetails.catalogItems),
+      //   Object.keys(defaultCatalogDetails.catalogItems).length,
+      //   defaultCatalogDetails.catalogItems,
+      // );
       const catalogBrands = _uniq(
         _map(defaultCatalogDetails.catalogItems, 'brandName'),
       );
       const catalogCategories = _uniq(
         _map(defaultCatalogDetails.catalogItems, 'categoryName'),
       );
-      const catalogItems = defaultCatalogDetails.catalogItems;
-      const catalogItemsSorted = _orderBy(
-        catalogItems,
-        [(catalogItems) => parseInt(catalogItems.itemRate, 10)],
-        ['asc'],
+
+      const catalogItems = _compact(
+        _map(defaultCatalogDetails.catalogItems, (itemDetails) => {
+          if (parseFloat(itemDetails.itemRate) > 0) return itemDetails;
+        }),
       );
-      const maxItemPrice = Math.max(
-        ...catalogItemsSorted.map((o) => parseInt(o.itemRate)),
-        1,
-      );
-      const minItemPrice = Math.min(
-        ...catalogItemsSorted.map((o) => parseInt(o.itemRate)),
-      );
+      const catalogItemsSorted =
+        catalogItems.length > 0
+          ? _orderBy(
+              catalogItems,
+              [(catalogItemDetails) => parseFloat(catalogItemDetails.itemRate)],
+              ['asc'],
+            )
+          : [];
+      const maxItemPrice =
+        catalogItems.length > 0
+          ? Math.max(...catalogItemsSorted.map((o) => parseInt(o.itemRate)), 1)
+          : 0;
+      const minItemPrice =
+        catalogItems.length > 0
+          ? Math.min(...catalogItemsSorted.map((o) => parseInt(o.itemRate)))
+          : 0;
       // console.log(minItemPrice, '-----------------');
       // const maxItemPrice = 10000;
       // const minItemPrice = 0;
@@ -546,7 +566,7 @@ export const Home = ({route, navigation}) => {
         onPressRightButton={() => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
         }}
-        isProduct={true}
+        isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
         onPressFilterIcon={() => {
           setShowSortView(false);
           navigation.push(ScreenNamesCustomer.FILTER, {
@@ -611,7 +631,11 @@ export const Home = ({route, navigation}) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${productDetails.images[0].imageName}`,
     );
-    return isCategoryFiltered && isBrandFiltered && isPricingFilterValidated ? (
+    const itemRate = parseFloat(productDetails.itemRate).toFixed(2);
+    return isCategoryFiltered &&
+      isBrandFiltered &&
+      isPricingFilterValidated &&
+      itemRate > 0 ? (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
@@ -643,7 +667,7 @@ export const Home = ({route, navigation}) => {
             </View>
           ) : ( */}
           <Text style={styles.specialPriceStyle}>
-            ₹{productDetails.itemRate}/{productDetails.uomName}
+            ₹{itemRate}/{productDetails.uomName}
           </Text>
           {/* )} */}
           <TouchableOpacity
@@ -874,10 +898,10 @@ export const Home = ({route, navigation}) => {
 
   return loading ? (
     <Loader />
-  ) : (
+  ) : catalogItems && catalogItems.length > 0 ? (
     <View style={styles.container}>
       {renderHeader()}
-      {catalogItems && catalogItems.length > 0 && renderListView()}
+      {renderListView()}
       {showSortView && renderSortView()}
       {showAlert && (
         <CommonAlertView
@@ -890,5 +914,7 @@ export const Home = ({route, navigation}) => {
         />
       )}
     </View>
-  );
+  ) : !loading ? (
+    <NoDataMessage message="No products are available in this Catalog :(" />
+  ) : null;
 };
