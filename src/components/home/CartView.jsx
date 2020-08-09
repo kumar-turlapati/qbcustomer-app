@@ -142,6 +142,7 @@ export const CartView = ({route, navigation}) => {
   const [showOrderAlertText, setShowOrderAlertText] = useState(false);
   const [stockOutItems, setStockOutItems] = useState([]);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  // const [refreshCart, setRefreshCart] = useState(false);
   const {
     cartItems,
     removeItemFromCart,
@@ -162,9 +163,11 @@ export const CartView = ({route, navigation}) => {
 
   // console.log(cartItems.length, 'cartItems in CartView.jsx');
 
-  // useEffect(() => {
-  //   fetchCart();
-  // }, []);
+  useEffect(() => {
+    if (orderSuccess) {
+      fetchCart();
+    }
+  }, [orderSuccess]);
 
   // console.log(stockOutItems, 'stock out items..........');
 
@@ -227,7 +230,7 @@ export const CartView = ({route, navigation}) => {
           setOrderLoading(false);
           if (apiResponse.data.status === 'success') {
             setShowOrderAlertText(
-              `Order successfully placed with Order No. ${apiResponse.data.response.orderNo} :)`,
+              `Order successfully placed with Order No. ${apiResponse.data.response.orderNo} :) Please wait while we refresh your list!`,
             );
             setOrderSuccess(true);
           } else {
@@ -639,7 +642,8 @@ export const CartView = ({route, navigation}) => {
         onPressSuccessButton={() => {
           setShowOrderAlert(false);
           if (orderSuccess) {
-            navigation.navigate(ScreenNamesCustomer.HOME);
+            setOrderLoading(true);
+            // navigation.navigate(ScreenNamesCustomer.ORDER);
           }
         }}
         successTitle={showOrderAlertText}

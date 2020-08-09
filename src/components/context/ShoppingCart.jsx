@@ -13,9 +13,9 @@ export const ShoppingCartProvider = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
 
-  useEffect(() => {
-    if (uuid && uuid.length > 0 && !tokenLoading) fetchCart();
-  }, [uuid, tokenLoading]);
+  // useEffect(() => {
+  //   if (uuid && uuid.length > 0 && !tokenLoading) fetchCart();
+  // }, [uuid, tokenLoading]);
 
   const {
     ADD_ITEM_TO_CART,
