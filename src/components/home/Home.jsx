@@ -405,21 +405,25 @@ export const Home = ({route, navigation}) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
   const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
+    '@accessToken',
+  );
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken();
   const {
     CATALOGS,
     CATALOG_DETAILS,
     ADD_ITEM_TO_WISHLIST,
     REMOVE_ITEM_FROM_WISHLIST,
   } = restEndPoints;
-  const isFocused = useIsFocused();
-  const {fetchCart} = useContext(ShoppingCartContext);
 
-  useEffect(() => {
-    if (isFocused) fetchCart();
-  }, [isFocused]);
+  // const isFocused = useIsFocused();
+  // const {fetchCart} = useContext(ShoppingCartContext);
+
+  // useEffect(() => {
+  //   if (isFocused) fetchCart();
+  // }, [isFocused]);
 
   // console.log(route.params, 'in Home Screen');
   // const catalogCode = route.params;
@@ -433,12 +437,13 @@ export const Home = ({route, navigation}) => {
       await axios
         .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
         .then((apiResponse) => {
+          setLoading(false);
           if (apiResponse.data.status === 'success') {
             setDefaultCatalogDetails(apiResponse.data.response);
           }
-          setLoading(false);
         })
         .catch((error) => {
+          setLoading(false);
           const errorText = error.response.data.errortext;
           // console.log(errorText);
         });
@@ -453,6 +458,7 @@ export const Home = ({route, navigation}) => {
       await axios
         .get(CATALOGS.URL, {headers: requestHeaders})
         .then((apiResponse) => {
+          setLoading(false);
           Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
           if (apiResponse.data.status === 'success') {
             const defaultCatalog = apiResponse.data.response.catalogs.find(
@@ -463,9 +469,9 @@ export const Home = ({route, navigation}) => {
               : '';
             getCatalogDetails(defaultCatalogCode, requestHeaders);
           }
-          setLoading(false);
         })
         .catch((error) => {
+          setLoading(false);
           const errorText = error.response.data.errortext;
           // console.log(errorText);
         });
@@ -486,11 +492,12 @@ export const Home = ({route, navigation}) => {
     }
   };
 
+  /*
   useEffect(() => {
     if (isFocused && catalogCode && catalogCode.length === 0)
       getCatalogs(requestHeaders);
     // console.log('here are ..........', isFocused, catalogCode);
-  }, [isFocused, catalogCode]);
+  }, [isFocused, catalogCode]); */
 
   useEffect(() => {
     if (accessToken && accessToken.length > 0) {
@@ -896,7 +903,7 @@ export const Home = ({route, navigation}) => {
     }
   };
 
-  return loading ? (
+  return loading || tokenLoading ? (
     <Loader />
   ) : catalogItems && catalogItems.length > 0 ? (
     <View style={styles.container}>
@@ -914,7 +921,8 @@ export const Home = ({route, navigation}) => {
         />
       )}
     </View>
-  ) : !loading ? (
-    <NoDataMessage message="No products are available in this Catalog :(" />
+  ) : !loading || !tokenLoading ? (
+    // <NoDataMessage message="No products are available in this Catalog :(" />
+    <></>
   ) : null;
 };

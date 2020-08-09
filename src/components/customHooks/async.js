@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default (key) => {
   const [storageItem, setStorageItem] = useState(null);
-  const [tokenLoading, setTokenLoading] = useState(false);
+  const [tokenLoading, setTokenLoading] = useState(true);
 
   const getStorageItem = async () => {
     const data = await AsyncStorage.getItem(key);
