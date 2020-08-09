@@ -146,8 +146,8 @@ export const OrderDetails = ({route, navigation}) => {
       // console.log(cartItemDetails, '----------------');
       const itemQty = parseFloat(orderItemDetails.itemQty);
       const itemRate = parseFloat(orderItemDetails.itemRate);
-      const packedQty = parseFloat(orderItemDetails.packedQty);
-      cartTotal += parseFloat(itemQty * itemRate * packedQty);
+      // const packedQty = parseFloat(orderItemDetails.packedQty);
+      cartTotal += parseFloat(itemQty * itemRate);
     });
     const discountAmount = parseFloat(orderDetails.discount);
     const itemTotalAfterRounding =
@@ -303,7 +303,7 @@ export const OrderDetails = ({route, navigation}) => {
                   marginLeft: 4,
                 },
               ]}>
-              Qty - {parseFloat(item.itemQty).toFixed(0)} *{' '}
+              Qty - {parseFloat(item.itemQty / item.packedQty).toFixed(0)} *{' '}
               {parseFloat(item.packedQty).toFixed(2)} {_toLower(item.uomName)}
             </Text>
           </View>

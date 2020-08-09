@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   StyleSheet,
   View,
@@ -37,6 +37,7 @@ import {useIsFocused} from '@react-navigation/native';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
 import {Image} from 'react-native-elements';
+import {ShoppingCartContext} from '../context/ShoppingCart';
 
 const {height, width} = Dimensions.get('window');
 
@@ -412,6 +413,11 @@ export const Home = ({route, navigation}) => {
     REMOVE_ITEM_FROM_WISHLIST,
   } = restEndPoints;
   const isFocused = useIsFocused();
+  const {fetchCart} = useContext(ShoppingCartContext);
+
+  useEffect(() => {
+    if (isFocused) fetchCart();
+  }, [isFocused]);
 
   // console.log(route.params, 'in Home Screen');
   // const catalogCode = route.params;

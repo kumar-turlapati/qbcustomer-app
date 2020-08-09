@@ -148,6 +148,7 @@ export const CartView = ({route, navigation}) => {
     loading,
     updateCart,
     businessLocations,
+    fetchCart,
   } = useContext(ShoppingCartContext);
 
   const {VALIDATE_COUPON, NEW_ORDER} = restEndPoints;
@@ -637,7 +638,9 @@ export const CartView = ({route, navigation}) => {
         showSuceessPopup={!orderLoading}
         onPressSuccessButton={() => {
           setShowOrderAlert(false);
-          if (orderSuccess) navigation.navigate(ScreenNamesCustomer.ORDER);
+          if (orderSuccess) {
+            navigation.navigate(ScreenNamesCustomer.HOME);
+          }
         }}
         successTitle={showOrderAlertText}
       />

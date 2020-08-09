@@ -9,13 +9,13 @@ export const ShoppingCartProvider = (props) => {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(false);
   const [apiErrorText, setApiErrorText] = useState('');
-  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {storageItem: uuid, tokenLoading} = useAsyncStorage('@uuid');
   const [cartItems, setCartItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
 
   useEffect(() => {
-    if (uuid && uuid.length > 0) fetchCart();
-  }, [uuid]);
+    if (uuid && uuid.length > 0 && !tokenLoading) fetchCart();
+  }, [uuid, tokenLoading]);
 
   const {
     ADD_ITEM_TO_CART,

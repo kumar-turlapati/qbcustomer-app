@@ -11,7 +11,7 @@ import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
 import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
-import {ShoppingCartContext} from '../context/ShoppingCart';
+// import {ShoppingCartContext} from '../context/ShoppingCart';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,11 +49,9 @@ export const Order = ({navigation}) => {
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {GET_ALL_ORDERS} = restEndPoints;
   const isFocused = useIsFocused();
-  const {fetchCart} = useContext(ShoppingCartContext);
+  // const {fetchCart} = useContext(ShoppingCartContext);
 
-  useEffect(() => {
-    fetchCart();
-  }, [isFocused]);
+  useEffect(() => {}, [isFocused]);
 
   // console.log(orders, 'orders of the customer........');
 
