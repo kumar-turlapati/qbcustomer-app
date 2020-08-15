@@ -12,6 +12,8 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
+import CommonAlertView from '../UI/CommonAlertView';
+import CommonAlertViewYesNo from '../UI/CommonAlertViewYesNo';
 import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
 import axios from 'axios';
@@ -125,20 +127,25 @@ export const OrderDetails = ({route, navigation}) => {
   const [orderItems, setOrderItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [alertText, setAlertText] = useState('');
+  const [apiLoading, setApiLoading] = useState(true);
+  const [orderDeleted, setOrderDeleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [orderValues, setOrderValues] = useState({
     cartTotal: 0,
     cartDiscount: 0,
     totalAmount: 0,
   });
-  const {ORDER_DETAILS} = restEndPoints;
-
+  const {ORDER_DETAILS, CANCEL_ORDER, INVOICE_DETAILS} = restEndPoints;
   const orderCode = route.params.orderCode;
 
   // console.log(orderCode, orderDetails, orderItems);
   // console.log(orderItems);
   // console.log(orderDetails);
   // console.log(parseFloat(orderDetails.discount), 'order details......');
+  console.log('order status is....', orderDetails);
 
   const calculateCart = () => {
     let cartTotal = 0;
@@ -177,6 +184,30 @@ export const OrderDetails = ({route, navigation}) => {
     });
   };
 
+  const cancelOrder = async () => {
+    setApiLoading(true);
+    setShowAlert(true);
+    try {
+      await axios
+        .delete(CANCEL_ORDER.URL(orderCode), {headers: requestHeaders})
+        .then((apiResponse) => {
+          setApiLoading(false);
+          setAlertText('Order cancelled successfully :)');
+          setOrderDeleted(true);
+        })
+        .catch((error) => {
+          // console.log(error, 'error is.......');
+          const errorText = error.response.data.errortext;
+          setApiLoading(false);
+          setAlertText(errorText);
+        });
+    } catch (e) {
+      // console.log('catch block', e);
+      setApiLoading(false);
+      setAlertText('Network error. Please try again :(');
+    }
+  };
+
   useEffect(() => {
     if (orderItems.length > 0) calculateCart();
   }, [orderItems]);
@@ -189,7 +220,6 @@ export const OrderDetails = ({route, navigation}) => {
           .get(ORDER_DETAILS.URL(orderCode), {headers: requestHeaders})
           .then((apiResponse) => {
             setOrderDetailsLoading(false);
-            console.log(apiResponse.data.response, 'response.........');
             if (apiResponse.data.status === 'success') {
               const orderDetails =
                 apiResponse.data.response.orderDetails.tranDetails;
@@ -392,7 +422,7 @@ export const OrderDetails = ({route, navigation}) => {
       <CommonButton
         buttonTitle="CANCEL ORDER"
         onPressButton={() => {
-          navigation.push(ScreenNamesCustomer.TRACKORDER);
+          setShowConfirmDialog(true);
         }}
         propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 15}}
         propTextStyle={{
@@ -401,10 +431,8 @@ export const OrderDetails = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
-        // disabled={parseInt(orderDetails.indentStatus, 10) > 0}
-        // disableButton={parseInt(orderDetails.indentStatus, 10) > 0}
-        disabled={true}
-        disableButton={true}
+        disabled={parseInt(orderDetails.indentStatus, 10) > 0}
+        disableButton={parseInt(orderDetails.indentStatus, 10) > 0}
       />
     );
   };
@@ -434,7 +462,7 @@ export const OrderDetails = ({route, navigation}) => {
       <CommonButton
         buttonTitle="VIEW INVOICE"
         onPressButton={() => {
-          navigation.push(ScreenNamesCustomer.TRACKORDER);
+          navigation.push(ScreenNamesCustomer.VIEWINVOICE);
         }}
         propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
         propTextStyle={{
@@ -443,8 +471,16 @@ export const OrderDetails = ({route, navigation}) => {
           lineHeight: 22,
           letterSpacing: -0.5,
         }}
-        disabled
-        disableButton
+        disabled={
+          orderDetails &&
+          orderDetails.invoiceNo &&
+          parseInt(orderDetails.invoiceNo, 10) === 0
+        }
+        disableButton={
+          orderDetails &&
+          orderDetails.invoiceNo &&
+          parseInt(orderDetails.invoiceNo, 10) === 0
+        }
       />
     );
   };
@@ -466,7 +502,31 @@ export const OrderDetails = ({route, navigation}) => {
       {renderButtonCancelOrder()}
       {renderButtonTrackOrder()}
       {renderButtonViewInvoice()}
-      {/* {showAlert && renderAlert()} */}
+      {showAlert && (
+        <CommonAlertView
+          showLoader={apiLoading}
+          showSuceessPopup={!apiLoading}
+          onPressSuccessButton={() => {
+            setShowAlert(false);
+            if (orderDeleted) navigation.navigate(ScreenNamesCustomer.ORDER);
+          }}
+          successTitle={alertText}
+        />
+      )}
+      {showConfirmDialog && (
+        <CommonAlertViewYesNo
+          showLoader={false}
+          showSuceessPopup
+          onPressOkButton={() => {
+            setShowConfirmDialog(false);
+            cancelOrder();
+          }}
+          onPressCancelButton={() => {
+            setShowConfirmDialog(false);
+          }}
+          successTitle="Are you sure. You want to Cancel this order?"
+        />
+      )}
     </ScrollView>
   );
 };

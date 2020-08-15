@@ -46,7 +46,10 @@ export const restEndPoints = {
     URL: `${apiBaseUrl}/${ordersUri}`,
   },
   CANCEL_ORDER: {
-    URL: `${apiBaseUrl}/${ordersUri}`,
+    URL: (orderCode) => `${apiBaseUrl}/${ordersUri}/${orderCode}`,
+  },
+  INVOICE_DETAILS: {
+    URL: (orderNo) => `${apiBaseUrl}/app/v1/invoice/details/${orderNo}`,
   },
   ORDER_DETAILS: {
     URL: (orderCode) => `${apiBaseUrl}/${ordersUri}/${orderCode}`,

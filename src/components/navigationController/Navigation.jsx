@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Login} from '../Login';
 import {WalkThroughScreen} from '../WalkThroughScreen';
@@ -9,7 +9,6 @@ import {CartView} from '../home/CartView';
 import {WishList} from '../home/WishList';
 import {OrderDetails} from '../orders/OrderDetails';
 import {TrackOrder} from '../orders/TrackOrder';
-import {CancelOrder} from '../orders/CancelOrder';
 import {ViewInvoice} from '../orders/ViewInvoice';
 import {Ledger} from '../profile/Ledger';
 import {ScreenNamesCustomer} from './ScreenNames';
@@ -57,10 +56,6 @@ export const AppCustomerNavigator = () => {
       <Stack.Screen
         name={ScreenNamesCustomer.VIEWINVOICE}
         component={ViewInvoice}
-      />
-      <Stack.Screen
-        name={ScreenNamesCustomer.CANCELORDER}
-        component={CancelOrder}
       />
     </Stack.Navigator>
   );

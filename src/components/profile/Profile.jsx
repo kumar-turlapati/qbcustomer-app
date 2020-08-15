@@ -41,7 +41,7 @@ const catalogue = [
   {
     id: 1,
     title: 'Orders',
-    description: 'Check your order status',
+    description: 'All about your orders',
     icon: <OrderIcon style={{width: 34, height: 34, marginTop: 30}} />,
   },
   {

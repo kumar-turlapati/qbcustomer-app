@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 });
 
 export const Order = ({navigation}) => {
-  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [orders, setOrders] = useState([]);
@@ -51,7 +51,9 @@ export const Order = ({navigation}) => {
   const isFocused = useIsFocused();
   // const {fetchCart} = useContext(ShoppingCartContext);
 
-  useEffect(() => {}, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) setScreenFocussed(true);
+  // }, [isFocused]);
 
   // console.log(orders, 'orders of the customer........');
 
@@ -87,7 +89,7 @@ export const Order = ({navigation}) => {
       }
     };
     getOrders();
-  }, []);
+  }, [isFocused]);
 
   const renderHeader = () => {
     return (
