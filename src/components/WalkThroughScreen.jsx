@@ -56,26 +56,28 @@ const banners = [
   {
     id: 1,
     icon: <Screen1 />,
-    title: 'Browse galleries',
-    subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
+    title: 'Extensive Catalogue of Fabrics',
+    subTitle: 'Select from a wide range of fabrics',
   },
   {
     id: 2,
     icon: <Screen2 />,
-    title: 'Order from the comfort of your location',
-    subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
+    title: 'Track Your Order',
+    subTitle: 'Know the upto date status of your order',
   },
   {
     id: 3,
     icon: <Screen3 />,
-    title: 'Track your order',
-    subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
+    title: 'Place Orders',
+    subTitle: 'Order from our app anywhere, anytime',
   },
+
   {
     id: 4,
     icon: <Screen4 />,
-    title: 'View your account at any time',
-    subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc',
+    title: 'Personalized Shopping Experience',
+    subTitle:
+      'Get the best shopping experience by browsing our unlimited catalogues.',
   },
 ];
 

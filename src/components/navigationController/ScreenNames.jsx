@@ -13,4 +13,6 @@ export const ScreenNamesCustomer = {
   ORDERDETAILS: 'OrderDetails',
   TRACKORDER: 'TrackOrder',
   LEDGER: 'Ledger',
+  VIEWINVOICE: 'ViewInvoice',
+  CANCELORDER: 'CancelOrder',
 };

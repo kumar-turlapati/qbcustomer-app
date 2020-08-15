@@ -39,7 +39,7 @@ export const Screen1 = (props) => (
     {...props}
     style={{width: 119, height: 154}}
     source={require('./Screen1.png')}
-    resizeMode={'contain'}
+    resizeMode="contain"
   />
 );
 
@@ -47,8 +47,8 @@ export const Screen2 = (props) => (
   <IconBase
     {...props}
     style={{width: 119, height: 154}}
-    source={require('./Screen1.png')}
-    resizeMode={'contain'}
+    source={require('./Screen2.png')}
+    resizeMode="contain"
   />
 );
 
@@ -56,8 +56,8 @@ export const Screen3 = (props) => (
   <IconBase
     {...props}
     style={{width: 66, height: 126}}
-    source={require('./Screen4.png')}
-    resizeMode={'contain'}
+    source={require('./Screen3.png')}
+    resizeMode="contain"
   />
 );
 
@@ -66,7 +66,7 @@ export const Screen4 = (props) => (
     {...props}
     style={{width: 66, height: 126}}
     source={require('./Screen4.png')}
-    resizeMode={'contain'}
+    resizeMode="contain"
   />
 );
 

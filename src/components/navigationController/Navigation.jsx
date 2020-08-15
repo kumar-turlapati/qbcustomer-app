@@ -9,36 +9,16 @@ import {CartView} from '../home/CartView';
 import {WishList} from '../home/WishList';
 import {OrderDetails} from '../orders/OrderDetails';
 import {TrackOrder} from '../orders/TrackOrder';
+import {CancelOrder} from '../orders/CancelOrder';
+import {ViewInvoice} from '../orders/ViewInvoice';
 import {Ledger} from '../profile/Ledger';
 import {ScreenNamesCustomer} from './ScreenNames';
-import useAsyncStorage from '../customHooks/async';
-import {Loader} from '../Loader';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
-  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
-    '@accessToken',
-  );
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // console.log(
-  //   'access token,',
-  //   accessToken,
-  //   accessToken && accessToken.length > 0,
-  // );
-
-  console.log(isLoggedIn, 'is logged in.........', tokenLoading);
-
-  useEffect(() => {
-    if (accessToken && accessToken.length > 0) setIsLoggedIn(true);
-  }, [accessToken]);
-
-  return tokenLoading ? (
-    <Loader />
-  ) : (
+  return (
     <Stack.Navigator
-      initialRouteName={
-        isLoggedIn ? ScreenNamesCustomer.TABBAR : ScreenNamesCustomer.LOGIN
-      }
+      initialRouteName={ScreenNamesCustomer.LOGIN}
       headerMode="none"
       screenOptions={() => ({
         headerShown: false,
@@ -52,70 +32,12 @@ export const AppCustomerNavigator = () => {
           duration: 100,
         })
       }>
-      {isLoggedIn ? (
-        <>
-          <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
-          <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
-          <Stack.Screen
-            name={ScreenNamesCustomer.PRODUCTDETAILS}
-            component={ProductDetails}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.CARTVIEW}
-            component={CartView}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.WISHLIST}
-            component={WishList}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.ORDERDETAILS}
-            component={OrderDetails}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.TRACKORDER}
-            component={TrackOrder}
-          />
-          <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
-          <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
-          <Stack.Screen
-            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
-            component={WalkThroughScreen}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
-          <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
-          <Stack.Screen
-            name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
-            component={WalkThroughScreen}
-          />
-          <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
-          <Stack.Screen
-            name={ScreenNamesCustomer.PRODUCTDETAILS}
-            component={ProductDetails}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.CARTVIEW}
-            component={CartView}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.WISHLIST}
-            component={WishList}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.ORDERDETAILS}
-            component={OrderDetails}
-          />
-          <Stack.Screen
-            name={ScreenNamesCustomer.TRACKORDER}
-            component={TrackOrder}
-          />
-          <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
-        </>
-      )}
-      {/* <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
+      <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
+      <Stack.Screen
+        name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
+        component={WalkThroughScreen}
+      />
+      <Stack.Screen name={ScreenNamesCustomer.TABBAR} component={TabBar} />
       <Stack.Screen name={ScreenNamesCustomer.FILTER} component={Filter} />
       <Stack.Screen
         name={ScreenNamesCustomer.PRODUCTDETAILS}
@@ -132,12 +54,14 @@ export const AppCustomerNavigator = () => {
         component={TrackOrder}
       />
       <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
-      <Stack.Screen name={ScreenNamesCustomer.LOGIN} component={Login} />
       <Stack.Screen
-        name={ScreenNamesCustomer.WALKTHROUGHSCREEN}
-        component={WalkThroughScreen}
-      /> */}
-      {/* <Stack.Screen name={ScreenNamesCustomer.ORDER} component={Order} /> */}
+        name={ScreenNamesCustomer.VIEWINVOICE}
+        component={ViewInvoice}
+      />
+      <Stack.Screen
+        name={ScreenNamesCustomer.CANCELORDER}
+        component={CancelOrder}
+      />
     </Stack.Navigator>
   );
 };
