@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {Dimensions, StyleSheet, View, Text, FlatList} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {theme} from '../../theme/theme';
+import React, { useState, useEffect } from 'react';
+import { Dimensions, StyleSheet, View, Text, FlatList } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import CommonButton from '../UI/CommonButton';
 // import {Product} from '../../icons/Icons';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 import {
   restEndPoints,
   requestHeaders,
@@ -14,14 +14,14 @@ import {
 } from '../../../qbconfig';
 import CommonAlertView from '../UI/CommonAlertView';
 import CommonAlertViewYesNo from '../UI/CommonAlertViewYesNo';
-import {Loader} from '../Loader';
-import {NoDataMessage} from '../NoDataMessage';
+import { Loader } from '../Loader';
+import { NoDataMessage } from '../NoDataMessage';
 import axios from 'axios';
 import _find from 'lodash/find';
-import {Image} from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import _toLower from 'lodash/toLower';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
 //   },
 // ];
 
-export const OrderDetails = ({route, navigation}) => {
+export const OrderDetails = ({ route, navigation }) => {
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
@@ -138,7 +138,7 @@ export const OrderDetails = ({route, navigation}) => {
     cartDiscount: 0,
     totalAmount: 0,
   });
-  const {ORDER_DETAILS, CANCEL_ORDER} = restEndPoints;
+  const { ORDER_DETAILS, CANCEL_ORDER } = restEndPoints;
   const orderCode = route.params.orderCode;
 
   // console.log(orderCode, orderDetails, orderItems);
@@ -166,7 +166,7 @@ export const OrderDetails = ({route, navigation}) => {
         (itemTotalAfterRounding -
           discountAmountAfterRounding +
           Number.EPSILON) *
-          100,
+        100,
       ) / 100;
 
     // console.log(
@@ -189,7 +189,7 @@ export const OrderDetails = ({route, navigation}) => {
     setShowAlert(true);
     try {
       await axios
-        .delete(CANCEL_ORDER.URL(orderCode), {headers: requestHeaders})
+        .delete(CANCEL_ORDER.URL(orderCode), { headers: requestHeaders })
         .then((apiResponse) => {
           setApiLoading(false);
           setAlertText('Order cancelled successfully :)');
@@ -217,7 +217,7 @@ export const OrderDetails = ({route, navigation}) => {
       setOrderDetailsLoading(true);
       try {
         await axios
-          .get(ORDER_DETAILS.URL(orderCode), {headers: requestHeaders})
+          .get(ORDER_DETAILS.URL(orderCode), { headers: requestHeaders })
           .then((apiResponse) => {
             setOrderDetailsLoading(false);
             if (apiResponse.data.status === 'success') {
@@ -308,21 +308,21 @@ export const OrderDetails = ({route, navigation}) => {
     );
     const imageUrl = imageLocation
       ? encodeURI(
-          `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
-        )
+        `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
+      )
       : '';
     return (
       <View>
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
-        {index === 0 && <View style={{height: 16}} />}
+        {index === 0 && <View style={{ height: 16 }} />}
         <View style={styles.rowStyles}>
           {/* {item.icon} */}
           <Image
-            source={{uri: imageUrl}}
-            style={{height: 90, width: 90}}
+            source={{ uri: imageUrl }}
+            style={{ height: 90, width: 90 }}
             PlaceholderContent={<Loader />}
           />
-          <View style={{marginLeft: 18, marginTop: 17}}>
+          <View style={{ marginLeft: 18, marginTop: 17 }}>
             <Text style={styles.rowTextStyles}> {item.itemName}</Text>
             <Text
               style={[
@@ -337,23 +337,23 @@ export const OrderDetails = ({route, navigation}) => {
               {parseFloat(item.packedQty).toFixed(2)} {_toLower(item.uomName)}
             </Text>
           </View>
-          <View style={{top: 16, right: 25, position: 'absolute'}}>
-            <Text style={[styles.rowTextStyles, {fontWeight: '600'}]}>
+          <View style={{ top: 16, right: 25, position: 'absolute' }}>
+            <Text style={[styles.rowTextStyles, { fontWeight: '600' }]}>
               {parseFloat(item.itemRate).toFixed(2)}/{_toLower(item.uomName)}
             </Text>
           </View>
         </View>
         {index === orderItems.length - 1 ? (
-          <View style={{height: 16}} />
+          <View style={{ height: 16 }} />
         ) : (
-          <View
-            style={{
-              borderBottomWidth: 2,
-              borderBottomColor: theme.colors.SEPERATOR_COLOR,
-              marginHorizontal: 16,
-            }}
-          />
-        )}
+            <View
+              style={{
+                borderBottomWidth: 2,
+                borderBottomColor: theme.colors.SEPERATOR_COLOR,
+                marginHorizontal: 16,
+              }}
+            />
+          )}
       </View>
     );
   };
@@ -365,19 +365,33 @@ export const OrderDetails = ({route, navigation}) => {
           flex: 1,
         }}
         data={orderItems}
-        renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.galleryID}
-        removeClippedSubviews={true}
+        renderItem={({ item, index }) => renderRow(item, index)}
+        keyExtractor={(item) => item.itemName}
+        removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          renderFooterView()
+        }
       />
     );
   };
 
+  const renderFooterView = () => {
+    return (
+      <View>
+        {renderTotals()}
+        {renderButtonCancelOrder()}
+        {renderButtonTrackOrder()}
+        {renderButtonViewInvoice()}
+      </View>
+    )
+  }
+
   const renderTotals = () => {
     return (
-      <View style={{marginHorizontal: 16}}>
-        <View style={[styles.ledgerRowTitleStyle, {marginTop: 23}]}>
+      <View style={{ marginHorizontal: 16 }}>
+        <View style={[styles.ledgerRowTitleStyle, { marginTop: 23 }]}>
           <Text style={styles.ledgerTextStyles}>Order total</Text>
           <Text style={styles.ledgerTextStyles}>
             ₹{orderValues.cartTotal.toFixed(2)}
@@ -385,7 +399,7 @@ export const OrderDetails = ({route, navigation}) => {
         </View>
         <View style={styles.ledgerRowTitleStyle}>
           <Text style={styles.ledgerTextStyles}>Discount (-)</Text>
-          <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
+          <Text style={[styles.ledgerTextStyles, { color: theme.colors.RED }]}>
             ₹{orderValues.cartDiscount.toFixed(2)}
           </Text>
         </View>
@@ -405,11 +419,11 @@ export const OrderDetails = ({route, navigation}) => {
             marginTop: 20,
           }}
         />
-        <View style={[styles.ledgerRowTitleStyle, {marginTop: 13}]}>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+        <View style={[styles.ledgerRowTitleStyle, { marginTop: 13 }]}>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>
             Total amount
           </Text>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>
             ₹{orderValues.totalAmount.toFixed(2)}
           </Text>
         </View>
@@ -424,7 +438,7 @@ export const OrderDetails = ({route, navigation}) => {
         onPressButton={() => {
           setShowConfirmDialog(true);
         }}
-        propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 15}}
+        propStyle={{ marginTop: 34, marginHorizontal: 17, marginBottom: 15 }}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,
@@ -446,7 +460,7 @@ export const OrderDetails = ({route, navigation}) => {
             orderDetails: orderDetails,
           });
         }}
-        propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
+        propStyle={{ marginTop: 7, marginHorizontal: 17, marginBottom: 15 }}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,
@@ -468,7 +482,7 @@ export const OrderDetails = ({route, navigation}) => {
             orderDate: orderDetails.createdDate,
           });
         }}
-        propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
+        propStyle={{ marginTop: 7, marginHorizontal: 17, marginBottom: 15 }}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,
@@ -494,43 +508,35 @@ export const OrderDetails = ({route, navigation}) => {
   ) : showNoDataMessage ? (
     <NoDataMessage message={errorMessage} />
   ) : (
-    <ScrollView
-      style={styles.container}
-      bounces={false}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}>
-      {renderHeader()}
-      {renderOrderID()}
-      {renderListView()}
-      {renderTotals()}
-      {renderButtonCancelOrder()}
-      {renderButtonTrackOrder()}
-      {renderButtonViewInvoice()}
-      {showAlert && (
-        <CommonAlertView
-          showLoader={apiLoading}
-          showSuceessPopup={!apiLoading}
-          onPressSuccessButton={() => {
-            setShowAlert(false);
-            if (orderDeleted) navigation.navigate(ScreenNamesCustomer.ORDER);
-          }}
-          successTitle={alertText}
-        />
-      )}
-      {showConfirmDialog && (
-        <CommonAlertViewYesNo
-          showLoader={false}
-          showSuceessPopup
-          onPressOkButton={() => {
-            setShowConfirmDialog(false);
-            cancelOrder();
-          }}
-          onPressCancelButton={() => {
-            setShowConfirmDialog(false);
-          }}
-          successTitle="Are you sure. You want to Cancel this order?"
-        />
-      )}
-    </ScrollView>
-  );
+        <View style={styles.container}>
+          {renderHeader()}
+          {renderOrderID()}
+          {renderListView()}
+          {showAlert && (
+            <CommonAlertView
+              showLoader={apiLoading}
+              showSuceessPopup={!apiLoading}
+              onPressSuccessButton={() => {
+                setShowAlert(false);
+                if (orderDeleted) navigation.navigate(ScreenNamesCustomer.ORDER);
+              }}
+              successTitle={alertText}
+            />
+          )}
+          {showConfirmDialog && (
+            <CommonAlertViewYesNo
+              showLoader={false}
+              showSuceessPopup
+              onPressOkButton={() => {
+                setShowConfirmDialog(false);
+                cancelOrder();
+              }}
+              onPressCancelButton={() => {
+                setShowConfirmDialog(false);
+              }}
+              successTitle="Are you sure. You want to Cancel this order?"
+            />
+          )}
+        </View>
+      );
 };

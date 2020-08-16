@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 // import {Loader} from '../../icons/Icons';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -71,11 +71,7 @@ const styles = StyleSheet.create({
     width: width - 104,
   },
   buttonAlertStyle: {
-    height: 44,
-    marginTop: 0,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    width: width - 104,
+    padding: 15
   },
 });
 
@@ -92,7 +88,7 @@ export default CommonAlertViewYesNo = ({
         <Text
           style={[
             styles.titleStyle,
-            {fontSize: 14, paddingTop: 25, paddingHorizontal: 12},
+            { fontSize: 14, paddingTop: 25, paddingHorizontal: 12 },
           ]}>
           {successTitle}
         </Text>
@@ -100,13 +96,16 @@ export default CommonAlertViewYesNo = ({
         <View
           style={{
             flexDirection: 'row',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            width: width - 104,
           }}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
               onPressOkButton();
             }}>
-            <View style={styles.buttonAlertStyle}>
+            <View style={[styles.buttonAlertStyle, { marginLeft: 20 }]}>
               <Text style={styles.buttonStyle}>OK</Text>
             </View>
           </TouchableOpacity>
@@ -115,7 +114,7 @@ export default CommonAlertViewYesNo = ({
             onPress={() => {
               onPressCancelButton();
             }}>
-            <View style={styles.buttonAlertStyle}>
+            <View style={[styles.buttonAlertStyle, { marginRight: 20 }]}>
               <Text style={styles.buttonStyle}>CANCEL</Text>
             </View>
           </TouchableOpacity>

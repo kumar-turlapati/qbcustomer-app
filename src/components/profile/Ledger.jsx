@@ -130,8 +130,8 @@ export const Ledger = ({ navigation }) => {
           data={amounts}
           numColumns={4}
           renderItem={({ item, index }) => renderRow(item, index)}
-          keyExtractor={(item) => item.id}
-          removeClippedSubviews={true}
+          keyExtractor={(item) => item.title}
+          removeClippedSubviews={false}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         />

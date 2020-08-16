@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -7,14 +7,14 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {theme} from '../../theme/theme';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {DeleteIcon} from '../../icons/Icons';
-import {useState} from 'react';
+import { DeleteIcon } from '../../icons/Icons';
+import { useState } from 'react';
 import CommonAlertView from '../UI/CommonAlertView';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
-import {ShoppingCartContext} from '../context/ShoppingCart';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import { ShoppingCartContext } from '../context/ShoppingCart';
 import {
   cdnUrl,
   clientCode,
@@ -26,10 +26,10 @@ import _find from 'lodash/find';
 import _upperCase from 'lodash/upperCase';
 import axios from 'axios';
 import _remove from 'lodash/remove';
-import {Image} from 'react-native-elements';
-import {Loader} from '../Loader';
+import { Image } from 'react-native-elements';
+import { Loader } from '../Loader';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CartView = ({route, navigation}) => {
+export const CartView = ({ route, navigation }) => {
   const [couponText, setCouponText] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [orderValues, setOrderValues] = useState({
@@ -152,7 +152,7 @@ export const CartView = ({route, navigation}) => {
     fetchCart,
   } = useContext(ShoppingCartContext);
 
-  const {VALIDATE_COUPON, NEW_ORDER} = restEndPoints;
+  const { VALIDATE_COUPON, NEW_ORDER } = restEndPoints;
 
   // console.log(
   //   businessLocations,
@@ -190,7 +190,7 @@ export const CartView = ({route, navigation}) => {
         (itemTotalAfterRounding -
           discountAmountAfterRounding +
           Number.EPSILON) *
-          100,
+        100,
       ) / 100;
 
     setOrderValues({
@@ -223,7 +223,7 @@ export const CartView = ({route, navigation}) => {
             orderDetails: orderDetails,
             billingRate: billingRate,
           },
-          {headers: requestHeaders},
+          { headers: requestHeaders },
         )
         .then((apiResponse) => {
           // console.log(apiResponse, 'apiResponse........');
@@ -265,7 +265,7 @@ export const CartView = ({route, navigation}) => {
     cartItems.forEach((cartItemDetails) => {
       const itemQty = cartItemDetails.itemQty;
       const itemID = cartItemDetails.itemID;
-      orderDetails.push({itemID: itemID, itemQty: itemQty});
+      orderDetails.push({ itemID: itemID, itemQty: itemQty });
     });
 
     try {
@@ -276,7 +276,7 @@ export const CartView = ({route, navigation}) => {
             couponCode: couponText,
             orderDetails: orderDetails,
           },
-          {headers: requestHeaders},
+          { headers: requestHeaders },
         )
         .then((apiResponse) => {
           // console.log(apiResponse, 'apiResponse........');
@@ -337,7 +337,7 @@ export const CartView = ({route, navigation}) => {
         onPressLeftButton={() => {
           navigation.goBack();
         }}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => { }}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {
@@ -362,24 +362,24 @@ export const CartView = ({route, navigation}) => {
     );
     const imageUrl = imageLocation
       ? encodeURI(
-          `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
-        )
+        `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
+      )
       : '';
     const isOutofStock = stockOutItems.includes(item.itemID);
     // console.log(isOutofStock, stockOutItems);
     return (
       <View>
         <View style={theme.viewStyles.rowTopSeperatorStyle} />
-        {index === 0 && <View style={{height: 16}} />}
+        {index === 0 && <View style={{ height: 16 }} />}
         <View style={styles.rowStyles}>
           <Image
-            source={{uri: imageUrl}}
-            style={{height: 95, width: 90}}
+            source={{ uri: imageUrl }}
+            style={{ height: 95, width: 90 }}
             PlaceholderContent={<Loader />}
           />
-          <View style={{marginLeft: 18, marginTop: 17}}>
+          <View style={{ marginLeft: 18, marginTop: 17 }}>
             <Text style={styles.rowTextStyles}>{item.itemName}</Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.rowSubViewStyles}>
                 <TouchableOpacity
                   activeOpacity={1}
@@ -405,9 +405,9 @@ export const CartView = ({route, navigation}) => {
                       );
                     }
                   }}>
-                  <Text style={{paddingLeft: 8, paddingTop: 4}}>-</Text>
+                  <Text style={{ paddingLeft: 8, paddingTop: 4 }}>-</Text>
                 </TouchableOpacity>
-                <TextInput style={{paddingLeft: 4, paddingTop: 4}}>
+                <TextInput style={{ paddingLeft: 4, paddingTop: 4 }}>
                   {parseInt(item.itemQty, 10).toFixed(0)}
                 </TextInput>
                 <TouchableOpacity
@@ -427,7 +427,7 @@ export const CartView = ({route, navigation}) => {
                     updateCart(cartItem);
                     calculateCart();
                   }}>
-                  <Text style={{paddingRight: 8, paddingTop: 4}}>+</Text>
+                  <Text style={{ paddingRight: 8, paddingTop: 4 }}>+</Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
@@ -436,7 +436,7 @@ export const CartView = ({route, navigation}) => {
                 onPress={() => {
                   setShowAlert(true);
                   const cartItems = {
-                    cartItems: [{cartItemCode: item.cartItemID}],
+                    cartItems: [{ cartItemCode: item.cartItemID }],
                   };
                   if (stockOutItems.includes(String(item.itemID))) {
                     const newValues = stockOutItems;
@@ -450,12 +450,12 @@ export const CartView = ({route, navigation}) => {
                   removeItemFromCart(cartItems);
                   setShowAlertMessage('Item removed from Cart successfully :)');
                 }}>
-                <DeleteIcon style={{width: 16, height: 16, marginTop: 15}} />
+                <DeleteIcon style={{ width: 16, height: 16, marginTop: 15 }} />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{top: 16, right: 25, position: 'absolute'}}>
-            <Text style={[styles.rowTextStyles, {fontWeight: '600'}]}>
+          <View style={{ top: 16, right: 25, position: 'absolute' }}>
+            <Text style={[styles.rowTextStyles, { fontWeight: '600' }]}>
               {item.itemRate}
             </Text>
             {/* <Text
@@ -471,16 +471,16 @@ export const CartView = ({route, navigation}) => {
           )}
         </View>
         {index === cartItems.length - 1 ? (
-          <View style={{height: 16}} />
+          <View style={{ height: 16 }} />
         ) : (
-          <View
-            style={{
-              borderBottomWidth: 2,
-              borderBottomColor: theme.colors.SEPERATOR_COLOR,
-              marginHorizontal: 16,
-            }}
-          />
-        )}
+            <View
+              style={{
+                borderBottomWidth: 2,
+                borderBottomColor: theme.colors.SEPERATOR_COLOR,
+                marginHorizontal: 16,
+              }}
+            />
+          )}
       </View>
     );
   };
@@ -492,18 +492,31 @@ export const CartView = ({route, navigation}) => {
           flex: 1,
         }}
         data={cartItems}
-        renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.itemID}
-        removeClippedSubviews={true}
+        renderItem={({ item, index }) => renderRow(item, index)}
+        keyExtractor={(item) => item.imageName}
+        removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          renderFooterView()
+        }
       />
     );
   };
 
+  const renderFooterView = () => {
+    return (
+      <View>
+        {renderCouponView()}
+        {renderLedger()}
+        {renderButton()}
+      </View>
+    )
+  }
+
   const renderCouponView = () => {
     return (
-      <View style={{marginTop: 5, marginHorizontal: 16}}>
+      <View style={{ marginTop: 5, marginHorizontal: 16 }}>
         <Text style={styles.couponStyle}>COUPON CODE</Text>
         <View style={styles.couponViewStyles}>
           <TextInput
@@ -540,8 +553,8 @@ export const CartView = ({route, navigation}) => {
 
   const renderLedger = () => {
     return (
-      <View style={{marginHorizontal: 16}}>
-        <View style={[styles.ledgerRowViewStyles, {marginTop: 23}]}>
+      <View style={{ marginHorizontal: 16 }}>
+        <View style={[styles.ledgerRowViewStyles, { marginTop: 23 }]}>
           <Text style={styles.ledgerTextStyles}>Cart total</Text>
           <Text style={styles.ledgerTextStyles}>
             ₹{orderValues.cartTotal.toFixed(2)}
@@ -549,7 +562,7 @@ export const CartView = ({route, navigation}) => {
         </View>
         <View style={styles.ledgerRowViewStyles}>
           <Text style={styles.ledgerTextStyles}>Discount (-)</Text>
-          <Text style={[styles.ledgerTextStyles, {color: theme.colors.RED}]}>
+          <Text style={[styles.ledgerTextStyles, { color: theme.colors.RED }]}>
             ₹{orderValues.cartDiscount.toFixed(2)}
           </Text>
         </View>
@@ -569,16 +582,16 @@ export const CartView = ({route, navigation}) => {
             marginTop: 20,
           }}
         />
-        <View style={[styles.ledgerRowViewStyles, {marginTop: 13}]}>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+        <View style={[styles.ledgerRowViewStyles, { marginTop: 13 }]}>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>
             Total amount
           </Text>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+          <Text style={[styles.ledgerTextStyles, { fontWeight: 'bold' }]}>
             ₹{orderValues.totalAmount.toFixed(2)}
           </Text>
         </View>
-        <View style={[styles.ledgerRowViewStyles, {marginTop: 10}]}>
-          <Text style={[styles.ledgerTextStyles, {fontSize: 14}]}>
+        <View style={[styles.ledgerRowViewStyles, { marginTop: 10 }]}>
+          <Text style={[styles.ledgerTextStyles, { fontSize: 14 }]}>
             Note: Amount shown here is exclusive of applicable taxes and duties
             and may change at the time of Billing. We reserve the right, at our
             sole discretion, to reject or refuse any order for any reason.
@@ -595,7 +608,7 @@ export const CartView = ({route, navigation}) => {
         onPressButton={() => {
           newOrder();
         }}
-        propStyle={{marginTop: 34, marginHorizontal: 17, marginBottom: 25}}
+        propStyle={{ marginTop: 34, marginHorizontal: 17, marginBottom: 25 }}
         propTextStyle={{
           fontWeight: 'bold',
           fontSize: 12,
@@ -652,19 +665,12 @@ export const CartView = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      bounces={false}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
       {renderHeader()}
       {renderListView()}
-      {renderCouponView()}
-      {renderLedger()}
-      {renderButton()}
       {showAlert && renderAlert()}
       {showCouponAlert && renderAlertForCouponApply()}
       {showOrderAlert && renderAlertForOrder()}
-    </ScrollView>
+    </View>
   );
 };

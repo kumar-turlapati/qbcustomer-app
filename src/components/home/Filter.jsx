@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -7,15 +7,15 @@ import {
   SectionList,
   TouchableOpacity,
 } from 'react-native';
-import {CheckIcon, UnCheckIcon} from '../../icons/Icons';
-import {theme} from '../../theme/theme';
+import { CheckIcon, UnCheckIcon } from '../../icons/Icons';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import {Slider} from 'react-native-elements';
+import { Slider } from 'react-native-elements';
 import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
 import _remove from 'lodash/remove';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderBottomColor: theme.colors.BLACK_WITH_OPACITY,
     borderBottomWidth: 1,
+    marginTop: 10
   },
   buttonViewStyles: {
     height: 70,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Filter = ({route, navigation}) => {
+export const Filter = ({ route, navigation }) => {
   const {
     catalogBrands,
     catalogCategories,
@@ -113,10 +114,10 @@ export const Filter = ({route, navigation}) => {
   let selectedBrandStates = new Array();
   let selectedCategoryStates = new Array();
   catalogBrands.map((brandName) => {
-    selectedBrandStates.push({brandName: brandName, status: false});
+    selectedBrandStates.push({ brandName: brandName, status: false });
   });
   catalogCategories.map((categoryName) => {
-    selectedCategoryStates.push({categoryName: categoryName, status: false});
+    selectedCategoryStates.push({ categoryName: categoryName, status: false });
   });
 
   const [filterOptions] = useState(filterData);
@@ -182,10 +183,10 @@ export const Filter = ({route, navigation}) => {
       <CommonHeader
         leftSideText={'FILTER'}
         isTabView={true}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => { }}
         isProduct={true}
-        onPressFilterIcon={() => {}}
-        onPressSortIcon={() => {}}
+        onPressFilterIcon={() => { }}
+        onPressSortIcon={() => { }}
       />
     );
   };
@@ -195,7 +196,7 @@ export const Filter = ({route, navigation}) => {
       <View style={styles.rowStyles}>
         <TouchableOpacity
           activeOpacity={1}
-          style={{width: 30, height: 30}}
+          style={{ width: 30, height: 30 }}
           onPress={() => {
             title === 'BRANDS'
               ? selectedBrandFilter(item)
@@ -206,13 +207,13 @@ export const Filter = ({route, navigation}) => {
             brandStates[index].status ? (
               <CheckIcon style={styles.iconHeartStyle} />
             ) : (
-              <UnCheckIcon style={styles.iconHeartStyle} />
-            )
+                <UnCheckIcon style={styles.iconHeartStyle} />
+              )
           ) : categoryStates[index].status ? (
             <CheckIcon style={styles.iconHeartStyle} />
           ) : (
-            <UnCheckIcon style={styles.iconHeartStyle} />
-          )}
+                <UnCheckIcon style={styles.iconHeartStyle} />
+              )}
         </TouchableOpacity>
         <Text style={styles.rowTextStyle}>{item}</Text>
       </View>
@@ -221,24 +222,25 @@ export const Filter = ({route, navigation}) => {
 
   const renderListView = () => {
     return (
-      <View style={{height: 400}}>
-        <SectionList
-          sections={filterOptions}
-          keyExtractor={(item, index) => item + index}
-          renderItem={({item, index, section: {title}}) =>
-            renderRow(item, index, title)
-          }
-          renderSectionHeader={({section: {title, index}}) => (
-            <Text
-              style={[
-                styles.sectionHeaderStyles,
-                {marginTop: index === 0 ? 100 : 35},
-              ]}>
-              {title}
-            </Text>
-          )}
-        />
-      </View>
+      <SectionList
+        sections={filterOptions}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item, index, section: { title } }) =>
+          renderRow(item, index, title)
+        }
+        renderSectionHeader={({ section: { title, index } }) => (
+          <Text
+            style={[
+              styles.sectionHeaderStyles,
+              { marginTop: index === 0 ? 100 : 35 },
+            ]}>
+            {title}
+          </Text>
+        )}
+        ListFooterComponent={
+          renderSliderView()
+        }
+      />
     );
   };
 
@@ -255,7 +257,7 @@ export const Filter = ({route, navigation}) => {
           ]}>
           PRICE RANGE
         </Text>
-        <Text style={[styles.rowTextStyle, {marginTop: 11}]}>
+        <Text style={[styles.rowTextStyle, { marginTop: 11 }]}>
           ₹{pricing.minimum} - ₹{pricing.maximum}
         </Text>
         <Slider
@@ -277,14 +279,14 @@ export const Filter = ({route, navigation}) => {
   const renderFloatingButtons = () => {
     return (
       <View style={styles.buttonViewStyles}>
-        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
+        <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
           <TouchableOpacity
             activeOpacity={1}
             style={styles.buttonStyles}
             onPress={() => {
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, {color: theme.colors.BLACK}]}>
+            <Text style={[styles.buttonTextStyle, { color: theme.colors.BLACK }]}>
               CANCEL
             </Text>
           </TouchableOpacity>
@@ -311,7 +313,7 @@ export const Filter = ({route, navigation}) => {
               setPricingFilterValue(sliderValue.toFixed(2));
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, {color: theme.colors.WHITE}]}>
+            <Text style={[styles.buttonTextStyle, { color: theme.colors.WHITE }]}>
               APPLY
             </Text>
           </TouchableOpacity>
@@ -324,7 +326,6 @@ export const Filter = ({route, navigation}) => {
     <View style={styles.container}>
       {renderHeader()}
       {renderListView()}
-      {renderSliderView()}
       {renderFloatingButtons()}
     </View>
   );

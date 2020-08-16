@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,10 +7,10 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {theme} from '../../theme/theme';
-import {HeartSelected} from '../../icons/Icons';
+import { theme } from '../../theme/theme';
+import { HeartSelected } from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 import {
   restEndPoints,
   requestHeaders,
@@ -18,14 +18,14 @@ import {
   clientCode,
 } from '../../../qbconfig';
 import useAsyncStorage from '../customHooks/async';
-import {Loader} from '../Loader';
+import { Loader } from '../Loader';
 import axios from 'axios';
 import CommonAlertView from '../UI/CommonAlertView';
 import _find from 'lodash/find';
-import {ShoppingCartContext} from '../context/ShoppingCart';
-import {Image} from 'react-native-elements';
+import { ShoppingCartContext } from '../context/ShoppingCart';
+import { Image } from 'react-native-elements';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
 //   },
 // ];
 
-export const WishList = ({navigation}) => {
+export const WishList = ({ navigation }) => {
   // const [arrayObjects, setArrayObjects] = useState(clothes);
   const [wishlistItems, setWishlistItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
@@ -397,10 +397,10 @@ export const WishList = ({navigation}) => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [wishlistAlert, setWishlistAlert] = useState(false);
   const [wishlistAlertText, setWishlistAlertText] = useState('');
-  const {GET_ITEMS_FROM_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
-  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const { GET_ITEMS_FROM_WISHLIST, REMOVE_ITEM_FROM_WISHLIST } = restEndPoints;
+  const { storageItem: uuid } = useAsyncStorage('@uuid');
   const [loading, setLoading] = useState(false);
-  const {addToCart, loading: apiLoading, apiError, apiErrorText} = useContext(
+  const { addToCart, loading: apiLoading, apiError, apiErrorText } = useContext(
     ShoppingCartContext,
   );
 
@@ -408,7 +408,7 @@ export const WishList = ({navigation}) => {
     setLoading(true);
     try {
       await axios
-        .get(GET_ITEMS_FROM_WISHLIST.URL(uuid), {headers: requestHeaders})
+        .get(GET_ITEMS_FROM_WISHLIST.URL(uuid), { headers: requestHeaders })
         .then((apiResponse) => {
           setLoading(false);
           // console.log(apiResponse.data.response, 'response.........');
@@ -449,7 +449,7 @@ export const WishList = ({navigation}) => {
       await axios
         .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
           headers: requestHeaders,
-          data: {wishListItems: [{wlItemCode: itemID}]},
+          data: { wishListItems: [{ wlItemCode: itemID }] },
         })
         .then((apiResponse) => {
           setWishlistLoading(false);
@@ -514,13 +514,13 @@ export const WishList = ({navigation}) => {
     );
     const imageUrl = imageLocation
       ? encodeURI(
-          `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
-        )
+        `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${item.imageName}`,
+      )
       : '';
     return businessLocations && businessLocations.length > 0 ? (
       <View style={styles.rowStyles}>
         <Image
-          source={{uri: imageUrl}}
+          source={{ uri: imageUrl }}
           style={{
             width: width / 2 - 24,
             height: 164,
@@ -541,7 +541,7 @@ export const WishList = ({navigation}) => {
           style={styles.addToCartStyles}
           onPress={() => {
             const cartItem = {
-              cartItems: [{itemCode: item.itemID, itemQty: 1}],
+              cartItems: [{ itemCode: item.itemID, itemQty: 1 }],
             };
             // console.log(cartItem);
             setShowAddToCartAlert(true);
@@ -564,9 +564,9 @@ export const WishList = ({navigation}) => {
         }}
         data={wishlistItems}
         numColumns={2}
-        renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.itemID}
-        removeClippedSubviews={true}
+        renderItem={({ item, index }) => renderRow(item, index)}
+        keyExtractor={(item) => item.itemName}
+        removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       />
@@ -576,40 +576,40 @@ export const WishList = ({navigation}) => {
   return loading ? (
     <Loader />
   ) : (
-    <View style={styles.container}>
-      {renderHeader()}
-      {wishlistItems && wishlistItems.length > 0 && renderListView()}
-      {showAlert && (
-        <CommonAlertView
-          showLoader={false}
-          showSuceessPopup={showAlert}
-          onPressSuccessButton={() => {
-            setShowAlert(false);
-            navigation.push(ScreenNamesCustomer.TABBAR);
-          }}
-          successTitle={alertText}
-        />
-      )}
-      {showAddToCartAlert && (
-        <CommonAlertView
-          showLoader={apiLoading}
-          showSuceessPopup={!apiLoading}
-          onPressSuccessButton={() => {
-            setShowAddToCartAlert(false);
-          }}
-          successTitle={alertText}
-        />
-      )}
-      {wishlistAlert && (
-        <CommonAlertView
-          showLoader={wishlistLoading}
-          showSuceessPopup={!wishlistLoading}
-          onPressSuccessButton={() => {
-            setWishlistAlert(false);
-          }}
-          successTitle={wishlistAlertText}
-        />
-      )}
-    </View>
-  );
+      <View style={styles.container}>
+        {renderHeader()}
+        {wishlistItems && wishlistItems.length > 0 && renderListView()}
+        {showAlert && (
+          <CommonAlertView
+            showLoader={false}
+            showSuceessPopup={showAlert}
+            onPressSuccessButton={() => {
+              setShowAlert(false);
+              navigation.push(ScreenNamesCustomer.TABBAR);
+            }}
+            successTitle={alertText}
+          />
+        )}
+        {showAddToCartAlert && (
+          <CommonAlertView
+            showLoader={apiLoading}
+            showSuceessPopup={!apiLoading}
+            onPressSuccessButton={() => {
+              setShowAddToCartAlert(false);
+            }}
+            successTitle={alertText}
+          />
+        )}
+        {wishlistAlert && (
+          <CommonAlertView
+            showLoader={wishlistLoading}
+            showSuceessPopup={!wishlistLoading}
+            onPressSuccessButton={() => {
+              setWishlistAlert(false);
+            }}
+            successTitle={wishlistAlertText}
+          />
+        )}
+      </View>
+    );
 };

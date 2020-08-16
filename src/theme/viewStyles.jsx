@@ -1,6 +1,9 @@
 import { colors } from './colors';
 
 export const viewStyles = {
+  flex: {
+    flex: 1
+  },
   container: {
     flex: 1,
     backgroundColor: colors.DEFAULT_BACKGROUND_COLOR,
@@ -150,5 +153,12 @@ export const viewStyles = {
     position: 'absolute',
     height: '100%',
     width: '100%'
+  },
+  versionTextStyle: {
+    color: colors.RED,
+    fontWeight: 'bold',
+    fontSize: 12,
+    letterSpacing: - 0.41,
+    textAlign: 'center'
   }
 };
