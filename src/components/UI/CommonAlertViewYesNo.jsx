@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 // import {Loader} from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: width - 104,
   },
   buttonAlertStyle: {
-    padding: 15
+    padding: 15,
   },
 });
 
@@ -88,7 +88,7 @@ export default CommonAlertViewYesNo = ({
         <Text
           style={[
             styles.titleStyle,
-            { fontSize: 14, paddingTop: 25, paddingHorizontal: 12 },
+            {fontSize: 14, paddingTop: 25, paddingHorizontal: 12},
           ]}>
           {successTitle}
         </Text>
@@ -98,24 +98,26 @@ export default CommonAlertViewYesNo = ({
             flexDirection: 'row',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            width: width - 104,
+            width: width - 270,
           }}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              onPressOkButton();
-            }}>
-            <View style={[styles.buttonAlertStyle, { marginLeft: 20 }]}>
-              <Text style={styles.buttonStyle}>OK</Text>
-            </View>
-          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
               onPressCancelButton();
             }}>
-            <View style={[styles.buttonAlertStyle, { marginRight: 20 }]}>
-              <Text style={styles.buttonStyle}>CANCEL</Text>
+            <View style={[styles.buttonAlertStyle, {marginRight: 10}]}>
+              <Text style={[styles.buttonStyle, {color: theme.colors.BLACK}]}>
+                NO
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              onPressOkButton();
+            }}>
+            <View style={[styles.buttonAlertStyle, {marginLeft: 10}]}>
+              <Text style={styles.buttonStyle}>YES</Text>
             </View>
           </TouchableOpacity>
         </View>
