@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { theme } from '../../theme/theme';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import {
   SideArrowIcon,
@@ -9,8 +9,8 @@ import {
   LedgerIcon,
   LogoutIcon,
 } from '../../icons/Icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import AsyncStorage from '@react-native-community/async-storage';
 import packageJson from '../../../package.json';
 
@@ -43,7 +43,7 @@ const catalogue = [
     id: 1,
     title: 'Orders',
     description: 'All about your orders',
-    icon: <OrderIcon style={{ width: 34, height: 34, marginTop: 30 }} />,
+    icon: <OrderIcon style={{width: 34, height: 34, marginTop: 30}} />,
   },
   {
     id: 2,
@@ -95,13 +95,13 @@ const catalogue = [
   },
 ];
 
-export const Profile = ({ navigation }) => {
+export const Profile = ({navigation}) => {
   const renderHeader = () => {
     return (
       <CommonHeader
         leftSideText="My Account"
         isTabView={true}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {
@@ -136,16 +136,16 @@ export const Profile = ({ navigation }) => {
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
               }}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'row'}}>
                 {item.icon}
-                <View style={{ marginLeft: 30 }}>
+                <View style={{marginLeft: 30}}>
                   <Text style={styles.titleTextStyle}>{item.title}</Text>
                   <Text style={styles.descriptionTextStyle}>
                     {item.description}
                   </Text>
                 </View>
               </View>
-              <SideArrowIcon style={{ width: 24, height: 24, marginTop: 33 }} />
+              <SideArrowIcon style={{width: 24, height: 24, marginTop: 33}} />
             </View>
           </View>
         </TouchableOpacity>
@@ -161,7 +161,7 @@ export const Profile = ({ navigation }) => {
           marginTop: 15,
         }}
         data={catalogue}
-        renderItem={({ item, index }) => renderRow(item, index)}
+        renderItem={({item, index}) => renderRow(item, index)}
         keyExtractor={(item) => item.title}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -172,12 +172,17 @@ export const Profile = ({ navigation }) => {
 
   const renderVersion = () => {
     return (
-      <View style={{ marginBottom: 20, marginHorizontal: 20 }}>
-        <Text style={theme.viewStyles.versionTextStyle}>v {packageJson.version}</Text>
-        <Text style={[theme.viewStyles.versionTextStyle, { marginTop: 5 }]}>If you encounter any bugs, delayed deliveries, billing errors or other technical problems on this APP, please call us on 9000377973</Text>
+      <View style={{marginBottom: 20, marginHorizontal: 20}}>
+        <Text style={theme.viewStyles.versionTextStyle}>
+          v {packageJson.version}
+        </Text>
+        <Text style={[theme.viewStyles.versionTextStyle, {marginTop: 5}]}>
+          If you encounter any bugs, delayed deliveries, billing errors or other
+          technical problems in this APP, please call us on 9000377973
+        </Text>
       </View>
     );
-  }
+  };
 
   return (
     <View style={styles.container}>
