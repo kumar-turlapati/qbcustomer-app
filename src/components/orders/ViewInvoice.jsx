@@ -18,7 +18,7 @@ import {Image} from 'react-native-elements';
 import _toLower from 'lodash/toLower';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
+import {toDate, utcToZonedTime} from 'date-fns-tz';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -288,19 +288,16 @@ export const ViewInvoice = ({route, navigation}) => {
     const gst = parseFloat(orderDetails.taxAmount).toFixed(2);
     const roundOff = parseFloat(orderDetails.roundOff).toFixed(2);
     const payable = parseFloat(orderDetails.netPay).toFixed(2);
-    const invoiceDateLocal = parse(
-      orderDetails.createdTime,
-      'yyyy-MM-dd HH:mm:ss',
-      new Date(),
-    );
-    // const formattedDate = format(parseISO(invoiceDateLocal), 'do MMMM yyyy');
+    const invoiceDate = orderDetails.invoiceDate.split('-').reverse().join('/');
 
-    console.log(
-      orderDetails.createdTime,
-      invoiceDateLocal,
-      '------------------------',
-      parseISO(new Date(invoiceDateLocal)),
-    );
+    // const formattedDate = format(invoiceDateLocal, 'do MMMM yyyy');
+
+    // console.log(
+    //   orderDetails.createdTime,
+    //   invoiceDateLocal,
+    //   '------------------------',
+    //   parseISO(new Date(invoiceDateLocal)),
+    // );
 
     return (
       <View style={{marginHorizontal: 16}}>
@@ -357,11 +354,11 @@ export const ViewInvoice = ({route, navigation}) => {
               {
                 fontSize: 15,
                 color: theme.colors.RED,
-                fontStyle: 'italic',
+                fontStyle: 'normal',
                 marginBottom: 20,
               })
             }>
-            {/* {`Invoice no.: ${orderDetails.billNo}, dated ${formattedDate}.`} */}
+            {`Invoice no.: ${orderDetails.billNo}, dated ${invoiceDate}.`}
           </Text>
         </View>
       </View>
