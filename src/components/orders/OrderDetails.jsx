@@ -138,14 +138,14 @@ export const OrderDetails = ({route, navigation}) => {
     cartDiscount: 0,
     totalAmount: 0,
   });
-  const {ORDER_DETAILS, CANCEL_ORDER, INVOICE_DETAILS} = restEndPoints;
+  const {ORDER_DETAILS, CANCEL_ORDER} = restEndPoints;
   const orderCode = route.params.orderCode;
 
   // console.log(orderCode, orderDetails, orderItems);
   // console.log(orderItems);
   // console.log(orderDetails);
   // console.log(parseFloat(orderDetails.discount), 'order details......');
-  console.log('order status is....', orderDetails);
+  // console.log('order status is....', orderDetails);
 
   const calculateCart = () => {
     let cartTotal = 0;
@@ -462,7 +462,11 @@ export const OrderDetails = ({route, navigation}) => {
       <CommonButton
         buttonTitle="VIEW INVOICE"
         onPressButton={() => {
-          navigation.push(ScreenNamesCustomer.VIEWINVOICE);
+          console.log(orderDetails);
+          navigation.push(ScreenNamesCustomer.VIEWINVOICE, {
+            orderNo: orderDetails.indentNo,
+            orderDate: orderDetails.createdDate,
+          });
         }}
         propStyle={{marginTop: 7, marginHorizontal: 17, marginBottom: 15}}
         propTextStyle={{

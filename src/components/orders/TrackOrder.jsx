@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     lineHeight: 18,
-    color: theme.colors.BLACK,
+    // color: theme.colors.BLACK,
+    color: '#228b22',
     marginLeft: 30,
   },
   dateStyle: {
@@ -141,7 +142,7 @@ export const TrackOrder = ({route, navigation}) => {
     route.params.orderDetails.transporterName.length > 0;
   const orderCancelReason =
     route.params.orderDetails.cancelReason.length > 0
-      ? `Your order has been cancelled due to ${route.params.orderDetails.cancelReason}`
+      ? `Your order has been cancelled. Reason:${route.params.orderDetails.cancelReason}`
       : 'Your order has been cancelled';
   const transporterName = route.params.orderDetails.transporterName;
   const lrNo = route.params.orderDetails.lrNo;
@@ -210,121 +211,130 @@ export const TrackOrder = ({route, navigation}) => {
           </View>
         </View>
 
-        {orderConfirmedStatus ? (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
-            <View>
-              <Text style={styles.titleStyle}>ORDER CONFIRMED</Text>
-              <Text style={styles.dateStyle}>
-                {format(orderUpdatedDate, 'do MMMM yyyy, hh:mm aaaa')}
-              </Text>
-              <Text style={styles.descriptionStyle}>
-                Your order has been confirmed.
-              </Text>
+        {
+          orderConfirmedStatus ? (
+            <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+              <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+              <View>
+                <Text style={styles.titleStyle}>ORDER CONFIRMED</Text>
+                <Text style={styles.dateStyle}>
+                  {format(orderUpdatedDate, 'do MMMM yyyy, hh:mm aaaa')}
+                </Text>
+                <Text style={styles.descriptionStyle}>
+                  Your order has been confirmed.
+                </Text>
+              </View>
             </View>
-          </View>
-        ) : orderCancelledStatus ? (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
-            <View>
-              <Text style={[styles.titleStyle, {color: theme.colors.RED}]}>
-                ORDER CANCELLED
-              </Text>
-              <Text style={styles.dateStyle}>
-                {format(orderUpdatedDate, 'do MMMM yyyy, hh:mm aaaa')}
-              </Text>
-              <Text style={styles.descriptionStyle}>{orderCancelReason}</Text>
+          ) : orderCancelledStatus ? (
+            <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+              <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+              <View>
+                <Text style={[styles.titleStyle, {color: theme.colors.RED}]}>
+                  ORDER CANCELLED
+                </Text>
+                <Text style={styles.dateStyle}>
+                  {format(orderUpdatedDate, 'do MMMM yyyy, hh:mm aaaa')}
+                </Text>
+                <Text style={styles.descriptionStyle}>{orderCancelReason}</Text>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
-            <View>
-              <Text style={styles.descriptionStyle}>ORDER CONFIRMED</Text>
-            </View>
-          </View>
-        )}
+          ) : null
+          // (
+          //   <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+          //     <OrderConfirmed style={{width: 18, height: 24, marginTop: 8}} />
+          //     <View>
+          //       <Text style={styles.descriptionStyle}>ORDER CONFIRMED</Text>
+          //     </View>
+          //   </View>
+          // )
+        }
 
-        {orderBillingandPackingStatus ? (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderReady
-              style={{width: 23, height: 22, marginTop: 8, marginLeft: -2}}
-            />
-            <View>
-              <Text style={[styles.titleStyle, {marginLeft: 26}]}>
-                ORDER READY
-              </Text>
-              <Text style={[styles.dateStyle, {marginLeft: 26}]}>
-                {format(invoiceCreatedDate, 'do MMMM yyyy, hh:mm aaaa')}
-              </Text>
-              <Text style={[styles.descriptionStyle, {marginLeft: 26}]}>
-                Your oder is in billing and packing
-              </Text>
+        {
+          orderBillingandPackingStatus ? (
+            <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+              <OrderReady
+                style={{width: 23, height: 22, marginTop: 8, marginLeft: -2}}
+              />
+              <View>
+                <Text style={[styles.titleStyle, {marginLeft: 26}]}>
+                  ORDER READY
+                </Text>
+                <Text style={[styles.dateStyle, {marginLeft: 26}]}>
+                  {format(invoiceCreatedDate, 'do MMMM yyyy, hh:mm aaaa')}
+                </Text>
+                <Text style={[styles.descriptionStyle, {marginLeft: 26}]}>
+                  Your oder is in billing and packing
+                </Text>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderReady
-              style={{width: 23, height: 22, marginTop: 8, marginLeft: -2}}
-            />
-            <View>
-              <Text style={[styles.descriptionStyle, {marginLeft: 26}]}>
-                ORDER READY
-              </Text>
-            </View>
-          </View>
-        )}
+          ) : null
+          // (
+          //   <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+          //     <OrderReady
+          //       style={{width: 23, height: 22, marginTop: 8, marginLeft: -2}}
+          //     />
+          //     <View>
+          //       <Text style={[styles.descriptionStyle, {marginLeft: 26}]}>
+          //         ORDER READY
+          //       </Text>
+          //     </View>
+          //   </View>
+          // )
+        }
 
-        {orderShippingStatus ? (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderDispatched
-              style={{width: 28, height: 24, marginTop: 8, marginLeft: -4}}
-            />
-            <View>
-              <Text style={[styles.titleStyle, {marginLeft: 24}]}>
-                ORDER DISPATCHED
-              </Text>
-              <Text style={[styles.dateStyle, {marginLeft: 24}]}>
-                {format(shippingDate, 'do MMMM yyyy, hh:mm aaaa')}
-              </Text>
-              <Text style={[styles.descriptionStyle, {marginLeft: 24}]}>
-                Your order has been dispactched through {transporterName} vide
-                transport voucher no.{' '}
-                <Text style={theme.viewStyles.underLineStyle}>{lrNo}</Text>{' '}
-                {wayBillNo.length > 0 && (
-                  <Text
-                    style={[
-                      theme.viewStyles.underLineStyle,
-                      {textDecorationLine: 'none'},
-                    ]}>
-                    <Text style={[styles.descriptionStyle]}>
-                      , Way Bill No.
-                    </Text>{' '}
-                    {wayBillNo}
-                  </Text>
-                )}{' '}
-                {shippingTrackUrl.length > 0 ? (
-                  <Text
-                    style={theme.viewStyles.underLineStyle}
-                    onPress={() => Linking.openURL(shippingTrackUrl)}>
-                    Track status
-                  </Text>
-                ) : null}
-              </Text>
+        {
+          orderShippingStatus ? (
+            <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+              <OrderDispatched
+                style={{width: 28, height: 24, marginTop: 8, marginLeft: -4}}
+              />
+              <View>
+                <Text style={[styles.titleStyle, {marginLeft: 24}]}>
+                  ORDER DISPATCHED
+                </Text>
+                <Text style={[styles.dateStyle, {marginLeft: 24}]}>
+                  {format(shippingDate, 'do MMMM yyyy, hh:mm aaaa')}
+                </Text>
+                <Text style={[styles.descriptionStyle, {marginLeft: 24}]}>
+                  Your order has been dispactched through {transporterName} vide
+                  transport voucher no.{' '}
+                  <Text style={theme.viewStyles.underLineStyle}>{lrNo}</Text>{' '}
+                  {wayBillNo.length > 0 && (
+                    <Text
+                      style={[
+                        theme.viewStyles.underLineStyle,
+                        {textDecorationLine: 'none'},
+                      ]}>
+                      <Text style={[styles.descriptionStyle]}>
+                        , Way Bill No.
+                      </Text>{' '}
+                      {wayBillNo}
+                    </Text>
+                  )}{' '}
+                  {shippingTrackUrl.length > 0 ? (
+                    <Text
+                      style={theme.viewStyles.underLineStyle}
+                      onPress={() => Linking.openURL(shippingTrackUrl)}>
+                      Track status
+                    </Text>
+                  ) : null}
+                </Text>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
-            <OrderDispatched
-              style={{width: 28, height: 24, marginTop: 8, marginLeft: -4}}
-            />
-            <View>
-              <Text style={[styles.descriptionStyle, {marginLeft: 24}]}>
-                ORDER DISPATCHED
-              </Text>
-            </View>
-          </View>
-        )}
+          ) : null
+          // (
+          //   <View style={{flexDirection: 'row', marginTop: 40, marginLeft: 20}}>
+          //     <OrderDispatched
+          //       style={{width: 28, height: 24, marginTop: 8, marginLeft: -4}}
+          //     />
+          //     <View>
+          //       <Text style={[styles.descriptionStyle, {marginLeft: 24}]}>
+          //         ORDER DISPATCHED
+          //       </Text>
+          //     </View>
+          //   </View>
+          // )
+        }
       </View>
     );
   };
