@@ -3,6 +3,7 @@ const cartUri = 'app/v1/cart';
 const ordersUri = 'app/v1/order';
 const wishlistUri = 'app/v1/wishlist';
 export const clientCode = 'nVlnoRYkRCGWulS';
+export const qbUrl = 'https://www.qwikbills.com/?source=app&client=svf';
 export const requestHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',
   'Org-Id': clientCode,

@@ -1,5 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Linking,
+  BackHandler,
+} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {Logo, TextBoxSelect, QLogo, Loader} from '../icons/Icons';
 import {theme} from '../theme/theme';
@@ -12,8 +19,9 @@ import {colors} from '../theme/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from './navigationController/ScreenNames';
 import axios from 'axios';
-import {restEndPoints, requestHeaders} from '../../qbconfig';
+import {restEndPoints, requestHeaders, qbUrl} from '../../qbconfig';
 import useAsyncStorage from '../components/customHooks/async';
+import {useFocusEffect} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,7 +82,19 @@ export const Login = ({navigation}) => {
     '@accessToken',
   );
 
-  console.log(tokenLoading, 'tokent loading..........');
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        BackHandler.exitApp();
+        // return true;
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
+
+  // console.log(tokenLoading, 'tokent loading..........');
 
   const showTickMark =
     mobileNumber.length === 10 && isMobileNumberValid(mobileNumber);
@@ -387,7 +407,9 @@ export const Login = ({navigation}) => {
 
   const renderFooterView = () => {
     return (
-      <View style={styles.footerViewStyles}>
+      <View
+        style={styles.footerViewStyles}
+        onPress={() => Linking.openURL(qbUrl)}>
         <QLogo />
       </View>
     );

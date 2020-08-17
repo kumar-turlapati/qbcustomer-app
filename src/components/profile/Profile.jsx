@@ -174,11 +174,15 @@ export const Profile = ({navigation}) => {
     return (
       <View style={{marginBottom: 20, marginHorizontal: 20}}>
         <Text style={theme.viewStyles.versionTextStyle}>
-          v {packageJson.version}
+          Version No. {packageJson.version}
         </Text>
-        <Text style={[theme.viewStyles.versionTextStyle, {marginTop: 5}]}>
+        <Text
+          style={[
+            theme.viewStyles.versionTextStyle,
+            {marginTop: 5, color: theme.colors.BLACK},
+          ]}>
           If you encounter any bugs, delayed deliveries, billing errors or other
-          technical problems in this APP, please call us on 9000377973
+          technical problems in this Application, please call us on 9000377973
         </Text>
       </View>
     );
