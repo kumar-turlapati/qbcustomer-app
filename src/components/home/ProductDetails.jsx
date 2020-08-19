@@ -410,7 +410,9 @@ export const ProductDetails = ({route, navigation}) => {
     return (
       <View style={styles.dotView}>
         {productImages.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
+          index == slideIndex
+            ? renderDot(true, index)
+            : renderDot(false, index),
         )}
       </View>
     );
@@ -502,7 +504,7 @@ export const ProductDetails = ({route, navigation}) => {
     return (
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
-        <Text style={styles.descriptionTextStyle}>Description</Text>
+        <Text style={styles.descriptionTextStyle}>About</Text>
         {/* <View
           style={{
             backgroundColor: theme.colors.BLACK,
@@ -513,7 +515,7 @@ export const ProductDetails = ({route, navigation}) => {
             height: 1,
           }}
         /> */}
-        <View style={{marginLeft: 24, marginTop: 16}}>
+        <View style={{marginLeft: 24, marginTop: 5}}>
           {/* <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text> */}
           <Text style={styles.addToCartStyle}>{productDescription}</Text>
           <Text
@@ -522,7 +524,7 @@ export const ProductDetails = ({route, navigation}) => {
               {fontWeight: 'normal', marginTop: -5},
             ]}></Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 26}}>
+        <View style={{marginLeft: 24, marginTop: 18}}>
           <Text style={styles.addToCartStyle}>Specifications</Text>
           <Text
             style={[
