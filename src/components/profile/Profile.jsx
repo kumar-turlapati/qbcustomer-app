@@ -172,14 +172,14 @@ export const Profile = ({navigation}) => {
 
   const renderVersion = () => {
     return (
-      <View style={{marginBottom: 20, marginHorizontal: 20}}>
+      <View style={{marginTop: 10, marginBottom: 20, marginHorizontal: 20}}>
         <Text style={theme.viewStyles.versionTextStyle}>
           Version No. {packageJson.version}
         </Text>
         <Text
           style={[
             theme.viewStyles.versionTextStyle,
-            {marginTop: 5, color: theme.colors.BLACK},
+            {marginTop: 5, color: theme.colors.BLACK, fontSize: 12},
           ]}>
           If you encounter any bugs, delayed deliveries, billing errors or other
           technical problems in this Application, please call us on 9000377973
