@@ -101,13 +101,17 @@ export const Ledger = ({navigation}) => {
     {
       title: 'Closing',
       amount: parseFloat(
-        parseFloat(openings) + parseFloat(sales) - parseFloat(credits),
+        parseFloat(openings) +
+          parseFloat(sales) -
+          (parseFloat(credits) + parseFloat(receipts)),
       ).toFixed(2),
     },
   ];
 
-  console.log(transactions, 'transactions...........', uuid);
+  // console.log(transactions, 'transactions...........', uuid);
   // console.log(openings, '=====', sales, '=====', credits, '=====', receipts);
+
+  // console.log(errorMessage, 'error message is.....');
 
   useEffect(() => {
     const getLedger = async () => {
@@ -162,10 +166,11 @@ export const Ledger = ({navigation}) => {
             }
           })
           .catch((error) => {
-            // console.log(error, '@@@@@@@@@@@@@@@@@@@@@@@@@@', requestHeaders);
+            // console.log(error.response.data, '@@@@@@@@@@@@@@@@@@@@@@@@@@');
+            const errorMessage = error.response.data.errortext;
             setLedgerLoading(false);
             setShowNoDataMessage(true);
-            setErrorMessage('No Orders found :(');
+            setErrorMessage(errorMessage);
             // setErrorMessage(error.response.data.errortext);
             // setErrorText(error.response.data.errortext);
             // setShowAlert(true);
@@ -277,7 +282,7 @@ export const Ledger = ({navigation}) => {
           const transType = transactionDetails.transType;
           const transAmount = parseFloat(transactionDetails.transValue);
           const transVocNo = transactionDetails.transNo;
-          const narration = transactionDetails.narration;
+          // const narration = transactionDetails.narration;
           const bankRefNo = transactionDetails.refNo;
           const transDateString = transDate.split('-').reverse().join('/');
           const drOrCr =
@@ -295,6 +300,7 @@ export const Ledger = ({navigation}) => {
                     theme.viewStyles.ledgerDescriptionTextStyles,
                   ]}>
                   {_startCase(transType)} ({drOrCr}) Voc.No. {transVocNo}
+                  {`${bankRefNo.length > 0 ? `Ref.No.${bankRefNo}` : ''}`}
                 </Text>
               </View>
               <Text
@@ -323,6 +329,8 @@ export const Ledger = ({navigation}) => {
 
   return ledgerLoading ? (
     <Loader />
+  ) : showNoDataMessage ? (
+    <NoDataMessage message={errorMessage} />
   ) : (
     <ScrollView
       style={styles.container}

@@ -5,6 +5,8 @@ import {theme} from '../theme/theme';
 export const NoDataMessage = (props) => {
   const {message} = props;
 
+  // console.log(message, 'message in NoDataMessage......');
+
   return (
     <View style={[styles.container, styles.horizontal]}>
       {message && message.length > 0 ? (
