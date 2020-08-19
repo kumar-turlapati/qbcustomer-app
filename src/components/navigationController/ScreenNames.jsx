@@ -15,4 +15,5 @@ export const ScreenNamesCustomer = {
   LEDGER: 'Ledger',
   VIEWINVOICE: 'ViewInvoice',
   CANCELORDER: 'CancelOrder',
+  WEBVIEW: 'ProductWebView',
 };

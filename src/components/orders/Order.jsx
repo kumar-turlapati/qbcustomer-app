@@ -1,17 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { theme } from '../../theme/theme';
+import React, {useEffect, useState, useContext} from 'react';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import { SideArrowIcon } from '../../icons/Icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {SideArrowIcon} from '../../icons/Icons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import axios from 'axios';
-import { restEndPoints, requestHeaders } from '../../../qbconfig';
-import { Loader } from '../Loader';
-import { NoDataMessage } from '../NoDataMessage';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {Loader} from '../Loader';
+import {NoDataMessage} from '../NoDataMessage';
 import useAsyncStorage from '../customHooks/async';
-import { useIsFocused } from '@react-navigation/native';
-// import {ShoppingCartContext} from '../context/ShoppingCart';
+import {useIsFocused} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,13 +40,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Order = ({ navigation }) => {
+export const Order = ({navigation}) => {
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [orders, setOrders] = useState([]);
-  const { storageItem: uuid } = useAsyncStorage('@uuid');
-  const { GET_ALL_ORDERS } = restEndPoints;
+  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {GET_ALL_ORDERS} = restEndPoints;
   const isFocused = useIsFocused();
   // const {fetchCart} = useContext(ShoppingCartContext);
 
@@ -62,7 +61,7 @@ export const Order = ({ navigation }) => {
       setOrdersLoading(true);
       try {
         await axios
-          .get(GET_ALL_ORDERS.URL(uuid), { headers: requestHeaders })
+          .get(GET_ALL_ORDERS.URL(uuid), {headers: requestHeaders})
           .then((apiResponse) => {
             setOrdersLoading(false);
             // console.log(apiResponse, '----------------------');
@@ -128,7 +127,7 @@ export const Order = ({ navigation }) => {
             });
           }}>
           <View style={styles.rowViewStyle}>
-            <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
+            <View style={{flexDirection: 'row', marginHorizontal: 20}}>
               <View>
                 <Text style={styles.titleTextStyle}>
                   Order No. {item.indentNo}
@@ -139,7 +138,7 @@ export const Order = ({ navigation }) => {
               </View>
             </View>
             <SideArrowIcon
-              style={{ width: 24, height: 24, marginTop: 23, marginRight: 20 }}
+              style={{width: 24, height: 24, marginTop: 23, marginRight: 20}}
             />
           </View>
         </TouchableOpacity>
@@ -155,7 +154,7 @@ export const Order = ({ navigation }) => {
           marginTop: 15,
         }}
         data={orders}
-        renderItem={({ item, index }) => renderRow(item, index)}
+        renderItem={({item, index}) => renderRow(item, index)}
         keyExtractor={(item) => item.indentCode}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -169,9 +168,9 @@ export const Order = ({ navigation }) => {
   ) : showNoDataMessage ? (
     <NoDataMessage message={errorMessage} />
   ) : (
-        <View style={styles.container}>
-          {renderHeader()}
-          {renderListView()}
-        </View>
-      );
+    <View style={styles.container}>
+      {renderHeader()}
+      {renderListView()}
+    </View>
+  );
 };

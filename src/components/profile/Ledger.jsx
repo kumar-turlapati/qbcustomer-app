@@ -1,16 +1,24 @@
-import React from 'react';
-import { StyleSheet, View, FlatList, Dimensions, Text } from 'react-native';
-import { theme } from '../../theme/theme';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, FlatList, Dimensions, Text} from 'react-native';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import {ScrollView} from 'react-native-gesture-handler';
+import axios from 'axios';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {Loader} from '../Loader';
+import {NoDataMessage} from '../NoDataMessage';
+import useAsyncStorage from '../customHooks/async';
+import {useIsFocused} from '@react-navigation/native';
+import _sumBy from 'lodash/sumBy';
+import _startCase from 'lodash/startCase';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     ...theme.viewStyles.container,
-    backgroundColor: theme.colors.BACKGROUND_COLOR
+    backgroundColor: theme.colors.BACKGROUND_COLOR,
   },
   transactionViewStyles: {
     borderTopColor: theme.colors.BORDER_COLOR,
@@ -39,14 +47,15 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 14,
     lineHeight: 22,
-    letterSpacing: - 0.41
+    letterSpacing: -0.41,
   },
   titleTextStyle: {
     marginLeft: 17,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   rowStyle: {
-    height: 80, width: width / 4,
+    height: 80,
+    width: width / 4,
     borderRightColor: theme.colors.BORDER_COLOR,
     borderRightWidth: 1,
     backgroundColor: theme.colors.WHITE,
@@ -59,29 +68,118 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 8,
     borderBottomWidth: 2,
-    borderBottomColor: theme.colors.BLACK_WITH_OPACITY_2
-  }
-})
+    borderBottomColor: theme.colors.BLACK_WITH_OPACITY_2,
+  },
+});
 
-const amounts = [
-  {
-    title: 'Opening',
-    amount: '10,000',
-  },
-  {
-    title: 'Debits',
-    amount: '20,000',
-  },
-  {
-    title: 'Credits',
-    amount: '10,000',
-  },
-  {
-    title: 'Closing',
-    amount: '10,000',
-  },
-];
-export const Ledger = ({ navigation }) => {
+export const Ledger = ({navigation}) => {
+  const [ledgerLoading, setLedgerLoading] = useState(true);
+  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [transactions, setTransactions] = useState([]);
+  const [openings, setOpenings] = useState(0);
+  const [sales, setSales] = useState(0);
+  const [credits, setCredits] = useState(0);
+  const [receipts, setReceipts] = useState(0);
+  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {CUSTOMER_LEDGER} = restEndPoints;
+  const isFocused = useIsFocused();
+
+  const amounts = [
+    {
+      title: 'Opening',
+      amount: openings,
+    },
+    {
+      title: 'Debits',
+      amount: sales,
+    },
+    {
+      title: 'Credits',
+      amount: credits,
+    },
+    {
+      title: 'Closing',
+      amount: parseFloat(
+        parseFloat(openings) + parseFloat(sales) - parseFloat(credits),
+      ).toFixed(2),
+    },
+  ];
+
+  console.log(transactions, 'transactions...........', uuid);
+  // console.log(openings, '=====', sales, '=====', credits, '=====', receipts);
+
+  useEffect(() => {
+    const getLedger = async () => {
+      setLedgerLoading(true);
+      try {
+        await axios
+          .get(CUSTOMER_LEDGER.URL(uuid), {headers: requestHeaders})
+          .then((apiResponse) => {
+            setLedgerLoading(false);
+            // console.log(apiResponse, '----------------------');
+            if (apiResponse.data.status === 'success') {
+              setTransactions(apiResponse.data.response);
+              // calculate balances.
+              const openings = _sumBy(
+                apiResponse.data.response,
+                (tranDetails) =>
+                  tranDetails.transType === 'opening'
+                    ? parseFloat(tranDetails.transValue)
+                    : 0,
+              );
+              const sales = _sumBy(apiResponse.data.response, (tranDetails) =>
+                tranDetails.transType === 'sales'
+                  ? parseFloat(tranDetails.transValue)
+                  : 0,
+              );
+              const cnotes = _sumBy(apiResponse.data.response, (tranDetails) =>
+                tranDetails.transType === 'cnote'
+                  ? parseFloat(tranDetails.transValue)
+                  : 0,
+              );
+              const receipts = _sumBy(
+                apiResponse.data.response,
+                (tranDetails) =>
+                  tranDetails.transType === 'receipt'
+                    ? parseFloat(tranDetails.transValue)
+                    : 0,
+              );
+              setOpenings(openings.toFixed(2));
+              setSales(sales.toFixed(2));
+              setCredits(cnotes.toFixed(2));
+              setReceipts(receipts.toFixed(2));
+              // console.log(
+              //   apiResponse.data.response,
+              //   openings,
+              //   sales,
+              //   cnotes,
+              //   receipts,
+              //   '=================',
+              // );
+            } else {
+              setShowNoDataMessage(true);
+            }
+          })
+          .catch((error) => {
+            // console.log(error, '@@@@@@@@@@@@@@@@@@@@@@@@@@', requestHeaders);
+            setLedgerLoading(false);
+            setShowNoDataMessage(true);
+            setErrorMessage('No Orders found :(');
+            // setErrorMessage(error.response.data.errortext);
+            // setErrorText(error.response.data.errortext);
+            // setShowAlert(true);
+          });
+      } catch {
+        // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+        setLedgerLoading(false);
+        setShowNoDataMessage(true);
+        setErrorMessage('Network error. Please try again :(');
+      }
+    };
+    if (isFocused && uuid && uuid.length > 0) getLedger();
+  }, [isFocused, uuid]);
+
   const renderHeader = () => {
     return (
       <CommonHeader
@@ -102,35 +200,46 @@ export const Ledger = ({ navigation }) => {
     );
   };
 
-  const renderRow = (item, index) => {
+  const renderRow = (item) => {
     return (
       <View style={styles.rowStyle}>
         <Text style={styles.titleRowTextStyle}>{item.title}</Text>
-        {item.title === 'Debits' ?
-          <Text style={[styles.amountStyle, { fontWeight: 'bold', color: theme.colors.RED }]}>{item.amount}</Text>
-          :
+        {item.title === 'Debits' ? (
+          <Text
+            style={[
+              styles.amountStyle,
+              {fontWeight: 'bold', color: theme.colors.RED},
+            ]}>
+            ₹{item.amount}
+          </Text>
+        ) : (
           <>
-            {
-              item.title === 'Credits' ?
-                <Text style={[styles.amountStyle, { color: theme.colors.GREEN, fontWeight: 'bold' }]}>{item.amount}</Text>
-                :
-                <Text style={styles.amountStyle}>{item.amount}</Text>
-            }
+            {item.title === 'Credits' ? (
+              <Text
+                style={[
+                  styles.amountStyle,
+                  {color: theme.colors.GREEN, fontWeight: 'bold'},
+                ]}>
+                ₹{item.amount}
+              </Text>
+            ) : (
+              <Text style={styles.amountStyle}>₹{item.amount}</Text>
+            )}
           </>
-        }
+        )}
       </View>
     );
   };
 
   const renderTransaction = () => {
     return (
-      <View style={{ height: 80 }}>
+      <View style={{height: 80}}>
         <FlatList
           style={styles.transactionViewStyles}
           data={amounts}
           numColumns={4}
-          renderItem={({ item, index }) => renderRow(item, index)}
-          keyExtractor={(item) => item.title}
+          renderItem={({item, index}) => renderRow(item, index)}
+          keyExtractor={(item) => item.transValue}
           removeClippedSubviews={false}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
@@ -141,12 +250,16 @@ export const Ledger = ({ navigation }) => {
 
   const renderDescription = () => {
     return (
-      <View style={{ marginTop: 8, width: width, backgroundColor: theme.colors.WHITE }}>
+      <View
+        style={{
+          marginTop: 8,
+          width: width,
+          backgroundColor: theme.colors.WHITE,
+          height: height,
+        }}>
         <View style={styles.descriptionViewStyle}>
-          <Text
-            style={[styles.textStyle, styles.titleTextStyle]}
-          >
-            Date and Description
+          <Text style={[styles.textStyle, styles.titleTextStyle]}>
+            Date, Voc. No. &amp; Description
           </Text>
           <Text
             style={[
@@ -156,131 +269,61 @@ export const Ledger = ({ navigation }) => {
                 paddingBottom: 10,
               },
             ]}>
-            Transaction
+            Amount
           </Text>
         </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              06-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[styles.textStyle, theme.viewStyles.ledgerTextStyles]}
-          >
-            10,000</Text>
-        </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              07-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[styles.textStyle, theme.viewStyles.ledgerTextStyles]}
-          >
-            10,000</Text>
-        </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              08-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                marginRight: 17,
-                paddingBottom: 10,
-                color: theme.colors.RED,
-                fontWeight: 'bold',
-                marginTop: 1,
-              },
-            ]}>
-            -10,000
-          </Text>
-        </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              09-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[styles.textStyle, theme.viewStyles.ledgerTextStyles]}
-          >
-            10,000</Text>
-        </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              10-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[styles.textStyle, theme.viewStyles.ledgerTextStyles]}
-          >
-            10,000</Text>
-        </View>
-        <View style={styles.descriptionViewStyle}>
-          <View>
-            <Text
-              style={[styles.textStyle, styles.titleTextStyle]}
-            >
-              11-06-2020
-            </Text>
-            <Text
-              style={[styles.textStyle, theme.viewStyles.ledgerDescriptionTextStyles]}
-            >
-              Sales (Dr.) 10000 Ref: 10000980
-            </Text>
-          </View>
-          <Text
-            style={[styles.textStyle, theme.viewStyles.ledgerTextStyles]}
-          >
-            10,000</Text>
-        </View>
+        {transactions.map((transactionDetails) => {
+          const transDate = transactionDetails.transDate;
+          const transType = transactionDetails.transType;
+          const transAmount = parseFloat(transactionDetails.transValue);
+          const transVocNo = transactionDetails.transNo;
+          const narration = transactionDetails.narration;
+          const bankRefNo = transactionDetails.refNo;
+          const transDateString = transDate.split('-').reverse().join('/');
+          const drOrCr =
+            transType === 'cnote' || transType === 'receipt' ? 'Cr.' : 'Dr.';
+
+          return (
+            <View style={styles.descriptionViewStyle} key={transVocNo}>
+              <View>
+                <Text style={[styles.textStyle, styles.titleTextStyle]}>
+                  {transDateString}
+                </Text>
+                <Text
+                  style={[
+                    styles.textStyle,
+                    theme.viewStyles.ledgerDescriptionTextStyles,
+                  ]}>
+                  {_startCase(transType)} ({drOrCr}) Voc.No. {transVocNo}
+                </Text>
+              </View>
+              <Text
+                style={[
+                  styles.textStyle,
+                  drOrCr === 'Dr.'
+                    ? theme.viewStyles.ledgerTextStyles
+                    : {
+                        marginRight: 17,
+                        paddingBottom: 10,
+                        color: theme.colors.RED,
+                        fontWeight: 'bold',
+                        marginTop: 1,
+                      },
+                ]}>
+                {drOrCr === 'Cr.'
+                  ? `(-) ₹${transAmount.toFixed(2)}`
+                  : `₹${transAmount.toFixed(2)}`}
+              </Text>
+            </View>
+          );
+        })}
       </View>
     );
   };
 
-  return (
+  return ledgerLoading ? (
+    <Loader />
+  ) : (
     <ScrollView
       style={styles.container}
       bounces={false}
@@ -289,7 +332,7 @@ export const Ledger = ({ navigation }) => {
       {renderHeader()}
       {renderTransaction()}
       {renderDescription()}
-      <View style={{ height: 20 }} />
+      <View style={{height: 20}} />
     </ScrollView>
   );
 };

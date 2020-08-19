@@ -4,6 +4,7 @@ const ordersUri = 'app/v1/order';
 const wishlistUri = 'app/v1/wishlist';
 export const clientCode = 'nVlnoRYkRCGWulS';
 export const qbUrl = 'https://www.qwikbills.com/?source=app&client=svf';
+export const externalGalleryUrl = '3D View';
 export const requestHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',
   'Org-Id': clientCode,
@@ -57,5 +58,8 @@ export const restEndPoints = {
   },
   GET_ALL_ORDERS: {
     URL: (uuid) => `${apiBaseUrl}/app/v1/orders/${uuid}`,
+  },
+  CUSTOMER_LEDGER: {
+    URL: (uuid) => `${apiBaseUrl}/app/v1/ledger/${uuid}`,
   },
 };

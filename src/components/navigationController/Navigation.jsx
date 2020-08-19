@@ -8,6 +8,7 @@ import {ProductDetails} from '../home/ProductDetails';
 import {CartView} from '../home/CartView';
 import {WishList} from '../home/WishList';
 import {OrderDetails} from '../orders/OrderDetails';
+import {ProductWebView} from '../home/ProductWebView';
 import {TrackOrder} from '../orders/TrackOrder';
 import {ViewInvoice} from '../orders/ViewInvoice';
 import {Ledger} from '../profile/Ledger';
@@ -53,6 +54,10 @@ export const AppCustomerNavigator = () => {
         component={TrackOrder}
       />
       <Stack.Screen name={ScreenNamesCustomer.LEDGER} component={Ledger} />
+      <Stack.Screen
+        name={ScreenNamesCustomer.WEBVIEW}
+        component={ProductWebView}
+      />
       <Stack.Screen
         name={ScreenNamesCustomer.VIEWINVOICE}
         component={ViewInvoice}
