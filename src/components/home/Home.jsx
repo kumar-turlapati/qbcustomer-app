@@ -25,7 +25,6 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
-import {getAccessToken} from '../../utils/general';
 import {Loader} from '../Loader';
 import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
@@ -40,7 +39,7 @@ import Reactotron from 'reactotron-react-native';
 import {Image} from 'react-native-elements';
 import {useFocusEffect} from '@react-navigation/native';
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -494,7 +493,8 @@ export const Home = ({route, navigation}) => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        return true;
+        BackHandler.exitApp();
+        // return true;
       };
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () =>

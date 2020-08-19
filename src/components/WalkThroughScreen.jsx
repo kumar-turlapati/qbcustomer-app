@@ -1,16 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   StyleSheet,
   View,
   Dimensions,
   Text,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import {Screen1, Screen2, Screen3, Screen4, SkipButton} from '../icons/Icons';
 import {theme} from '../theme/theme';
 import Carousel from 'react-native-snap-carousel';
 import {colors} from '../theme/colors';
 import {ScreenNamesCustomer} from './navigationController/ScreenNames';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width: winWidth} = Dimensions.get('window');
 
@@ -83,6 +85,18 @@ const banners = [
 
 export const WalkThroughScreen = ({navigation}) => {
   const [slideIndex, setSlideIndex] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // BackHandler.exitApp();
+        return true;
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
   const renderDot = (active, index) => (
     <View

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Login} from '../Login';
 import {WalkThroughScreen} from '../WalkThroughScreen';
@@ -13,12 +13,31 @@ import {TrackOrder} from '../orders/TrackOrder';
 import {ViewInvoice} from '../orders/ViewInvoice';
 import {Ledger} from '../profile/Ledger';
 import {ScreenNamesCustomer} from './ScreenNames';
+import useAsyncStorage from '../customHooks/async';
+import {Loader} from '../Loader';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
-  return (
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
+    '@accessToken',
+  );
+
+  useEffect(() => {
+    if (accessToken && accessToken.length > 0) setIsUserLoggedIn(true);
+  }, [accessToken]);
+
+  return tokenLoading ? (
+    <Loader />
+  ) : (
     <Stack.Navigator
-      initialRouteName={ScreenNamesCustomer.LOGIN}
+      initialRouteName={
+        !tokenLoading
+          ? isUserLoggedIn
+            ? ScreenNamesCustomer.TABBAR
+            : ScreenNamesCustomer.LOGIN
+          : null
+      }
       headerMode="none"
       screenOptions={() => ({
         headerShown: false,
