@@ -93,15 +93,16 @@ const styles = StyleSheet.create({
 });
 
 export const ViewInvoice = ({route, navigation}) => {
-  const [invoiceDetailsLoading, setInvoiceDetailsLoading] = useState(false);
+  const [invoiceDetailsLoading, setInvoiceDetailsLoading] = useState(true);
   const [orderDetails, setOrderDetails] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [invoiceDate, setInvoiceDate] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertText, setAlertText] = useState('');
-  const [apiLoading, setApiLoading] = useState(true);
+  // const [showAlert, setShowAlert] = useState(false);
+  // const [alertText, setAlertText] = useState('');
+  // const [apiLoading, setApiLoading] = useState(true);
+  const placeHolderImage = require('../../icons/UnfilledHeart.png');
 
   const {INVOICE_DETAILS} = restEndPoints;
   const orderNo = route.params.orderNo;
@@ -226,7 +227,13 @@ export const ViewInvoice = ({route, navigation}) => {
         {index === 0 && <View style={{height: 16}} />}
         <View style={styles.rowStyles}>
           <Image
-            source={{uri: imageUrl}}
+            source={
+              imageUrl.length > 0
+                ? {
+                    uri: imageUrl,
+                  }
+                : placeHolderImage
+            }
             style={{height: 90, width: 90}}
             PlaceholderContent={<Loader />}
           />
