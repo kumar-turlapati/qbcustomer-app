@@ -213,7 +213,7 @@ export const Ledger = ({navigation}) => {
           <Text
             style={[
               styles.amountStyle,
-              {fontWeight: 'bold', color: theme.colors.RED},
+              {fontWeight: 'bold', color: theme.colors.GREEN},
             ]}>
             ₹{item.amount}
           </Text>
@@ -223,7 +223,7 @@ export const Ledger = ({navigation}) => {
               <Text
                 style={[
                   styles.amountStyle,
-                  {color: theme.colors.GREEN, fontWeight: 'bold'},
+                  {color: theme.colors.RED, fontWeight: 'bold'},
                 ]}>
                 ₹{item.amount}
               </Text>
@@ -300,7 +300,7 @@ export const Ledger = ({navigation}) => {
                     theme.viewStyles.ledgerDescriptionTextStyles,
                   ]}>
                   {_startCase(transType)} ({drOrCr}) Voc.No. {transVocNo}
-                  {`${bankRefNo.length > 0 ? `Ref.No.${bankRefNo}` : ''}`}
+                  {`${bankRefNo.length > 0 ? `, Ref.No.${bankRefNo}` : ''}`}
                 </Text>
               </View>
               <Text
