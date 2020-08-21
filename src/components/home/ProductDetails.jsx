@@ -410,7 +410,9 @@ export const ProductDetails = ({route, navigation}) => {
     return (
       <View style={styles.dotView}>
         {productImages.map((_, index) =>
-          index == slideIndex ? renderDot(true) : renderDot(false),
+          index == slideIndex
+            ? renderDot(true, index)
+            : renderDot(false, index),
         )}
       </View>
     );

@@ -407,10 +407,12 @@ export const Login = ({navigation}) => {
 
   const renderFooterView = () => {
     return (
-      <View
-        style={styles.footerViewStyles}
-        onPress={() => Linking.openURL(qbUrl)}>
-        <QLogo />
+      <View style={styles.footerViewStyles}>
+        <TouchableOpacity
+          onPress={() => Linking.openURL(qbUrl)}
+          activeOpacity={1}>
+          <QLogo />
+        </TouchableOpacity>
       </View>
     );
   };
