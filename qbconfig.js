@@ -62,4 +62,7 @@ export const restEndPoints = {
   CUSTOMER_LEDGER: {
     URL: (uuid) => `${apiBaseUrl}/app/v1/ledger/${uuid}`,
   },
+  CONTACT_INFORMATION: {
+    URL: () => `${apiBaseUrl}/app/v1/get-contact-details`,
+  },
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
@@ -13,6 +13,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import AsyncStorage from '@react-native-community/async-storage';
 import packageJson from '../../../package.json';
+import axios from 'axios';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const catalogue = [
+const profileOptions = [
   {
     id: 1,
     title: 'Orders',
@@ -96,6 +98,42 @@ const catalogue = [
 ];
 
 export const Profile = ({navigation}) => {
+  const [apiLoading, setApiLoading] = useState(true);
+  const [contactDetails, setContactDetails] = useState([]);
+  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const {CONTACT_INFORMATION} = restEndPoints;
+
+  // console.log(contactDetails, 'contact details...................');
+
+  useEffect(() => {
+    const getAppDetails = async () => {
+      setApiLoading(true);
+      try {
+        await axios
+          .get(CONTACT_INFORMATION.URL(), {headers: requestHeaders})
+          .then((apiResponse) => {
+            setApiLoading(false);
+            if (apiResponse.data.status === 'success') {
+              setContactDetails(apiResponse.data.response.contactDetails);
+            }
+          })
+          .catch((error) => {
+            // console.log(error.response.data);
+            const errorMessage = error.response.data;
+            setShowNoDataMessage(true);
+            setErrorMessage(errorMessage);
+          });
+      } catch (e) {
+        const errorMessage = 'Network error. Please try again :(';
+        setErrorMessage(errorMessage);
+        setShowNoDataMessage(true);
+      }
+    };
+    getAppDetails();
+  }, []);
+
   const renderHeader = () => {
     return (
       <CommonHeader
@@ -160,7 +198,7 @@ export const Profile = ({navigation}) => {
           flex: 1,
           marginTop: 15,
         }}
-        data={catalogue}
+        data={profileOptions}
         renderItem={({item, index}) => renderRow(item, index)}
         keyExtractor={(item) => item.title}
         removeClippedSubviews={false}
@@ -172,17 +210,24 @@ export const Profile = ({navigation}) => {
 
   const renderVersion = () => {
     return (
-      <View style={{marginTop: 10, marginBottom: 20, marginHorizontal: 20}}>
+      <View
+        style={{
+          marginTop: 20,
+          marginBottom: 10,
+          marginHorizontal: 20,
+          fontSize: 12,
+        }}>
         <Text style={theme.viewStyles.versionTextStyle}>
           Version No. {packageJson.version}
         </Text>
         <Text
           style={[
             theme.viewStyles.versionTextStyle,
-            {marginTop: 5, color: theme.colors.BLACK, fontSize: 12},
+            {marginTop: 5, color: 'darkgrey', fontSize: 11},
           ]}>
           If you encounter any bugs, delayed deliveries, billing errors or other
-          technical problems in this Application, please call us on 9000377973
+          technical problems in this Application, please call us on{' '}
+          {contactDetails.appContactTech}
         </Text>
       </View>
     );
@@ -193,6 +238,7 @@ export const Profile = ({navigation}) => {
       {renderHeader()}
       {renderListView()}
       {renderVersion()}
+      {showNoDataMessage && <NoDataMessage message={errorMessage} />}
     </View>
   );
 };

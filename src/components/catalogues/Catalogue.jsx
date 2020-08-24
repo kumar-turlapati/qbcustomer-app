@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { theme } from '../../theme/theme';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import { SideArrowIcon } from '../../icons/Icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {SideArrowIcon} from '../../icons/Icons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import axios from 'axios';
-import { restEndPoints, requestHeaders } from '../../../qbconfig';
+import {restEndPoints, requestHeaders} from '../../../qbconfig';
 import CommonAlertView from '../UI/CommonAlertView';
-import { Loader } from '../Loader';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Loader} from '../Loader';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import _find from 'lodash/find';
+import _compact from 'lodash/compact';
 
 const styles = StyleSheet.create({
   container: {
@@ -77,24 +79,35 @@ const styles = StyleSheet.create({
 //   },
 // ];
 
-export const Catalogue = ({ navigation }) => {
+export const Catalogue = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [catalogs, setCatalogs] = useState([]);
   const [errorText, setErrorText] = useState('');
   const [showAlert, setShowAlert] = useState(false);
-  const { CATALOGS } = restEndPoints;
+  const {CATALOGS} = restEndPoints;
+
+  // console.log('.......', catalogs);
 
   useEffect(() => {
     const getCatalogs = async () => {
       setLoading(true);
       try {
         await axios
-          .get(CATALOGS.URL, { headers: requestHeaders })
+          .get(CATALOGS.URL, {headers: requestHeaders})
           .then((apiResponse) => {
-            setLoading(false);
             // console.log(apiResponse, '----------------------');
+            setLoading(false);
             if (apiResponse.data.status === 'success') {
-              setCatalogs(apiResponse.data.response.catalogs);
+              const catalogs = apiResponse.data.response.catalogs;
+              const arrangedCatalogs = _find(catalogs, ['isDefault', '1']);
+              const otherCatalogs = catalogs.map((catalogDetails) => {
+                if (catalogDetails.isDefault === '0') return catalogDetails;
+              });
+              const finalCatalogs = _compact([
+                arrangedCatalogs,
+                ...otherCatalogs,
+              ]);
+              setCatalogs(finalCatalogs);
             } else {
               setErrorText('Catalogs are not yet created :(');
             }
@@ -110,7 +123,7 @@ export const Catalogue = ({ navigation }) => {
             setErrorText(error.response.data.errortext);
             setShowAlert(true);
           });
-      } catch {
+      } catch (error) {
         // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
         setLoading(false);
         setErrorText('Network Error. Please try again.');
@@ -128,7 +141,7 @@ export const Catalogue = ({ navigation }) => {
           marginTop: 15,
         }}
         data={catalogs}
-        renderItem={({ item, index }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.catalogCode}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -142,7 +155,7 @@ export const Catalogue = ({ navigation }) => {
       <CommonHeader
         leftSideText="Catalogs"
         isTabView={true}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {}}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {
@@ -164,7 +177,7 @@ export const Catalogue = ({ navigation }) => {
           }}>
           <View style={styles.rowViewStyle}>
             <View>
-              <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+              <View style={{flexDirection: 'row', marginLeft: 20}}>
                 <Text style={styles.titleTextStyle}>{item.catalogName}</Text>
                 {parseInt(item.isDefault, 10) === 1 && (
                   <Text style={styles.defaultTextStyles}>Latest</Text>
@@ -175,7 +188,7 @@ export const Catalogue = ({ navigation }) => {
               </Text>
             </View>
             <SideArrowIcon
-              style={{ width: 24, height: 24, marginTop: 33, marginRight: 20 }}
+              style={{width: 24, height: 24, marginTop: 33, marginRight: 20}}
             />
           </View>
         </TouchableOpacity>
@@ -186,19 +199,19 @@ export const Catalogue = ({ navigation }) => {
   return loading ? (
     <Loader />
   ) : (
-      <View style={styles.container}>
-        {renderHeader()}
-        {renderListView()}
-        {showAlert && (
-          <CommonAlertView
-            showLoader={false}
-            showSuceessPopup
-            onPressSuccessButton={() => {
-              setShowAlert(false);
-            }}
-            successTitle={errorText}
-          />
-        )}
-      </View>
-    );
+    <View style={styles.container}>
+      {renderHeader()}
+      {renderListView()}
+      {showAlert && (
+        <CommonAlertView
+          showLoader={false}
+          showSuceessPopup
+          onPressSuccessButton={() => {
+            setShowAlert(false);
+          }}
+          successTitle={errorText}
+        />
+      )}
+    </View>
+  );
 };
