@@ -143,6 +143,7 @@ export const Home = ({route, navigation}) => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
+
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
@@ -319,7 +320,12 @@ export const Home = ({route, navigation}) => {
   const renderHeader = () => {
     return (
       <CommonHeader
-        leftSideText={'Products'}
+        leftSideText={
+          defaultCatalogDetails.catalogName &&
+          defaultCatalogDetails.catalogName.length > 0
+            ? defaultCatalogDetails.catalogName.substring(0, 25)
+            : ''
+        }
         isTabView={true}
         onPressRightButton={() => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
