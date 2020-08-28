@@ -59,4 +59,3 @@ buck-out/
 /ios/Pods/
 
 # ignore gradle.properties
-gradle.properties
