@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,17 +7,25 @@ import {
   FlatList,
   TouchableOpacity,
   BackHandler,
+  Image
 } from 'react-native';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 import {
   HeartUnSelected,
   HeartSelected,
   CheckIcon,
   UnCheckIcon,
+  MainImage,
+  RectangleOverlay,
+  SideRectangle,
+  Men,
+  Women,
+  Boy,
+  Girl
 } from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
-import {Overlay} from 'react-native-elements';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import { Overlay } from 'react-native-elements';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
 import axios from 'axios';
 import {
   restEndPoints,
@@ -25,7 +33,7 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
-import {Loader} from '../Loader';
+import { Loader } from '../Loader';
 import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
@@ -36,10 +44,12 @@ import _compact from 'lodash/compact';
 import useAsyncStorage from '../customHooks/async';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
-import {Image} from 'react-native-elements';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import CommonSearchHeader from '../UI/CommonSearchHeader';
+import Carousel from 'react-native-snap-carousel';
+import { colors } from '../../theme/colors';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -122,9 +132,126 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 0,
   },
+  dotView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    bottom: 10,
+    alignSelf: 'center',
+    position: 'absolute',
+    backgroundColor: colors.WHITE,
+    height: 17,
+    borderRadius: 10
+  },
+  sliderDotStyle: {
+    height: 8,
+    width: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+    marginTop: 4,
+  },
+  getOfferStyles: {
+    color: colors.WHITE,
+    fontWeight: '500',
+    fontSize: 20,
+    letterSpacing: -0.41,
+    marginTop: 24,
+    marginLeft: 34
+  },
+  offerTextStyles: {
+    color: colors.WHITE,
+    fontSize: 40,
+    letterSpacing: -0.41,
+    marginTop: 0,
+    marginLeft: 34
+  },
+  pickSideStyles: {
+    backgroundColor: colors.WHITE,
+    color: colors.BLACK,
+    paddingVertical: 18,
+    paddingLeft: 16,
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: - 0.41
+  },
+  brandRowStyles: {
+    width: width / 2,
+    height: 281,
+    borderRightWidth: 0.5,
+    borderRightColor: colors.SEPERATOR_COLOR
+  },
+  genderTextStyles: {
+    backgroundColor: colors.BLACK,
+    color: colors.WHITE,
+    paddingTop: 13,
+    paddingLeft: 19,
+    paddingBottom: 10,
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 22,
+    letterSpacing: - 0.41
+  },
+  viewTextStyles: {
+    color: colors.BLACK,
+    paddingTop: 13,
+    paddingLeft: 12,
+    fontSize: 16,
+    lineHeight: 22,
+    letterSpacing: - 0.41
+  }
 });
 
-export const Home = ({route, navigation}) => {
+const offerData = [
+  {
+    id: 1,
+    offer: '40%',
+    title: 'ON EXCLUSIVE',
+    description: 'REYMOND’S COLLECTION'
+  },
+  {
+    id: 2,
+    offer: '60%',
+    title: 'ON EXCLUSIVE',
+    description: 'LENIN’S COLLECTION'
+  },
+  {
+    id: 3,
+    offer: '80%',
+    title: 'ON EXCLUSIVE',
+    description: 'ARROW’S COLLECTION'
+  },
+  {
+    id: 4,
+    offer: '100%',
+    title: 'ON EXCLUSIVE',
+    description: 'J&J’S COLLECTION'
+  }
+]
+
+const genderData = [
+  {
+    id: 1,
+    title: 'Men’s',
+    image: <Men style={{ width: 189, height: 187 }} />
+  },
+  {
+    id: 2,
+    title: 'Women’s',
+    image: <Women style={{ width: 189, height: 187 }} />
+  },
+  {
+    id: 3,
+    title: 'Boy’s',
+    image: <Boy style={{ width: 189, height: 187 }} />
+  },
+  {
+    id: 4,
+    title: 'Girl’s',
+    image: <Girl style={{ width: 189, height: 187 }} />
+  }
+]
+
+export const Home = ({ route, navigation }) => {
   // const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHighSelected, setLowToHighSelected] = useState(true);
@@ -143,9 +270,10 @@ export const Home = ({route, navigation}) => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
+  const [slideIndex, setSlideIndex] = useState(0);
 
-  const {storageItem: uuid} = useAsyncStorage('@uuid');
-  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
+  const { storageItem: uuid } = useAsyncStorage('@uuid');
+  const { storageItem: accessToken, tokenLoading } = useAsyncStorage(
     '@accessToken',
   );
   const catalogCode =
@@ -175,7 +303,7 @@ export const Home = ({route, navigation}) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode), { headers: requestHeaders })
         .then((apiResponse) => {
           setLoading(false);
           if (apiResponse.data.status === 'success') {
@@ -196,7 +324,7 @@ export const Home = ({route, navigation}) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOGS.URL, {headers: requestHeaders})
+        .get(CATALOGS.URL, { headers: requestHeaders })
         .then((apiResponse) => {
           setLoading(false);
           Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
@@ -288,10 +416,10 @@ export const Home = ({route, navigation}) => {
       const catalogItemsSorted =
         catalogItems.length > 0
           ? _orderBy(
-              catalogItems,
-              [(catalogItemDetails) => parseFloat(catalogItemDetails.itemRate)],
-              ['asc'],
-            )
+            catalogItems,
+            [(catalogItemDetails) => parseFloat(catalogItemDetails.itemRate)],
+            ['asc'],
+          )
           : [];
       const maxItemPrice =
         catalogItems.length > 0
@@ -313,41 +441,55 @@ export const Home = ({route, navigation}) => {
       setCatalogItems(catalogItemsSorted);
       setBusinessLocations(defaultCatalogDetails.businessLocations);
       setWishlistItems(defaultCatalogDetails.wishlistItems);
-      setPricing({minimum: minItemPrice, maximum: maxItemPrice});
+      setPricing({ minimum: minItemPrice, maximum: maxItemPrice });
     }
   }, [defaultCatalogDetails]);
 
+  // const renderHeader = () => {
+  //   return (
+  //     <CommonHeader
+  //       leftSideText={
+  //         defaultCatalogDetails.catalogName &&
+  //           defaultCatalogDetails.catalogName.length > 0
+  //           ? defaultCatalogDetails.catalogName.substring(0, 25)
+  //           : ''
+  //       }
+  //       isTabView={true}
+  //       onPressRightButton={() => {
+  //         navigation.push(ScreenNamesCustomer.CARTVIEW);
+  //       }}
+  //       isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
+  //       onPressFilterIcon={() => {
+  //         setShowSortView(false);
+  //         navigation.push(ScreenNamesCustomer.FILTER, {
+  //           catalogBrands: catalogBrands,
+  //           setBrandSelected: (brandSelected) =>
+  //             setBrandSelected(brandSelected),
+  //           catalogCategories: catalogCategories,
+  //           setCategorySelected: (categorySelected) =>
+  //             setCategorySelected(categorySelected),
+  //           pricing: pricing,
+  //           setPricingFilterValue: (pricingFilterValue) =>
+  //             setPricingFilterValue(pricingFilterValue),
+  //         });
+  //       }}
+  //       onPressSortIcon={() => {
+  //         setShowSortView(!showSortView);
+  //       }}
+  //     />
+  //   );
+  // };
+
   const renderHeader = () => {
     return (
-      <CommonHeader
-        leftSideText={
-          defaultCatalogDetails.catalogName &&
-          defaultCatalogDetails.catalogName.length > 0
-            ? defaultCatalogDetails.catalogName.substring(0, 25)
-            : ''
-        }
+      <CommonSearchHeader
+        leftSideText={'Shop Name'}
+        isSearch={false}
         isTabView={true}
-        onPressRightButton={() => {
-          navigation.push(ScreenNamesCustomer.CARTVIEW);
+        onPressSearchIcon={() => {
+          console.log('onPressSearchIcon')
         }}
-        isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
-        onPressFilterIcon={() => {
-          setShowSortView(false);
-          navigation.push(ScreenNamesCustomer.FILTER, {
-            catalogBrands: catalogBrands,
-            setBrandSelected: (brandSelected) =>
-              setBrandSelected(brandSelected),
-            catalogCategories: catalogCategories,
-            setCategorySelected: (categorySelected) =>
-              setCategorySelected(categorySelected),
-            pricing: pricing,
-            setPricingFilterValue: (pricingFilterValue) =>
-              setPricingFilterValue(pricingFilterValue),
-          });
-        }}
-        onPressSortIcon={() => {
-          setShowSortView(!showSortView);
-        }}
+
       />
     );
   };
@@ -371,7 +513,7 @@ export const Home = ({route, navigation}) => {
     const isPricingFilterValidated =
       parseFloat(pricingFilterValue) > 0
         ? parseFloat(productDetails.itemRate) >= minimumValue &&
-          parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
+        parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
         : true;
     const isItemInWishlist = _find(wishlistItems, {
       itemID: String(productDetails.itemID),
@@ -400,26 +542,26 @@ export const Home = ({route, navigation}) => {
       isBrandFiltered &&
       isPricingFilterValidated &&
       itemRate > 0 ? (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => {
-          navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
-            productDetails: productDetails,
-            productLocation: imageLocation.locationCode,
-            isItemInWishlist: isItemInWishlist ? true : false,
-          });
-        }}>
-        <View style={styles.rowStyles}>
-          <Image
-            style={{
-              width: width / 2 - 24,
-              height: 164,
-            }}
-            source={{uri: imageUrl}}
-            PlaceholderContent={<Loader />}
-          />
-          <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
-          {/* {item.specialPrice.length !== 0 ? (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
+              productDetails: productDetails,
+              productLocation: imageLocation.locationCode,
+              isItemInWishlist: isItemInWishlist ? true : false,
+            });
+          }}>
+          <View style={styles.rowStyles}>
+            <Image
+              style={{
+                width: width / 2 - 24,
+                height: 164,
+              }}
+              source={{ uri: imageUrl }}
+              PlaceholderContent={<Loader />}
+            />
+            <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
+            {/* {item.specialPrice.length !== 0 ? (
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
               <Text style={styles.originalPriceStyle}>
@@ -430,31 +572,31 @@ export const Home = ({route, navigation}) => {
               </Text>
             </View>
           ) : ( */}
-          <Text style={styles.specialPriceStyle}>
-            ₹{itemRate}/{productDetails.uomName}
-          </Text>
-          {/* )} */}
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.heartIconViewStyles}
-            onPress={() => {
-              manageItemInWishlist(
-                productDetails.itemID,
-                isItemInWishlist ? true : false,
-              );
-            }}
-            disabled={wishlistLoading}>
-            {isItemInWishlist ? (
-              <HeartSelected style={styles.iconHeartStyle} />
-            ) : (
-              <HeartUnSelected style={styles.iconHeartStyle} />
-            )}
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    ) : (
-      <></>
-    );
+            <Text style={styles.specialPriceStyle}>
+              ₹{itemRate}/{productDetails.uomName}
+            </Text>
+            {/* )} */}
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.heartIconViewStyles}
+              onPress={() => {
+                manageItemInWishlist(
+                  productDetails.itemID,
+                  isItemInWishlist ? true : false,
+                );
+              }}
+              disabled={wishlistLoading}>
+              {isItemInWishlist ? (
+                <HeartSelected style={styles.iconHeartStyle} />
+              ) : (
+                  <HeartUnSelected style={styles.iconHeartStyle} />
+                )}
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      );
   };
 
   const renderListView = () => {
@@ -467,11 +609,14 @@ export const Home = ({route, navigation}) => {
         }}
         data={catalogItems}
         numColumns={2}
-        renderItem={({item}) => renderRow(item)}
+        renderItem={({ item }) => renderRow(item)}
         keyExtractor={(item) => item.itemName}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          renderHeaderComponent()
+        }
       />
     );
   };
@@ -523,10 +668,10 @@ export const Home = ({route, navigation}) => {
                   }
                 }}>
                 {highToLowSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -561,12 +706,12 @@ export const Home = ({route, navigation}) => {
                   }
                 }}>
                 {lowToHighSelected ? (
-                  <CheckIcon style={{width: 16, height: 16}} />
+                  <CheckIcon style={{ width: 16, height: 16 }} />
                 ) : (
-                  <UnCheckIcon style={{width: 16, height: 16}} />
-                )}
+                    <UnCheckIcon style={{ width: 16, height: 16 }} />
+                  )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
+              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
                 Price - Low to High
               </Text>
             </View>
@@ -586,7 +731,7 @@ export const Home = ({route, navigation}) => {
         await axios
           .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
             headers: requestHeaders,
-            data: {wishListItems: [{wlItemCode: itemID}]},
+            data: { wishListItems: [{ wlItemCode: itemID }] },
           })
           .then((apiResponse) => {
             setWishlistLoading(false);
@@ -627,9 +772,9 @@ export const Home = ({route, navigation}) => {
           .post(
             ADD_ITEM_TO_WISHLIST.URL(uuid),
             {
-              wishListItems: [{itemCode: itemID}],
+              wishListItems: [{ itemCode: itemID }],
             },
-            {headers: requestHeaders},
+            { headers: requestHeaders },
           )
           .then((apiResponse) => {
             setWishlistLoading(false);
@@ -658,6 +803,138 @@ export const Home = ({route, navigation}) => {
         // setApiErrorText('Network error. Please try again.');
       }
     }
+  };
+
+  const renderHeaderComponent = () => {
+    return (
+      <>
+        {renderMainView()}
+        {renderBrandsList()}
+        {renderFlatListPagination()}
+      </>
+    );
+  }
+
+  const renderFlatListPagination = () => {
+    return (
+      <View>
+        <Text style={styles.pickSideStyles}>Hot Sellers</Text>
+      </View>
+    );
+  }
+
+  const renderBrandsList = () => {
+    return (
+      <View>
+        <Text style={styles.pickSideStyles}>Pick your side</Text>
+        <FlatList
+          style={{
+            flex: 1,
+          }}
+          data={genderData}
+          numColumns={2}
+          renderItem={({ item }) => renderBrandRow(item)}
+          keyExtractor={(item) => item.itemName}
+          removeClippedSubviews={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={() => {
+            return (
+              <View style={{ width: '100%', height: 0.5, backgroundColor: colors.SEPERATOR_COLOR }} />
+            );
+          }
+          }
+        />
+      </View>
+    );
+  }
+
+  const renderBrandRow = (item) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.brandRowStyles}
+        onPress={() => {
+          navigation.push(ScreenNamesCustomer.SHOWBRANDS, {
+            title: item.title
+          })
+        }}
+      >
+        <Text style={styles.genderTextStyles}>{item.title}</Text>
+        {item.image}
+        <Text style={styles.viewTextStyles}>View All Brands</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  const renderMainView = () => {
+    return (
+      <View style={{ width: '100%', height: 406 }}>
+        <MainImage style={{ width: '100%', height: 406 }} />
+        <RectangleOverlay style={{ position: 'absolute', width: '100%', height: 157, bottom: 0 }} />
+        <SideRectangle style={{ position: 'absolute', width: 174, height: 157, bottom: 0, left: 0 }} />
+        {renderCarouselView()}
+        {renderSliderDotView()}
+      </View>
+    );
+  }
+
+  const renderCarouselView = () => {
+    return (
+      <View style={{ position: 'absolute', width: '100%', height: 157, bottom: 0 }}>
+        <Carousel
+          onSnapToItem={(slideIndex) => setSlideIndex(slideIndex)}
+          data={offerData}
+          renderItem={renderSliderItem}
+          sliderWidth={width}
+          itemWidth={width}
+          loop
+          layout="default"
+        />
+      </View>
+    );
+  };
+
+  const renderSliderDotView = () => {
+    return (
+      <View style={styles.dotView}>
+        {offerData.map((_, index) =>
+          index == slideIndex
+            ? renderDot(true, index)
+            : renderDot(false, index),
+        )}
+      </View>
+    );
+  };
+
+  const renderDot = (active, index) => (
+    <View
+      style={[
+        styles.sliderDotStyle,
+        {
+          backgroundColor: active
+            ? theme.colors.ACTIVE_CAROUSEL_COLOR
+            : theme.colors.ACTIVE_BLACK_CAROUSEL_COLOR,
+        },
+      ]}
+      key={index}
+    />
+  );
+
+  const renderSliderItem = ({ item }) => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <View>
+          <Text style={styles.getOfferStyles}>GET</Text>
+          <Text style={styles.offerTextStyles}>{item.offer}</Text>
+          <Text style={[styles.getOfferStyles, { marginTop: 0 }]}>OFF</Text>
+        </View>
+        <View style={{ left: 160, position: 'absolute' }}>
+          <Text style={[styles.offerTextStyles, { fontSize: 16, marginTop: 50, marginLeft: 0 }]}>{item.title}</Text>
+          <Text style={[styles.offerTextStyles, { fontSize: 15, marginLeft: 0 }]}>{item.description}</Text>
+        </View>
+      </View>
+    );
   };
 
   return loading || tokenLoading ? (

@@ -16,4 +16,5 @@ export const ScreenNamesCustomer = {
   VIEWINVOICE: 'ViewInvoice',
   CANCELORDER: 'CancelOrder',
   WEBVIEW: 'ProductWebView',
+  SHOWBRANDS: "ShowBrands"
 };

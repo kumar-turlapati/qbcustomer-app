@@ -59,6 +59,7 @@ const Product = {
 const Carousel = {
   ACTIVE_CAROUSEL_COLOR: '#4A4A4A',
   IN_ACTIVE_CAROUSEL_COLOR: 'rgba(196,196,196,0.6)',
+  ACTIVE_BLACK_CAROUSEL_COLOR: black
 };
 
 const Slider = {

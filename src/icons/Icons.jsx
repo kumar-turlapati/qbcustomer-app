@@ -1,15 +1,15 @@
 import React from 'react';
-import {Image, ImageProps} from 'react-native';
+import { Image, ImageProps } from 'react-native';
 
 const getIconStyle = (size) => {
-  if (size === 'sm') return {width: 24, height: 24};
-  if (size === 'sm_l') return {width: 18, height: 21};
-  if (size === 'md_l') return {width: 54, height: 54};
-  if (size === 'lg') return {width: 64, height: 64};
-  return {width: 48, height: 48};
+  if (size === 'sm') return { width: 24, height: 24 };
+  if (size === 'sm_l') return { width: 18, height: 21 };
+  if (size === 'md_l') return { width: 54, height: 54 };
+  if (size === 'lg') return { width: 64, height: 64 };
+  return { width: 48, height: 48 };
 };
 
-export const IconBase = ({size, style, ...props}) => (
+export const IconBase = ({ size, style, ...props }) => (
   <Image style={[getIconStyle(size), style]} {...props} />
 );
 
@@ -28,7 +28,7 @@ export const TextBoxSelect = (props) => (
 export const QLogo = (props) => (
   <IconBase
     {...props}
-    style={{width: 121, height: 54}}
+    style={{ width: 121, height: 54 }}
     source={require('./QLogo.png')}
     resizeMode={'contain'}
   />
@@ -37,7 +37,7 @@ export const QLogo = (props) => (
 export const Screen1 = (props) => (
   <IconBase
     {...props}
-    style={{width: 119, height: 154}}
+    style={{ width: 119, height: 154 }}
     source={require('./Screen1.png')}
     resizeMode="contain"
   />
@@ -46,7 +46,7 @@ export const Screen1 = (props) => (
 export const Screen2 = (props) => (
   <IconBase
     {...props}
-    style={{width: 119, height: 154}}
+    style={{ width: 119, height: 154 }}
     source={require('./Screen2.png')}
     resizeMode="contain"
   />
@@ -55,7 +55,7 @@ export const Screen2 = (props) => (
 export const Screen3 = (props) => (
   <IconBase
     {...props}
-    style={{width: 66, height: 126}}
+    style={{ width: 66, height: 126 }}
     source={require('./Screen3.png')}
     resizeMode="contain"
   />
@@ -64,7 +64,7 @@ export const Screen3 = (props) => (
 export const Screen4 = (props) => (
   <IconBase
     {...props}
-    style={{width: 66, height: 126}}
+    style={{ width: 66, height: 126 }}
     source={require('./Screen4.png')}
     resizeMode="contain"
   />
@@ -149,7 +149,7 @@ export const HeartUnSelected = (props) => (
 export const SortIcon = (props) => (
   <IconBase
     {...props}
-    style={{width: 21, height: 24}}
+    style={{ width: 21, height: 24 }}
     source={require('./Sort.png')}
     resizeMode={'contain'}
   />
@@ -158,7 +158,7 @@ export const SortIcon = (props) => (
 export const FilterIcon = (props) => (
   <IconBase
     {...props}
-    style={{width: 21, height: 23}}
+    style={{ width: 21, height: 23 }}
     source={require('./Filter.png')}
     resizeMode={'contain'}
   />
@@ -167,7 +167,7 @@ export const FilterIcon = (props) => (
 export const CartIcon = (props) => (
   <IconBase
     {...props}
-    style={{width: 20, height: 22}}
+    style={{ width: 20, height: 22 }}
     source={require('./Cart.png')}
     resizeMode={'contain'}
   />
@@ -325,6 +325,126 @@ export const OrderDispatched = (props) => (
   <IconBase
     {...props}
     source={require('./OrderDispatched.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const SearchIcon = (props) => (
+  <IconBase
+    {...props}
+    source={require('./SearchIcon.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const SmallLogo = (props) => (
+  <IconBase
+    {...props}
+    source={require('./smallLogo.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Search_Glyph = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Search_Glyph.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const SearchClose = (props) => (
+  <IconBase
+    {...props}
+    source={require('./SearchClose.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const RectangleOverlay = (props) => (
+  <IconBase
+    {...props}
+    source={require('./RectangleOverlay.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const SideRectangle = (props) => (
+  <IconBase
+    {...props}
+    source={require('./SideRectangle.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const MainImage = (props) => (
+  <IconBase
+    {...props}
+    source={require('./MainImage.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Men = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Men.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Women = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Women.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Boy = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Boy.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Girl = (props) => (
+  <IconBase
+    {...props}
+    source={require('./Girl.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const RaymondLogo = (props) => (
+  <IconBase
+    {...props}
+    source={require('./RaymondLogo.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const RaymondLinenLogo = (props) => (
+  <IconBase
+    {...props}
+    source={require('./RaymondLinenLogo.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const SiyaramsLogo = (props) => (
+  <IconBase
+    {...props}
+    source={require('./SiyaramsLogo.png')}
+    resizeMode={'contain'}
+  />
+);
+
+export const Zaccari = (props) => (
+  <IconBase
+    {...props}
+    source={require('./zaccari.png')}
     resizeMode={'contain'}
   />
 );

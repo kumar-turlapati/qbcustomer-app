@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -7,14 +7,14 @@ import {
   TextInput,
   Platform,
 } from 'react-native';
-import {theme} from '../../theme/theme';
+import { theme } from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import Carousel from 'react-native-snap-carousel';
 // import {Product, ProductFullScreen, CrossIcon} from '../../icons/Icons';
-import {CrossIcon} from '../../icons/Icons';
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
-import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
-import {ShoppingCartContext} from '../context/ShoppingCart';
+import { CrossIcon } from '../../icons/Icons';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import { ShoppingCartContext } from '../context/ShoppingCart';
 import {
   cdnUrl,
   clientCode,
@@ -26,10 +26,10 @@ import useAsyncStorage from '../customHooks/async';
 import axios from 'axios';
 import _startCase from 'lodash/startCase';
 import _lowerCase from 'lodash/lowerCase';
-import {Image} from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import ImageZoom from 'react-native-image-pan-zoom';
 
-const {width: winWidth, height: winHeight} = Dimensions.get('window');
+const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ProductDetails = ({route, navigation}) => {
+export const ProductDetails = ({ route, navigation }) => {
   const [orderQty, setOrderQty] = useState('1');
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -164,8 +164,8 @@ export const ProductDetails = ({route, navigation}) => {
   const packedQty = route.params.productDetails.packedQty;
   const productUomName = route.params.productDetails.uomName;
   const brandUrl = route.params.productDetails.brandUrl;
-  const {storageItem: uuid} = useAsyncStorage('@uuid');
-  const {ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST} = restEndPoints;
+  const { storageItem: uuid } = useAsyncStorage('@uuid');
+  const { ADD_ITEM_TO_WISHLIST, REMOVE_ITEM_FROM_WISHLIST } = restEndPoints;
 
   // console.log(route.params.productDetails, '---------------------');
   // console.log(slideIndex, 'slide index is....................');
@@ -203,7 +203,7 @@ export const ProductDetails = ({route, navigation}) => {
         await axios
           .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
             headers: requestHeaders,
-            data: {wishListItems: [{wlItemCode: itemID}]},
+            data: { wishListItems: [{ wlItemCode: itemID }] },
           })
           .then((apiResponse) => {
             // console.log(apiResponse.data.status);
@@ -230,9 +230,9 @@ export const ProductDetails = ({route, navigation}) => {
           .post(
             ADD_ITEM_TO_WISHLIST.URL(uuid),
             {
-              wishListItems: [{itemCode: itemID}],
+              wishListItems: [{ itemCode: itemID }],
             },
-            {headers: requestHeaders},
+            { headers: requestHeaders },
           )
           .then((apiResponse) => {
             setWishlistLoading(false);
@@ -292,7 +292,7 @@ export const ProductDetails = ({route, navigation}) => {
     />
   );
 
-  const renderSliderItem = ({item}) => {
+  const renderSliderItem = ({ item }) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
     );
@@ -306,8 +306,8 @@ export const ProductDetails = ({route, navigation}) => {
         key={item.itemID}>
         <View style={styles.onboardingViewStyles}>
           <Image
-            source={{uri: imageUrl}}
-            style={{height: 280, width: winWidth - 80}}
+            source={{ uri: imageUrl }}
+            style={{ height: 280, width: winWidth - 80 }}
           />
         </View>
       </TouchableOpacity>
@@ -345,7 +345,7 @@ export const ProductDetails = ({route, navigation}) => {
     );
   };
 
-  const renderSliderFullView = ({item}) => {
+  const renderSliderFullView = ({ item }) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/${productLocationKey}/${item.imageName}`,
     );
@@ -357,8 +357,8 @@ export const ProductDetails = ({route, navigation}) => {
           imageWidth={winWidth}
           imageHeight={winHeight}>
           <Image
-            source={{uri: imageUrl}}
-            style={{width: winWidth, height: winHeight}}
+            source={{ uri: imageUrl }}
+            style={{ width: winWidth, height: winHeight }}
           />
         </ImageZoom>
       </View>
@@ -421,7 +421,7 @@ export const ProductDetails = ({route, navigation}) => {
   const renderTitleAndButton = () => {
     return (
       <View style={styles.titleViewStyle}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Text style={styles.titleStyle}>{productName}</Text>
           <Text style={styles.instockStyles}>In stock</Text>
           {brandUrl.length > 0 ? (
@@ -435,7 +435,7 @@ export const ProductDetails = ({route, navigation}) => {
               <Text
                 style={[
                   styles.instockStyles,
-                  {backgroundColor: theme.colors.RED},
+                  { backgroundColor: theme.colors.RED },
                 ]}>
                 3D View
               </Text>
@@ -464,7 +464,7 @@ export const ProductDetails = ({route, navigation}) => {
               }}
               value={orderQty}
               maxLength={3}
-              onEndEditing={(e) => {}}
+              onEndEditing={(e) => { }}
               keyboardType="numeric"
             />
             <TouchableOpacity
@@ -472,7 +472,7 @@ export const ProductDetails = ({route, navigation}) => {
               style={styles.addToCartStyles}
               onPress={() => {
                 const cartItem = {
-                  cartItems: [{itemCode: productCode, itemQty: orderQty}],
+                  cartItems: [{ itemCode: productCode, itemQty: orderQty }],
                 };
                 setShowAlert(true);
                 addToCart(cartItem);
@@ -481,7 +481,7 @@ export const ProductDetails = ({route, navigation}) => {
               <Text style={styles.addToCartStyle}>ADD TO CART</Text>
             </TouchableOpacity>
           </View>
-          <View style={{opacity: disableViewCart ? 0.5 : 1}}>
+          <View style={{ opacity: disableViewCart ? 0.5 : 1 }}>
             <TouchableOpacity
               activeOpacity={1}
               style={[styles.buyNowStyles]}
@@ -490,7 +490,7 @@ export const ProductDetails = ({route, navigation}) => {
               }}
               disabled={disableViewCart}>
               <Text
-                style={[styles.addToCartStyle, {color: theme.colors.WHITE}]}>
+                style={[styles.addToCartStyle, { color: theme.colors.WHITE }]}>
                 VIEW CART
               </Text>
             </TouchableOpacity>
@@ -515,21 +515,21 @@ export const ProductDetails = ({route, navigation}) => {
             height: 1,
           }}
         /> */}
-        <View style={{marginLeft: 24, marginTop: 16}}>
+        <View style={{ marginLeft: 24, marginTop: 16 }}>
           {/* <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text> */}
           <Text style={styles.addToCartStyle}>{productDescription}</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}></Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 26}}>
+        <View style={{ marginLeft: 24, marginTop: 26 }}>
           <Text style={styles.addToCartStyle}>Specifications</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: 1},
+              { fontWeight: 'normal', marginTop: 1 },
             ]}>
             Packed Qty. -{' '}
             {`${parseFloat(packedQty).toFixed(2)} ${_lowerCase(
@@ -539,24 +539,24 @@ export const ProductDetails = ({route, navigation}) => {
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             Brand - {_startCase(_lowerCase(productBrand))}
           </Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: -5},
+              { fontWeight: 'normal', marginTop: -5 },
             ]}>
             Category - {_startCase(_lowerCase(productCategory))}
           </Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 24}}>
+        <View style={{ marginLeft: 24, marginTop: 24 }}>
           <Text style={styles.addToCartStyle}>Billing Information</Text>
           <Text
             style={[
               styles.addToCartStyle,
-              {fontWeight: 'normal', marginTop: 1, textAlign: 'justify'},
+              { fontWeight: 'normal', marginTop: 1, textAlign: 'justify' },
             ]}>
             {
               'This item will be billed as per the packed qty. given in the specifications. When you add 1 to the cart it will be multiplied with packed qty. and the value will be generated accordingly. Packed qty. may subject to change at the time of billing.'
