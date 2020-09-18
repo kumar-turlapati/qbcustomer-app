@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -12,7 +12,7 @@ import { colors } from '../../theme/colors';
 import { theme } from '../../theme/theme';
 import CommonSearchHeader from '../UI/CommonSearchHeader';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -36,6 +36,21 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 22,
     letterSpacing: - 0.41
+  },
+  searchRowStyles: {
+    height: 44,
+    backgroundColor: theme.colors.WHITE,
+    width: width,
+    borderBottomColor: theme.colors.SEPERATOR_COLOR,
+    borderBottomWidth: 0.5
+  },
+  searchRowTextStyles: {
+    paddingLeft: 15,
+    paddingTop: 10,
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: - 0.408,
+    color: theme.colors.BLACK
   }
 });
 
@@ -68,6 +83,13 @@ export const ShowBrands = ({ route, navigation }) => {
   const { title } = route.params
 
   const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+
+    return () => {
+      setShowSearch(false)
+    };
+  }, [])
 
 
   const renderHeader = () => {
@@ -129,12 +151,45 @@ export const ShowBrands = ({ route, navigation }) => {
     )
   }
 
+  const renderSearchView = () => {
+    return (
+      <FlatList
+        style={{
+          flex: 1,
+          position: 'absolute',
+          marginTop: 88,
+          height: height - 88,
+          backgroundColor: theme.colors.BLACK_WITH_OPACITY_5
+        }}
+        data={genderData}
+        renderItem={({ item }) => renderSearchRow(item)}
+        keyExtractor={(item) => item.title}
+        removeClippedSubviews={false}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      />
+    );
+  }
+
+  const renderSearchRow = (item) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.searchRowStyles}
+        onPress={() => {
+        }}
+      >
+        <Text style={styles.searchRowTextStyles}>{item.title}</Text>
+      </TouchableOpacity>
+    )
+  }
 
   return (
     < View style={styles.container} >
       { renderHeader()}
       <Text style={styles.titleStyle}>{title} Collection</Text>
       { renderListView()}
+      {showSearch && renderSearchView()}
     </View >
   )
 

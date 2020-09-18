@@ -15,6 +15,7 @@ const green = '#34C759'
 const blackOpacity6 = "rgba(0,0,0,0.6)";
 const blackOpacity2 = 'rgba(0,0,0,0.2)';
 const blackOpacity8 = 'rgba(0,0,0,0.8)';
+const blackOpacity5 = 'rgba(0,0,0,0.5)';
 
 const snow = 'rgb(249,249,249)'
 
@@ -46,6 +47,7 @@ const Common = {
   BLACK_WITH_OPACITY_6: blackOpacity6,
   BLACK_WITH_OPACITY_2: blackOpacity2,
   BLACK_WITH_OPACITY_8: blackOpacity8,
+  BLACK_WITH_OPACITY_5: blackOpacity5,
   SNOW: snow,
   SEARCH_INPUT_BACKGROUND_COLOR: 'rgba(118,118,128,0.12)',
   DARK_BLUISH_GRAY: '#3C3C43'

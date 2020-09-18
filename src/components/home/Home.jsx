@@ -49,7 +49,7 @@ import CommonSearchHeader from '../UI/CommonSearchHeader';
 import Carousel from 'react-native-snap-carousel';
 import { colors } from '../../theme/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -198,6 +198,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     letterSpacing: - 0.41
+  },
+  searchRowStyles: {
+    height: 44,
+    backgroundColor: theme.colors.WHITE,
+    width: width,
+    borderBottomColor: theme.colors.SEPERATOR_COLOR,
+    borderBottomWidth: 0.5
+  },
+  searchRowTextStyles: {
+    paddingLeft: 15,
+    paddingTop: 10,
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: - 0.408,
+    color: theme.colors.BLACK
   }
 });
 
@@ -952,6 +967,39 @@ export const Home = ({ route, navigation }) => {
     );
   };
 
+  const renderSearchView = () => {
+    return (
+      <FlatList
+        style={{
+          flex: 1,
+          position: 'absolute',
+          marginTop: 88,
+          height: height - 88,
+          backgroundColor: theme.colors.BLACK_WITH_OPACITY_5
+        }}
+        data={genderData}
+        renderItem={({ item }) => renderSearchRow(item)}
+        keyExtractor={(item) => item.title}
+        removeClippedSubviews={false}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      />
+    );
+  }
+
+  const renderSearchRow = (item) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.searchRowStyles}
+        onPress={() => {
+        }}
+      >
+        <Text style={styles.searchRowTextStyles}>{item.title}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   return loading || tokenLoading ? (
     <Loader />
   ) : catalogItems && catalogItems.length > 0 ? (
@@ -959,6 +1007,7 @@ export const Home = ({ route, navigation }) => {
       {renderHeader()}
       {renderBrandsList()}
       {showSortView && renderSortView()}
+      {showSearch && renderSearchView()}
       {showAlert && (
         <CommonAlertView
           showLoader={wishlistLoading}
