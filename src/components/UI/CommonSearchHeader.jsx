@@ -1,24 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  TextInput
 } from 'react-native';
 import {
   BackIcon,
-  CartIcon,
-  FilterIcon,
-  SortIcon,
-  WishListIcon,
-  HeartSelected,
-  HeartUnSelected,
-  SmallLogo,
-  SearchIcon
+  SearchClose,
+  SearchIcon,
+  Search_Glyph,
+  SmallLogo
 } from '../../icons/Icons';
 import { theme } from '../../theme/theme';
-import { ShoppingCartContext } from '../context/ShoppingCart';
 
 const { height, width } = Dimensions.get('window');
 
@@ -97,25 +93,48 @@ const styles = StyleSheet.create({
   iconBackStyles: {
     height: 11,
     width: 21,
-    marginTop: 8,
+    marginTop: 5,
     marginLeft: 2,
   },
+  textInputStyles: {
+    fontSize: 17,
+    color: theme.colors.DARK_BLUISH_GRAY,
+    marginLeft: 4,
+    width: 150
+  },
+  inputViewStyle: {
+    width: width - 90,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderWidth: 0.1,
+    borderRadius: 4,
+    flexDirection: 'row',
+    backgroundColor: theme.colors.SEARCH_INPUT_BACKGROUND_COLOR
+  },
+  searchGlyphStyles: {
+    height: 22,
+    width: 24,
+    marginTop: 8,
+    marginLeft: 4
+  },
+  closeStyles: {
+    position: 'absolute',
+    height: 40,
+    width: 40,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 
 export default CommonSearchHeader = ({
   leftSideText,
   onPressSearchIcon,
   isSearch,
-  onPressLeftButton,
-  onPressRightButton,
-  isProduct,
+  onPressBackButton,
+  onPressSearchCloseButton,
+  onTextChange,
   isTabView,
-  onPressFilterIcon,
-  onPressSortIcon,
-  isWishList,
-  onPressWishListIcon,
-  isItemInWishlist,
-  disableCart,
+  onPressLeftButton
 }) => {
 
   const renderHeader = () => {
@@ -130,7 +149,7 @@ export default CommonSearchHeader = ({
               </View>
               :
               <TouchableOpacity
-                style={[styles.iconViewStyles, { height: 40, width: 40, }]}
+                style={[styles.iconViewStyles, { height: 40, width: 40, marginTop: 54, marginLeft: -6 }]}
                 activeOpacity={1}
                 onPress={() => {
                   onPressLeftButton();
@@ -147,7 +166,38 @@ export default CommonSearchHeader = ({
               <SearchIcon style={styles.searchIconStyles} />
             </TouchableOpacity>
           </>
-          : null}
+          :
+          <View style={{ width: '100%', height: 40, marginTop: 44, flexDirection: 'row' }}>
+            <TouchableOpacity
+              style={[styles.iconViewStyles, {
+                height: 40, width: 40, marginTop: 10, marginLeft: -6
+              }]}
+              activeOpacity={1}
+              onPress={() => {
+                onPressBackButton();
+              }}>
+              <BackIcon style={styles.iconBackStyles} />
+            </TouchableOpacity>
+            <View style={styles.inputViewStyle}>
+              <Search_Glyph style={styles.searchGlyphStyles} />
+              <TextInput
+                style={styles.textInputStyles}
+                placeholder="Raymond's"
+                autoCorrect={false}
+                autoFocus={true}
+                onChangeText={(changedText) => {
+                  onTextChange(changedText)
+                }}
+              />
+              <TouchableOpacity style={styles.closeStyles}
+                onPress={() => {
+                  onPressSearchCloseButton();
+                }}>
+                <SearchClose style={{ height: 17, width: 17 }} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
       </View>
     );
   };

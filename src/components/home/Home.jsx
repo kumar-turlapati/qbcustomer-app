@@ -271,6 +271,7 @@ export const Home = ({ route, navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
   const [slideIndex, setSlideIndex] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
 
   const { storageItem: uuid } = useAsyncStorage('@uuid');
   const { storageItem: accessToken, tokenLoading } = useAsyncStorage(
@@ -484,12 +485,22 @@ export const Home = ({ route, navigation }) => {
     return (
       <CommonSearchHeader
         leftSideText={'Shop Name'}
-        isSearch={false}
+        isSearch={showSearch}
         isTabView={true}
         onPressSearchIcon={() => {
           console.log('onPressSearchIcon')
+          setShowSearch(true)
         }}
-
+        onPressSearchCloseButton={() => {
+          console.log('onPressSearchCloseButton')
+        }}
+        onTextChange={(changedText) => {
+          console.log('onTextChange', changedText)
+        }}
+        onPressBackButton={() => {
+          console.log('onPressBackButton')
+          setShowSearch(false)
+        }}
       />
     );
   };

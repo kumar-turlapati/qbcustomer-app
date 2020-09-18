@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -67,17 +67,31 @@ export const ShowBrands = ({ route, navigation }) => {
 
   const { title } = route.params
 
+  const [showSearch, setShowSearch] = useState(false);
+
+
   const renderHeader = () => {
     return (
       <CommonSearchHeader
         leftSideText={'Shop Name'}
-        isSearch={false}
+        isSearch={showSearch}
         isTabView={false}
         onPressSearchIcon={() => {
           console.log('onPressSearchIcon')
+          setShowSearch(true)
+        }}
+        onPressSearchCloseButton={() => {
+          console.log('onPressSearchCloseButton')
+        }}
+        onTextChange={(changedText) => {
+          console.log('onTextChange', changedText)
+        }}
+        onPressBackButton={() => {
+          console.log('onPressBackButton')
+          setShowSearch(false)
         }}
         onPressLeftButton={() => {
-          navigation.goBack();
+          navigation.goBack()
         }}
       />
     );
@@ -94,7 +108,7 @@ export const ShowBrands = ({ route, navigation }) => {
         data={genderData}
         numColumns={2}
         renderItem={({ item }) => renderRow(item)}
-        keyExtractor={(item) => item.image}
+        keyExtractor={(item) => item.title}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

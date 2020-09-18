@@ -46,7 +46,9 @@ const Common = {
   BLACK_WITH_OPACITY_6: blackOpacity6,
   BLACK_WITH_OPACITY_2: blackOpacity2,
   BLACK_WITH_OPACITY_8: blackOpacity8,
-  SNOW: snow
+  SNOW: snow,
+  SEARCH_INPUT_BACKGROUND_COLOR: 'rgba(118,118,128,0.12)',
+  DARK_BLUISH_GRAY: '#3C3C43'
 };
 
 const Product = {
