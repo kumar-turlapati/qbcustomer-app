@@ -608,15 +608,13 @@ export const Home = ({ route, navigation }) => {
           marginBottom: 0,
         }}
         data={catalogItems}
-        numColumns={2}
+        horizontal={true}
+        // numColumns={2}
         renderItem={({ item }) => renderRow(item)}
         keyExtractor={(item) => item.itemName}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          renderHeaderComponent()
-        }
       />
     );
   };
@@ -809,8 +807,7 @@ export const Home = ({ route, navigation }) => {
     return (
       <>
         {renderMainView()}
-        {renderBrandsList()}
-        {renderFlatListPagination()}
+        <Text style={styles.pickSideStyles}>Pick your side</Text>
       </>
     );
   }
@@ -825,27 +822,34 @@ export const Home = ({ route, navigation }) => {
 
   const renderBrandsList = () => {
     return (
-      <View>
-        <Text style={styles.pickSideStyles}>Pick your side</Text>
-        <FlatList
-          style={{
-            flex: 1,
-          }}
-          data={genderData}
-          numColumns={2}
-          renderItem={({ item }) => renderBrandRow(item)}
-          keyExtractor={(item) => item.itemName}
-          removeClippedSubviews={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => {
-            return (
-              <View style={{ width: '100%', height: 0.5, backgroundColor: colors.SEPERATOR_COLOR }} />
-            );
-          }
-          }
-        />
-      </View>
+      <FlatList
+        style={{
+          flex: 1,
+        }}
+        data={genderData}
+        numColumns={2}
+        renderItem={({ item }) => renderBrandRow(item)}
+        keyExtractor={(item) => item.title}
+        removeClippedSubviews={false}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          renderHeaderComponent()
+        }
+        ListFooterComponent={
+          renderFooterComponent()
+        }
+      />
+    );
+  }
+
+  const renderFooterComponent = () => {
+    return (
+      <>
+        <View style={{ width: '100%', height: 0.5, backgroundColor: colors.SEPERATOR_COLOR }} />
+        {renderFlatListPagination()}
+        {renderListView()}
+      </>
     );
   }
 
@@ -942,7 +946,7 @@ export const Home = ({ route, navigation }) => {
   ) : catalogItems && catalogItems.length > 0 ? (
     <View style={styles.container}>
       {renderHeader()}
-      {renderListView()}
+      {renderBrandsList()}
       {showSortView && renderSortView()}
       {showAlert && (
         <CommonAlertView

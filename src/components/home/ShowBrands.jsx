@@ -43,18 +43,22 @@ const styles = StyleSheet.create({
 const genderData = [
   {
     id: 1,
+    title: 'Men',
     image: <RaymondLogo style={{ width: 150, height: 150 }} />
   },
   {
     id: 2,
+    title: 'Women',
     image: <RaymondLinenLogo style={{ width: 150, height: 150 }} />
   },
   {
     id: 3,
+    title: 'Boy',
     image: <Zaccari style={{ width: 150, height: 150 }} />
   },
   {
     id: 4,
+    title: 'Girl',
     image: <SiyaramsLogo style={{ width: 150, height: 150 }} />
   }
 ]
@@ -90,7 +94,7 @@ export const ShowBrands = ({ route, navigation }) => {
         data={genderData}
         numColumns={2}
         renderItem={({ item }) => renderRow(item)}
-        keyExtractor={(item) => item.image}
+        keyExtractor={(item) => item.title}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
