@@ -94,7 +94,7 @@ export const ShowBrands = ({ route, navigation }) => {
         data={genderData}
         numColumns={2}
         renderItem={({ item }) => renderRow(item)}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.image}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
