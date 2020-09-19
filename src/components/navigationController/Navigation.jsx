@@ -16,6 +16,7 @@ import { ScreenNamesCustomer } from './ScreenNames';
 import useAsyncStorage from '../customHooks/async';
 import { Loader } from '../Loader';
 import { ShowBrands } from '../home/ShowBrands';
+import { NewHome } from '../home/NewHome';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
@@ -85,6 +86,10 @@ export const AppCustomerNavigator = () => {
         <Stack.Screen
           name={ScreenNamesCustomer.SHOWBRANDS}
           component={ShowBrands}
+        />
+        <Stack.Screen
+          name={ScreenNamesCustomer.NEWHOME}
+          component={NewHome}
         />
       </Stack.Navigator>
     );

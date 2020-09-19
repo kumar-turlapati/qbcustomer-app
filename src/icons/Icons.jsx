@@ -381,7 +381,7 @@ export const MainImage = (props) => (
   <IconBase
     {...props}
     source={require('./MainImage.png')}
-    resizeMode={'contain'}
+    resizeMode={'stretch'}
   />
 );
 
@@ -389,7 +389,7 @@ export const Men = (props) => (
   <IconBase
     {...props}
     source={require('./Men.png')}
-    resizeMode={'contain'}
+    resizeMode={'stretch'}
   />
 );
 
@@ -397,7 +397,7 @@ export const Women = (props) => (
   <IconBase
     {...props}
     source={require('./Women.png')}
-    resizeMode={'contain'}
+    resizeMode={'stretch'}
   />
 );
 
@@ -405,7 +405,7 @@ export const Boy = (props) => (
   <IconBase
     {...props}
     source={require('./Boy.png')}
-    resizeMode={'contain'}
+    resizeMode={'stretch'}
   />
 );
 
@@ -413,7 +413,7 @@ export const Girl = (props) => (
   <IconBase
     {...props}
     source={require('./Girl.png')}
-    resizeMode={'contain'}
+    resizeMode={'stretch'}
   />
 );
 

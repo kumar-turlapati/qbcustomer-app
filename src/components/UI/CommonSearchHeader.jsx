@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -137,6 +137,8 @@ export default CommonSearchHeader = ({
   onPressLeftButton
 }) => {
 
+  const [value, setValue] = useState('')
+
   const renderHeader = () => {
     return (
       <View style={styles.headerStyles}>
@@ -185,12 +187,15 @@ export default CommonSearchHeader = ({
                 placeholder="Raymond's"
                 autoCorrect={false}
                 autoFocus={true}
+                value={value}
                 onChangeText={(changedText) => {
+                  setValue(changedText)
                   onTextChange(changedText)
                 }}
               />
               <TouchableOpacity style={styles.closeStyles}
                 onPress={() => {
+                  setValue('')
                   onPressSearchCloseButton();
                 }}>
                 <SearchClose style={{ height: 17, width: 17 }} />

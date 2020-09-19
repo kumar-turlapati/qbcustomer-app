@@ -83,6 +83,7 @@ export const ShowBrands = ({ route, navigation }) => {
   const { title } = route.params
 
   const [showSearch, setShowSearch] = useState(false);
+  const [searchData, setSearchData] = useState(genderData);
 
   useEffect(() => {
 
@@ -104,9 +105,15 @@ export const ShowBrands = ({ route, navigation }) => {
         }}
         onPressSearchCloseButton={() => {
           console.log('onPressSearchCloseButton')
+          setSearchData(genderData)
         }}
         onTextChange={(changedText) => {
           console.log('onTextChange', changedText)
+          let filteredArray = genderData.filter((str) => {
+            return str.title.toLowerCase().indexOf(changedText.toLowerCase()) >= 0;
+          });
+          setSearchData(filteredArray)
+          console.log('filteredArray', filteredArray)
         }}
         onPressBackButton={() => {
           console.log('onPressBackButton')
@@ -161,7 +168,7 @@ export const ShowBrands = ({ route, navigation }) => {
           height: height - 88,
           backgroundColor: theme.colors.BLACK_WITH_OPACITY_5
         }}
-        data={genderData}
+        data={searchData}
         renderItem={({ item }) => renderSearchRow(item)}
         keyExtractor={(item) => item.title}
         removeClippedSubviews={false}
