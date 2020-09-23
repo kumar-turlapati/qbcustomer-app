@@ -2,7 +2,7 @@ export const ScreenNamesCustomer = {
   LOGIN: 'Login',
   WALKTHROUGHSCREEN: 'WalkThroughScreen',
   TABBAR: 'TabBar',
-  HOME: 'Home',
+  HOME: 'HomeCatalogs',
   CATALOGUE: 'Catalogs',
   ORDER: 'Orders',
   PROFILE: 'My Account',
@@ -16,6 +16,6 @@ export const ScreenNamesCustomer = {
   VIEWINVOICE: 'ViewInvoice',
   CANCELORDER: 'CancelOrder',
   WEBVIEW: 'ProductWebView',
-  SHOWBRANDS: "ShowBrands",
-  NEWHOME: "NewHome"
+  SHOWBRANDS: 'ShowBrands',
+  NEWHOME: 'Home',
 };

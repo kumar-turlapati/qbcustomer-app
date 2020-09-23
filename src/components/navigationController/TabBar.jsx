@@ -1,4 +1,5 @@
-import {Home} from '../home/Home';
+import {Home} from '../home/HomeCataogs';
+import {NewHome} from '../home/NewHome';
 import {Catalogue} from '../catalogues/Catalogue';
 import {Order} from '../orders/Order';
 import {Profile} from '../profile/Profile';
@@ -39,7 +40,7 @@ export const TabBar = ({route}) => {
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
   return (
     <Tab.Navigator
-      initialRouteName={ScreenNamesCustomer.HOME}
+      initialRouteName={ScreenNamesCustomer.NEWHOME}
       backBehavior="none"
       resetOnBlur="true"
       screenOptions={({route}) => ({
@@ -61,8 +62,8 @@ export const TabBar = ({route}) => {
         },
       }}>
       <Tab.Screen
-        name={ScreenNamesCustomer.HOME}
-        component={Home}
+        name={ScreenNamesCustomer.NEWHOME}
+        component={NewHome}
         initialParams={{catalogCode: catalogCode}}
       />
       <Tab.Screen name={ScreenNamesCustomer.CATALOGUE} component={Catalogue} />

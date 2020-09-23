@@ -95,6 +95,22 @@ const profileOptions = [
       />
     ),
   },
+  {
+    id: 5,
+    title: 'New Home',
+    description: 'New Home',
+    icon: (
+      <LogoutIcon
+        style={{
+          width: 24,
+          height: 26,
+          marginTop: 30,
+          marginLeft: 6,
+          marginRight: 4,
+        }}
+      />
+    ),
+  },
 ];
 
 export const Profile = ({navigation}) => {
@@ -164,6 +180,8 @@ export const Profile = ({navigation}) => {
             } else if (index === 3) {
               AsyncStorage.clear();
               navigation.push(ScreenNamesCustomer.LOGIN);
+            } else if (index === 4) {
+              navigation.push(ScreenNamesCustomer.NEWHOME);
             }
           }}>
           <View style={styles.rowViewStyle}>

@@ -12,6 +12,12 @@ export const requestHeaders = {
 };
 export const billingRate = 'wholesale';
 export const cdnUrl = 'https://dgufxvy74ps27.cloudfront.net';
+export const clientName = 'S V FABRICS';
+export const contentSections = {
+  MAIN_BANNER: 'main-banner',
+  HOT_SELLERS: 'hot-sellers',
+  TOP_BRANDS: 'top-brands',
+};
 export const restEndPoints = {
   LOGIN: {URL: `${apiBaseUrl}/app/v1/login`, method: 'POST'},
   RESEND_OTP: {URL: `${apiBaseUrl}/app/v1/resend-otp`, method: 'POST'},
@@ -64,5 +70,11 @@ export const restEndPoints = {
   },
   CONTACT_INFORMATION: {
     URL: () => `${apiBaseUrl}/app/v1/get-contact-details`,
+  },
+  APP_CONTENT: {
+    URL: `${apiBaseUrl}/app/v1/app-content`,
+  },
+  CATS_SUBCATS: {
+    URL: `${apiBaseUrl}/app/v1/cats-subcats`,
   },
 };

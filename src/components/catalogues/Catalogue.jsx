@@ -11,6 +11,10 @@ import {Loader} from '../Loader';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import _find from 'lodash/find';
 import _compact from 'lodash/compact';
+import _startCase from 'lodash/startCase';
+import _toLower from 'lodash/toLower';
+import {NoDataMessage} from '../NoDataMessage';
+import {useIsFocused} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -79,21 +83,28 @@ const styles = StyleSheet.create({
 //   },
 // ];
 
-export const Catalogue = ({navigation}) => {
+export const Catalogue = ({route, navigation}) => {
   const [loading, setLoading] = useState(false);
   const [catalogs, setCatalogs] = useState([]);
   const [errorText, setErrorText] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
+  // const [showAlert, setShowAlert] = useState(false);
+  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const {CATALOGS} = restEndPoints;
+  const {brandName, categoryId, subCategoryId} = route.params;
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // console.log('.......', catalogs);
+  const isFocused = useIsFocused();
+  // console.log(categoryId, subCategoryId, brandName, 'catalogs i......');
 
   useEffect(() => {
     const getCatalogs = async () => {
       setLoading(true);
+      const catalogsUrl = `${CATALOGS.URL}?categoryID=${categoryId}&subCategoryID=${subCategoryId}`;
       try {
         await axios
-          .get(CATALOGS.URL, {headers: requestHeaders})
+          .get(catalogsUrl, {
+            headers: requestHeaders,
+          })
           .then((apiResponse) => {
             // console.log(apiResponse, '----------------------');
             setLoading(false);
@@ -109,29 +120,28 @@ export const Catalogue = ({navigation}) => {
               ]);
               setCatalogs(finalCatalogs);
             } else {
+              // console.log('here.............................');
               setErrorText('Catalogs are not yet created :(');
             }
           })
           .catch((error) => {
-            // console.log(
-            //   error,
-            //   '@@@@@@@@@@@@@@@@@@@@@@@@@@',
-            //   CATALOGS.URL,
-            //   requestHeaders,
-            // );
             setLoading(false);
-            setErrorText(error.response.data.errortext);
-            setShowAlert(true);
+            setShowNoDataMessage(true);
+            setErrorMessage('Catalogs are coming soon :)');
           });
       } catch (error) {
         // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
         setLoading(false);
-        setErrorText('Network Error. Please try again.');
-        setShowAlert(true);
+        setShowNoDataMessage(true);
+        setErrorMessage('Network Error. Please try again.');
       }
     };
-    getCatalogs();
-  }, []);
+    if (isFocused) getCatalogs();
+    return () => {
+      setCatalogs([]);
+      setShowNoDataMessage(false);
+    };
+  }, [isFocused]);
 
   const renderListView = () => {
     return (
@@ -153,7 +163,7 @@ export const Catalogue = ({navigation}) => {
   const renderHeader = () => {
     return (
       <CommonHeader
-        leftSideText="Catalogs"
+        leftSideText={`${_startCase(_toLower(brandName))} Catalogs`}
         isTabView={true}
         onPressRightButton={() => {}}
         isProduct={false}
@@ -171,7 +181,7 @@ export const Catalogue = ({navigation}) => {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            navigation.push(ScreenNamesCustomer.TABBAR, {
+            navigation.navigate(ScreenNamesCustomer.HOME, {
               catalogCode: item.catalogCode,
             });
           }}>
@@ -198,11 +208,13 @@ export const Catalogue = ({navigation}) => {
 
   return loading ? (
     <Loader />
+  ) : showNoDataMessage ? (
+    <NoDataMessage message={errorMessage} />
   ) : (
     <View style={styles.container}>
       {renderHeader()}
       {renderListView()}
-      {showAlert && (
+      {/* {showAlert && (
         <CommonAlertView
           showLoader={false}
           showSuceessPopup
@@ -211,7 +223,7 @@ export const Catalogue = ({navigation}) => {
           }}
           successTitle={errorText}
         />
-      )}
+      )} */}
     </View>
   );
 };

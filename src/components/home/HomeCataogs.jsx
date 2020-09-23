@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   BackHandler,
 } from 'react-native';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 import {
   HeartUnSelected,
   HeartSelected,
@@ -16,8 +16,8 @@ import {
   UnCheckIcon,
 } from '../../icons/Icons';
 import CommonHeader from '../UI/CommonHeader';
-import { Overlay } from 'react-native-elements';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Overlay} from 'react-native-elements';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import axios from 'axios';
 import {
   restEndPoints,
@@ -25,7 +25,7 @@ import {
   cdnUrl,
   clientCode,
 } from '../../../qbconfig';
-import { Loader } from '../Loader';
+import {Loader} from '../Loader';
 import _map from 'lodash/map';
 import _uniq from 'lodash/uniq';
 import _forEach from 'lodash/forEach';
@@ -36,10 +36,10 @@ import _compact from 'lodash/compact';
 import useAsyncStorage from '../customHooks/async';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
-import { Image } from 'react-native-elements';
-import { useFocusEffect } from '@react-navigation/native';
+import {Image} from 'react-native-elements';
+import {useFocusEffect} from '@react-navigation/native';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Home = ({ route, navigation }) => {
+export const HomeCatalogs = ({route, navigation}) => {
   // const [arrayObjects, setArrayObjects] = useState(clothes);
   const [showSortView, setShowSortView] = useState(false);
   const [lowToHighSelected, setLowToHighSelected] = useState(true);
@@ -144,8 +144,8 @@ export const Home = ({ route, navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
 
-  const { storageItem: uuid } = useAsyncStorage('@uuid');
-  const { storageItem: accessToken, tokenLoading } = useAsyncStorage(
+  const {storageItem: uuid} = useAsyncStorage('@uuid');
+  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
   const catalogCode =
@@ -170,12 +170,13 @@ export const Home = ({ route, navigation }) => {
   // console.log('default catalogcode$$$$$$$$$$$$$$', navigation.params);
   // console.log(brandSelected, categorySelected, '--------------------------');
   // console.log(pricingFilterValue, 'pricing filter value...........');
+  // console.log(catalogItems, 'catalog items..........');
 
   const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOG_DETAILS.URL(defaultCatalogCode), { headers: requestHeaders })
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
         .then((apiResponse) => {
           setLoading(false);
           if (apiResponse.data.status === 'success') {
@@ -196,7 +197,7 @@ export const Home = ({ route, navigation }) => {
     setLoading(true);
     try {
       await axios
-        .get(CATALOGS.URL, { headers: requestHeaders })
+        .get(CATALOGS.URL, {headers: requestHeaders})
         .then((apiResponse) => {
           setLoading(false);
           Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
@@ -232,17 +233,17 @@ export const Home = ({ route, navigation }) => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        BackHandler.exitApp();
-        // return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const onBackPress = () => {
+  //       BackHandler.exitApp();
+  //       // return true;
+  //     };
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //     return () =>
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, []),
+  // );
 
   /*
   useEffect(() => {
@@ -288,10 +289,10 @@ export const Home = ({ route, navigation }) => {
       const catalogItemsSorted =
         catalogItems.length > 0
           ? _orderBy(
-            catalogItems,
-            [(catalogItemDetails) => parseFloat(catalogItemDetails.itemRate)],
-            ['asc'],
-          )
+              catalogItems,
+              [(catalogItemDetails) => parseFloat(catalogItemDetails.itemRate)],
+              ['asc'],
+            )
           : [];
       const maxItemPrice =
         catalogItems.length > 0
@@ -313,7 +314,7 @@ export const Home = ({ route, navigation }) => {
       setCatalogItems(catalogItemsSorted);
       setBusinessLocations(defaultCatalogDetails.businessLocations);
       setWishlistItems(defaultCatalogDetails.wishlistItems);
-      setPricing({ minimum: minItemPrice, maximum: maxItemPrice });
+      setPricing({minimum: minItemPrice, maximum: maxItemPrice});
     }
   }, [defaultCatalogDetails]);
 
@@ -322,7 +323,7 @@ export const Home = ({ route, navigation }) => {
       <CommonHeader
         leftSideText={
           defaultCatalogDetails.catalogName &&
-            defaultCatalogDetails.catalogName.length > 0
+          defaultCatalogDetails.catalogName.length > 0
             ? defaultCatalogDetails.catalogName.substring(0, 25)
             : ''
         }
@@ -333,18 +334,17 @@ export const Home = ({ route, navigation }) => {
         isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
         onPressFilterIcon={() => {
           setShowSortView(false);
-          navigation.push(ScreenNamesCustomer.NEWHOME)
-          // navigation.push(ScreenNamesCustomer.FILTER, {
-          //   catalogBrands: catalogBrands,
-          //   setBrandSelected: (brandSelected) =>
-          //     setBrandSelected(brandSelected),
-          //   catalogCategories: catalogCategories,
-          //   setCategorySelected: (categorySelected) =>
-          //     setCategorySelected(categorySelected),
-          //   pricing: pricing,
-          //   setPricingFilterValue: (pricingFilterValue) =>
-          //     setPricingFilterValue(pricingFilterValue),
-          // });
+          navigation.push(ScreenNamesCustomer.FILTER, {
+            catalogBrands: catalogBrands,
+            setBrandSelected: (brandSelected) =>
+              setBrandSelected(brandSelected),
+            catalogCategories: catalogCategories,
+            setCategorySelected: (categorySelected) =>
+              setCategorySelected(categorySelected),
+            pricing: pricing,
+            setPricingFilterValue: (pricingFilterValue) =>
+              setPricingFilterValue(pricingFilterValue),
+          });
         }}
         onPressSortIcon={() => {
           setShowSortView(!showSortView);
@@ -372,7 +372,7 @@ export const Home = ({ route, navigation }) => {
     const isPricingFilterValidated =
       parseFloat(pricingFilterValue) > 0
         ? parseFloat(productDetails.itemRate) >= minimumValue &&
-        parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
+          parseFloat(productDetails.itemRate) <= parseFloat(pricingFilterValue)
         : true;
     const isItemInWishlist = _find(wishlistItems, {
       itemID: String(productDetails.itemID),
@@ -396,31 +396,32 @@ export const Home = ({ route, navigation }) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/${imageLocation.locationCode}/${productDetails.images[0].imageName}`,
     );
-    const itemRate = parseFloat(productDetails.itemRate).toFixed(2);
+    const itemRate = parseFloat(productDetails.itemRate).toFixed(0);
+    const mrp = parseFloat(productDetails.mrp).toFixed(0);
     return isCategoryFiltered &&
       isBrandFiltered &&
       isPricingFilterValidated &&
       itemRate > 0 ? (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
-              productDetails: productDetails,
-              productLocation: imageLocation.locationCode,
-              isItemInWishlist: isItemInWishlist ? true : false,
-            });
-          }}>
-          <View style={styles.rowStyles}>
-            <Image
-              style={{
-                width: width / 2 - 24,
-                height: 164,
-              }}
-              source={{ uri: imageUrl }}
-              PlaceholderContent={<Loader />}
-            />
-            <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
-            {/* {item.specialPrice.length !== 0 ? (
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          navigation.push(ScreenNamesCustomer.PRODUCTDETAILS, {
+            productDetails: productDetails,
+            productLocation: imageLocation.locationCode,
+            isItemInWishlist: isItemInWishlist ? true : false,
+          });
+        }}>
+        <View style={styles.rowStyles}>
+          <Image
+            style={{
+              width: width / 2 - 24,
+              height: 164,
+            }}
+            source={{uri: imageUrl}}
+            PlaceholderContent={<Loader />}
+          />
+          <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
+          {/* {item.specialPrice.length !== 0 ? (
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
               <Text style={styles.originalPriceStyle}>
@@ -431,31 +432,32 @@ export const Home = ({ route, navigation }) => {
               </Text>
             </View>
           ) : ( */}
-            <Text style={styles.specialPriceStyle}>
-              ₹{itemRate}/{productDetails.uomName}
-            </Text>
-            {/* )} */}
-            <TouchableOpacity
-              activeOpacity={1}
-              style={styles.heartIconViewStyles}
-              onPress={() => {
-                manageItemInWishlist(
-                  productDetails.itemID,
-                  isItemInWishlist ? true : false,
-                );
-              }}
-              disabled={wishlistLoading}>
-              {isItemInWishlist ? (
-                <HeartSelected style={styles.iconHeartStyle} />
-              ) : (
-                  <HeartUnSelected style={styles.iconHeartStyle} />
-                )}
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      ) : (
-        <></>
-      );
+          <Text style={styles.specialPriceStyle}>
+            WHS: ₹{itemRate} {/*/{productDetails.uomName}*/}
+            {mrp > 0 && `  MRP: ₹${itemRate}`}
+          </Text>
+          {/* )} */}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.heartIconViewStyles}
+            onPress={() => {
+              manageItemInWishlist(
+                productDetails.itemID,
+                isItemInWishlist ? true : false,
+              );
+            }}
+            disabled={wishlistLoading}>
+            {isItemInWishlist ? (
+              <HeartSelected style={styles.iconHeartStyle} />
+            ) : (
+              <HeartUnSelected style={styles.iconHeartStyle} />
+            )}
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    ) : (
+      <></>
+    );
   };
 
   const renderListView = () => {
@@ -468,7 +470,7 @@ export const Home = ({ route, navigation }) => {
         }}
         data={catalogItems}
         numColumns={2}
-        renderItem={({ item }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.itemName}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -524,10 +526,10 @@ export const Home = ({ route, navigation }) => {
                   }
                 }}>
                 {highToLowSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
               <Text style={styles.sortPriceTextStyle}>Price - High to Low</Text>
             </View>
@@ -562,12 +564,12 @@ export const Home = ({ route, navigation }) => {
                   }
                 }}>
                 {lowToHighSelected ? (
-                  <CheckIcon style={{ width: 16, height: 16 }} />
+                  <CheckIcon style={{width: 16, height: 16}} />
                 ) : (
-                    <UnCheckIcon style={{ width: 16, height: 16 }} />
-                  )}
+                  <UnCheckIcon style={{width: 16, height: 16}} />
+                )}
               </TouchableOpacity>
-              <Text style={[styles.sortPriceTextStyle, { marginTop: 5 }]}>
+              <Text style={[styles.sortPriceTextStyle, {marginTop: 5}]}>
                 Price - Low to High
               </Text>
             </View>
@@ -587,7 +589,7 @@ export const Home = ({ route, navigation }) => {
         await axios
           .delete(REMOVE_ITEM_FROM_WISHLIST.URL(uuid), {
             headers: requestHeaders,
-            data: { wishListItems: [{ wlItemCode: itemID }] },
+            data: {wishListItems: [{wlItemCode: itemID}]},
           })
           .then((apiResponse) => {
             setWishlistLoading(false);
@@ -628,9 +630,9 @@ export const Home = ({ route, navigation }) => {
           .post(
             ADD_ITEM_TO_WISHLIST.URL(uuid),
             {
-              wishListItems: [{ itemCode: itemID }],
+              wishListItems: [{itemCode: itemID}],
             },
-            { headers: requestHeaders },
+            {headers: requestHeaders},
           )
           .then((apiResponse) => {
             setWishlistLoading(false);
