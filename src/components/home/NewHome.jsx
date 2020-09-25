@@ -20,17 +20,7 @@ import {
   requestHeaders,
   contentSections,
 } from '../../../qbconfig';
-import {
-  Boy,
-  Girl,
-  HeartSelected,
-  HeartUnSelected,
-  MainImage,
-  Men,
-  RectangleOverlay,
-  SideRectangle,
-  Women,
-} from '../../icons/Icons';
+import {Boy, Girl, MainImage, Men, Women} from '../../icons/Icons';
 import {colors} from '../../theme/colors';
 import {theme} from '../../theme/theme';
 import useAsyncStorage from '../customHooks/async';
@@ -41,7 +31,7 @@ import CommonSearchHeader from '../UI/CommonSearchHeader';
 import axios from 'axios';
 import _pickBy from 'lodash/pickBy';
 import _orderBy from 'lodash/orderBy';
-// import {Image} from 'react-native-elements';
+import {useDebounce} from 'use-debounce';
 
 const {width, height} = Dimensions.get('window');
 
@@ -281,7 +271,7 @@ export const NewHome = ({route, navigation}) => {
   const [alertText, setAlertText] = useState('');
   const [slideIndex, setSlideIndex] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
-  const [searchData, setSearchData] = useState(genderData);
+  const [searchData, setSearchData] = useState([]);
   const [banners, setBanners] = useState([]);
   const [topBrands, setTopBrands] = useState([]);
   const [hotSellers, setHotSellers] = useState([]);
@@ -293,8 +283,32 @@ export const NewHome = ({route, navigation}) => {
   const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
+  const {CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC} = restEndPoints;
+  const [searchItemsResult, setSearchItemsResult] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [debouncedText] = useDebounce(searchText, 1000);
 
-  const {CATS_SUBCATS, APP_CONTENT} = restEndPoints;
+  // console.log(searchData, '-------------------------------');
+
+  const searchItems = async () => {
+    // console.log(debouncedText, 'debouncedText is........');
+    if (searchText.length >= 3) {
+      try {
+        await axios
+          .get(`${CATALOG_ITEMS_AC.URL}?q=${debouncedText}`, {
+            headers: requestHeaders,
+          })
+          .then((apiResponse) => {
+            setSearchData(apiResponse.data);
+          })
+          .catch((error) => {
+            // console.log(error.response, '@@@@@@@@@@@@@@@@@@@@@@@@@@');
+          });
+      } catch (error) {
+        // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+      }
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -405,27 +419,27 @@ export const NewHome = ({route, navigation}) => {
       <CommonSearchHeader
         leftSideText={`Welcome to ${clientName}`}
         isSearch={showSearch}
-        isTabView={true}
+        isTabView
         onPressSearchIcon={() => {
-          console.log('onPressSearchIcon');
+          // console.log('onPressSearchIcon');
           setShowSearch(true);
         }}
         onPressSearchCloseButton={() => {
-          console.log('onPressSearchCloseButton');
-          setSearchData(genderData);
+          // console.log('onPressSearchCloseButton');
+          setSearchData([]);
         }}
         onTextChange={(changedText) => {
-          console.log('onTextChange', changedText);
-          let filteredArray = genderData.filter((str) => {
-            return (
-              str.title.toLowerCase().indexOf(changedText.toLowerCase()) >= 0
-            );
-          });
-          setSearchData(filteredArray);
-          console.log('filteredArray', filteredArray);
+          setSearchText(changedText);
+          if (changedText.length === 0) {
+            setSearchData([]);
+          } else {
+            searchItems();
+          }
         }}
         onPressBackButton={() => {
-          console.log('onPressBackButton');
+          // console.log('onPressBackButton');
+          setSearchData([]);
+          setSearchText('');
           setShowSearch(false);
         }}
       />
@@ -738,7 +752,7 @@ export const NewHome = ({route, navigation}) => {
         }}
         data={searchData}
         renderItem={({item}) => renderSearchRow(item)}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -752,11 +766,12 @@ export const NewHome = ({route, navigation}) => {
         activeOpacity={1}
         style={styles.searchRowStyles}
         onPress={() => {
-          navigation.push(ScreenNamesCustomer.SHOWBRANDS, {
-            title: item.title,
-          });
+          alert(item);
+          // navigation.push(ScreenNamesCustomer.SHOWBRANDS, {
+          //   title: item,
+          // });
         }}>
-        <Text style={styles.searchRowTextStyles}>{item.title}</Text>
+        <Text style={styles.searchRowTextStyles}>{item}</Text>
       </TouchableOpacity>
     );
   };

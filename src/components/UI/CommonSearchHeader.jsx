@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  TextInput
+  TextInput,
 } from 'react-native';
 import {
   BackIcon,
   SearchClose,
   SearchIcon,
   Search_Glyph,
-  SmallLogo
+  SmallLogo,
 } from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {theme} from '../../theme/theme';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     marginTop: 8,
-    marginLeft: 10
+    marginLeft: 10,
   },
   searchViewStyles: {
     width: 40,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: theme.colors.DARK_BLUISH_GRAY,
     marginLeft: 4,
-    width: 150
+    width: 150,
   },
   inputViewStyle: {
     width: width - 90,
@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     borderWidth: 0.1,
     borderRadius: 4,
     flexDirection: 'row',
-    backgroundColor: theme.colors.SEARCH_INPUT_BACKGROUND_COLOR
+    backgroundColor: theme.colors.SEARCH_INPUT_BACKGROUND_COLOR,
   },
   searchGlyphStyles: {
     height: 22,
     width: 24,
     marginTop: 8,
-    marginLeft: 4
+    marginLeft: 4,
   },
   closeStyles: {
     position: 'absolute',
@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     width: 40,
     right: 0,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default CommonSearchHeader = ({
@@ -134,33 +134,35 @@ export default CommonSearchHeader = ({
   onPressSearchCloseButton,
   onTextChange,
   isTabView,
-  onPressLeftButton
+  onPressLeftButton,
 }) => {
-
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
 
   const renderHeader = () => {
     return (
       <View style={styles.headerStyles}>
-        {!isSearch ?
+        {!isSearch ? (
           <>
-            {isTabView ?
+            {isTabView ? (
               <View style={styles.iconViewStyles}>
                 <SmallLogo style={styles.iconStyles} />
                 <Text style={styles.leftTextStyle}>{leftSideText}</Text>
               </View>
-              :
+            ) : (
               <TouchableOpacity
-                style={[styles.iconViewStyles, { height: 40, width: 40, marginTop: 54, marginLeft: -6 }]}
+                style={[
+                  styles.iconViewStyles,
+                  {height: 40, width: 40, marginTop: 54, marginLeft: -6},
+                ]}
                 activeOpacity={1}
                 onPress={() => {
                   onPressLeftButton();
                 }}>
                 <BackIcon style={styles.iconBackStyles} />
               </TouchableOpacity>
-
-            }
-            <TouchableOpacity style={styles.searchViewStyles}
+            )}
+            <TouchableOpacity
+              style={styles.searchViewStyles}
               activeOpacity={1}
               onPress={() => {
                 onPressSearchIcon();
@@ -168,12 +170,24 @@ export default CommonSearchHeader = ({
               <SearchIcon style={styles.searchIconStyles} />
             </TouchableOpacity>
           </>
-          :
-          <View style={{ width: '100%', height: 40, marginTop: 44, flexDirection: 'row' }}>
+        ) : (
+          <View
+            style={{
+              width: '100%',
+              height: 40,
+              marginTop: 44,
+              flexDirection: 'row',
+            }}>
             <TouchableOpacity
-              style={[styles.iconViewStyles, {
-                height: 40, width: 40, marginTop: 10, marginLeft: -6
-              }]}
+              style={[
+                styles.iconViewStyles,
+                {
+                  height: 40,
+                  width: 40,
+                  marginTop: 10,
+                  marginLeft: -6,
+                },
+              ]}
               activeOpacity={1}
               onPress={() => {
                 onPressBackButton();
@@ -184,25 +198,26 @@ export default CommonSearchHeader = ({
               <Search_Glyph style={styles.searchGlyphStyles} />
               <TextInput
                 style={styles.textInputStyles}
-                placeholder="Raymond's"
+                placeholder="Type item name..."
                 autoCorrect={false}
                 autoFocus={true}
                 value={value}
                 onChangeText={(changedText) => {
-                  setValue(changedText)
-                  onTextChange(changedText)
+                  setValue(changedText);
+                  onTextChange(changedText);
                 }}
               />
-              <TouchableOpacity style={styles.closeStyles}
+              <TouchableOpacity
+                style={styles.closeStyles}
                 onPress={() => {
-                  setValue('')
+                  setValue('');
                   onPressSearchCloseButton();
                 }}>
-                <SearchClose style={{ height: 17, width: 17 }} />
+                <SearchClose style={{height: 17, width: 17}} />
               </TouchableOpacity>
             </View>
           </View>
-        }
+        )}
       </View>
     );
   };

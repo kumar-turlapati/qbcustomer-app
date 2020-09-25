@@ -77,4 +77,10 @@ export const restEndPoints = {
   CATS_SUBCATS: {
     URL: `${apiBaseUrl}/app/v1/cats-subcats`,
   },
+  CATALOG_ITEMS_AC: {
+    URL: `${apiBaseUrl}/catalog/item/ac`,
+  },
+  CATALOG_ITEM_DETAILS: {
+    URL: `${apiBaseUrl}/app/v1/item-details`,
+  },
 };
