@@ -198,7 +198,7 @@ export default CommonSearchHeader = ({
               <Search_Glyph style={styles.searchGlyphStyles} />
               <TextInput
                 style={styles.textInputStyles}
-                placeholder="Type item name..."
+                placeholder="Type item name ..."
                 autoCorrect={false}
                 autoFocus={true}
                 value={value}

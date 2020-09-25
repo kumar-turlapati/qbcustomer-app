@@ -5,6 +5,7 @@ import {WalkThroughScreen} from '../WalkThroughScreen';
 import {TabBar} from '../navigationController/TabBar';
 import {Filter} from '../home/Filter';
 import {ProductDetails} from '../home/ProductDetails';
+import {ProductDetailsFromSearch} from '../home/ProductDetailsFromSearch';
 import {CartView} from '../home/CartView';
 import {WishList} from '../home/WishList';
 import {OrderDetails} from '../orders/OrderDetails';
@@ -64,6 +65,10 @@ export const AppCustomerNavigator = () => {
       <Stack.Screen
         name={ScreenNamesCustomer.PRODUCTDETAILS}
         component={ProductDetails}
+      />
+      <Stack.Screen
+        name={ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH}
+        component={ProductDetailsFromSearch}
       />
       <Stack.Screen name={ScreenNamesCustomer.CARTVIEW} component={CartView} />
       <Stack.Screen name={ScreenNamesCustomer.WISHLIST} component={WishList} />

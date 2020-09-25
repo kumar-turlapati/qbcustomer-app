@@ -284,9 +284,9 @@ export const NewHome = ({route, navigation}) => {
     '@accessToken',
   );
   const {CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC} = restEndPoints;
-  const [searchItemsResult, setSearchItemsResult] = useState(null);
+  // const [searchItemsResult, setSearchItemsResult] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [debouncedText] = useDebounce(searchText, 1000);
+  const [debouncedText] = useDebounce(searchText, 600);
 
   // console.log(searchData, '-------------------------------');
 
@@ -450,14 +450,23 @@ export const NewHome = ({route, navigation}) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/categories/${item.imageName}`,
     );
+    const enableRedirection = parseInt(item.enableRedirection, 10);
+    const itemId = parseInt(item.itemID, 10);
+    const catalogId = parseInt(item.catalogID, 10);
     return (
       <TouchableOpacity
         activeOpacity={1}
         style={styles.brandRowStyles}
         onPress={() => {
-          navigation.push(ScreenNamesCustomer.SHOWBRANDS, {
-            title: item.title,
-          });
+          if (enableRedirection) {
+            if (catalogId > 0) {
+            } else if (itemId > 0) {
+              navigation.push(ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH, {
+                itemName: itemId,
+                byNameOrId: 'id',
+              });
+            }
+          }
         }}>
         <Text style={styles.genderTextStyles}>{item.contentTitle}</Text>
         <Image
@@ -766,10 +775,13 @@ export const NewHome = ({route, navigation}) => {
         activeOpacity={1}
         style={styles.searchRowStyles}
         onPress={() => {
-          alert(item);
-          // navigation.push(ScreenNamesCustomer.SHOWBRANDS, {
-          //   title: item,
-          // });
+          setSearchData([]);
+          setSearchText('');
+          setShowSearch(false);
+          navigation.push(ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH, {
+            itemName: item,
+            byNameOrId: 'name',
+          });
         }}>
         <Text style={styles.searchRowTextStyles}>{item}</Text>
       </TouchableOpacity>

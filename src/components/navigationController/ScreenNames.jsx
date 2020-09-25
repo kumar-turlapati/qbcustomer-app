@@ -8,6 +8,7 @@ export const ScreenNamesCustomer = {
   PROFILE: 'My Account',
   FILTER: 'Filter',
   PRODUCTDETAILS: 'ProductDetails',
+  PRODUCTDETAILSFROMSEARCH: 'ProductDetailsFromSearch',
   CARTVIEW: 'CartView',
   WISHLIST: 'WishList',
   ORDERDETAILS: 'OrderDetails',
