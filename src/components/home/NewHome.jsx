@@ -458,6 +458,10 @@ export const NewHome = ({route, navigation}) => {
         onPress={() => {
           if (enableRedirection) {
             if (catalogId > 0) {
+              navigation.push(ScreenNamesCustomer.HOME, {
+                catalogId: catalogId,
+                fetchBy: 'id',
+              });
             } else if (itemId > 0) {
               navigation.push(ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH, {
                 itemName: itemId,
@@ -501,7 +505,7 @@ export const NewHome = ({route, navigation}) => {
     return (
       <>
         {renderMainView()}
-        <Text style={styles.pickSideStyles}>Pick your side</Text>
+        <Text style={styles.pickSideStyles}>Browse Catalogs</Text>
       </>
     );
   };
@@ -685,67 +689,35 @@ export const NewHome = ({route, navigation}) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/app-content/${item.imageName}`,
     );
+    const enableRedirection = parseInt(item.enableRedirection, 10);
+    const itemId = parseInt(item.itemID, 10);
+    const catalogId = parseInt(item.catalogID, 10);
+    // console.log('item in banners .....', item);
     return (
-      <>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          if (enableRedirection) {
+            if (catalogId > 0) {
+              navigation.push(ScreenNamesCustomer.HOME, {
+                catalogId: catalogId,
+                fetchBy: 'id',
+              });
+            } else if (itemId > 0) {
+              navigation.push(ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH, {
+                itemName: itemId,
+                byNameOrId: 'id',
+              });
+            }
+          }
+        }}>
         <Image
           source={{uri: imageUrl}}
           PlaceholderContent={<Loader />}
           style={{width: '100%', height: 406, position: 'absolute'}}
           resizeMode="stretch"
         />
-        {/* {item.mainImage} */}
-        {/* {offerData.length > 1 && (
-          <>
-            <RectangleOverlay
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: 157,
-                bottom: 0,
-              }}
-            />
-            <SideRectangle
-              style={{
-                position: 'absolute',
-                width: 174,
-                height: 157,
-                bottom: 0,
-                left: 0,
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                position: 'absolute',
-                width: '100%',
-                height: 157,
-                bottom: 0,
-              }}>
-              <View>
-                <Text style={styles.getOfferStyles}>GET</Text>
-                <Text style={styles.offerTextStyles}>{item.offer}</Text>
-                <Text style={[styles.getOfferStyles, {marginTop: 0}]}>OFF</Text>
-              </View>
-              <View style={{left: 160, position: 'absolute'}}>
-                <Text
-                  style={[
-                    styles.offerTextStyles,
-                    {fontSize: 16, marginTop: 50, marginLeft: 0},
-                  ]}>
-                  {item.title}
-                </Text>
-                <Text
-                  style={[
-                    styles.offerTextStyles,
-                    {fontSize: 15, marginLeft: 0},
-                  ]}>
-                  {item.description}
-                </Text>
-              </View>
-            </View>
-          </>
-        )} */}
-      </>
+      </TouchableOpacity>
     );
   };
 

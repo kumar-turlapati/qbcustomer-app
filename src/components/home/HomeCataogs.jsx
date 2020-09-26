@@ -38,6 +38,7 @@ import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
 import {Image} from 'react-native-elements';
 import {useFocusEffect} from '@react-navigation/native';
+// import {CommonActions} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 
@@ -143,13 +144,19 @@ export const HomeCatalogs = ({route, navigation}) => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
-
   const {storageItem: uuid} = useAsyncStorage('@uuid');
   const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
+  const catalogId =
+    route.params && route.params.catalogId ? route.params.catalogId : null;
+  const fetchBy =
+    route.params && route.params.fetchBy ? route.params.fetchBy : 'code';
+
+  // console.log(catalogCode, catalogId, 'catalog inputs......');
+
   // const accessToken = getAccessToken();
   const {
     CATALOGS,
@@ -172,11 +179,22 @@ export const HomeCatalogs = ({route, navigation}) => {
   // console.log(pricingFilterValue, 'pricing filter value...........');
   // console.log(catalogItems, 'catalog items..........');
 
-  const getCatalogDetails = async (defaultCatalogCode, requestHeaders) => {
+  const getCatalogDetails = async (
+    defaultCatalogCode,
+    byType,
+    requestHeaders,
+  ) => {
     setLoading(true);
+    console.log(
+      defaultCatalogCode,
+      byType,
+      CATALOG_DETAILS.URL(defaultCatalogCode, byType),
+    );
     try {
       await axios
-        .get(CATALOG_DETAILS.URL(defaultCatalogCode), {headers: requestHeaders})
+        .get(CATALOG_DETAILS.URL(defaultCatalogCode, byType), {
+          headers: requestHeaders,
+        })
         .then((apiResponse) => {
           setLoading(false);
           if (apiResponse.data.status === 'success') {
@@ -185,7 +203,7 @@ export const HomeCatalogs = ({route, navigation}) => {
         })
         .catch((error) => {
           setLoading(false);
-          const errorText = error.response.data.errortext;
+          // const errorText = error.response.data.errortext;
           // console.log(errorText);
         });
     } catch {
@@ -200,7 +218,7 @@ export const HomeCatalogs = ({route, navigation}) => {
         .get(CATALOGS.URL, {headers: requestHeaders})
         .then((apiResponse) => {
           setLoading(false);
-          Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
+          // Reactotron.log(apiResponse, 'Api Response in getCatalogs()');
           if (apiResponse.data.status === 'success') {
             const defaultCatalog = apiResponse.data.response.catalogs.find(
               (catalogDetails) => catalogDetails.isDefault === '1',
@@ -254,12 +272,20 @@ export const HomeCatalogs = ({route, navigation}) => {
 
   useEffect(() => {
     if (accessToken && accessToken.length > 0) {
+      console.log(catalogCode, catalogId, fetchBy);
       // this will set access token across the app.
       // no need of recalling it seperately in all the components
       requestHeaders['Access-Token'] = accessToken;
-      if (catalogCode && catalogCode.length > 0)
-        getCatalogDetails(catalogCode, requestHeaders);
-      else getCatalogs(requestHeaders);
+      if (catalogCode && catalogCode.length > 0) {
+        // console.log('here....if');
+        getCatalogDetails(catalogCode, 'code', requestHeaders);
+      } else if (catalogId && parseInt(catalogId) > 0) {
+        // console.log('here....elseif');
+        getCatalogDetails(catalogId, 'id', requestHeaders);
+      } else {
+        // console.log('here....else');
+        getCatalogs(requestHeaders);
+      }
     }
   }, [accessToken]);
 
@@ -327,9 +353,12 @@ export const HomeCatalogs = ({route, navigation}) => {
             ? defaultCatalogDetails.catalogName.substring(0, 25)
             : ''
         }
-        isTabView={true}
+        isTabView={false}
         onPressRightButton={() => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
+        }}
+        onPressLeftButton={() => {
+          navigation.navigate(ScreenNamesCustomer.NEWHOME);
         }}
         isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
         onPressFilterIcon={() => {

@@ -24,7 +24,8 @@ export const restEndPoints = {
   GET_TOKEN: {URL: `${apiBaseUrl}/app/v1/get-token`, method: 'POST'},
   CATALOGS: {URL: `${apiBaseUrl}/app/v1/catalog`, method: 'GET'},
   CATALOG_DETAILS: {
-    URL: (catalogCode) => `${apiBaseUrl}/app/v1/catalog/details/${catalogCode}`,
+    URL: (catalogCode, byType) =>
+      `${apiBaseUrl}/app/v1/catalog/details/${catalogCode}?by=${byType}`,
   },
   ADD_ITEM_TO_CART: {
     URL: (customerCode) => `${apiBaseUrl}/${cartUri}/${customerCode}`,

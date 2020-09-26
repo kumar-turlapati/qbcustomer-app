@@ -6,7 +6,7 @@ import {SideArrowIcon} from '../../icons/Icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import axios from 'axios';
 import {restEndPoints, requestHeaders} from '../../../qbconfig';
-import CommonAlertView from '../UI/CommonAlertView';
+// import CommonAlertView from '../UI/CommonAlertView';
 import {Loader} from '../Loader';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import _find from 'lodash/find';
@@ -15,6 +15,7 @@ import _startCase from 'lodash/startCase';
 import _toLower from 'lodash/toLower';
 import {NoDataMessage} from '../NoDataMessage';
 import {useIsFocused} from '@react-navigation/native';
+// import {CommonActions} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -90,9 +91,16 @@ export const Catalogue = ({route, navigation}) => {
   // const [showAlert, setShowAlert] = useState(false);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const {CATALOGS} = restEndPoints;
-  const {brandName, categoryId, subCategoryId} = route.params;
+  // const {brandName, categoryId, subCategoryId} = route.params;
+  const brandName =
+    route.params && route.params.brandName ? route.params.brandName : '';
+  const categoryId =
+    route.params && route.params.categoryId ? route.params.categoryId : '';
+  const subCategoryId =
+    route.params && route.params.subCategoryId
+      ? route.params.subCategoryId
+      : '';
   const [errorMessage, setErrorMessage] = useState('');
-
   const isFocused = useIsFocused();
   // console.log(categoryId, subCategoryId, brandName, 'catalogs i......');
 
@@ -164,8 +172,11 @@ export const Catalogue = ({route, navigation}) => {
     return (
       <CommonHeader
         leftSideText={`${_startCase(_toLower(brandName))} Catalogs`}
-        isTabView={true}
+        isTabView={false}
         onPressRightButton={() => {}}
+        onPressLeftButton={() => {
+          navigation.navigate(ScreenNamesCustomer.NEWHOME);
+        }}
         isProduct={false}
         isWishList={true}
         onPressWishListIcon={() => {

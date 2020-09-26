@@ -95,22 +95,22 @@ const profileOptions = [
       />
     ),
   },
-  {
-    id: 5,
-    title: 'New Home',
-    description: 'New Home',
-    icon: (
-      <LogoutIcon
-        style={{
-          width: 24,
-          height: 26,
-          marginTop: 30,
-          marginLeft: 6,
-          marginRight: 4,
-        }}
-      />
-    ),
-  },
+  // {
+  //   id: 5,
+  //   title: 'New Home',
+  //   description: 'New Home',
+  //   icon: (
+  //     <LogoutIcon
+  //       style={{
+  //         width: 24,
+  //         height: 26,
+  //         marginTop: 30,
+  //         marginLeft: 6,
+  //         marginRight: 4,
+  //       }}
+  //     />
+  //   ),
+  // },
 ];
 
 export const Profile = ({navigation}) => {
