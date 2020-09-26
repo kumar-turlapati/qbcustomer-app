@@ -154,15 +154,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.WHITE,
     color: colors.RED,
     paddingVertical: 18,
-    paddingLeft: 16,
+    paddingLeft: 10,
     fontWeight: 'bold',
-    fontSize: 19,
+    fontSize: 16,
     lineHeight: 22,
     letterSpacing: -0.41,
   },
   brandRowStyles: {
     width: width / 2,
-    height: 281,
+    height: 289,
     // borderRightWidth: 0.5,
     // borderRightColor: colors.SEPERATOR_COLOR,
   },
@@ -284,10 +284,8 @@ export const NewHome = ({route, navigation}) => {
     '@accessToken',
   );
   const {CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC} = restEndPoints;
-  // const [searchItemsResult, setSearchItemsResult] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [debouncedText] = useDebounce(searchText, 600);
-
+  const [debouncedText] = useDebounce(searchText, 500);
   // console.log(searchData, '-------------------------------');
 
   const searchItems = async () => {
@@ -485,7 +483,7 @@ export const NewHome = ({route, navigation}) => {
       <FlatList
         style={{
           flex: 1,
-          marginTop: 8,
+          marginTop: 0,
           marginBottom: 0,
         }}
         data={topBrands}
@@ -575,22 +573,22 @@ export const NewHome = ({route, navigation}) => {
     return (
       <>
         <View
-        // style={{
-        //   width: '100%',
-        //   height: 0.5,
-        //   backgroundColor: colors.SEPERATOR_COLOR,
-        // }}
+          style={{
+            width: '100%',
+            height: 0.5,
+            backgroundColor: colors.SEPERATOR_COLOR,
+          }}
         />
-        {topBrands.length > 0 && (
-          <>
-            {renderFlatListPaginationTopBrands()}
-            {renderListViewTopBrands()}
-          </>
-        )}
         {hotSellers.length > 0 && (
           <>
             {renderFlatListPaginationHotSellers()}
             {renderListViewHotSellers()}
+          </>
+        )}
+        {topBrands.length > 0 && (
+          <>
+            {renderFlatListPaginationTopBrands()}
+            {renderListViewTopBrands()}
           </>
         )}
       </>
@@ -616,9 +614,11 @@ export const NewHome = ({route, navigation}) => {
         <Image
           source={{uri: imageUrl}}
           style={{width: width / 2, height: width / 2}}
-          resizeMode="contain"
+          resizeMode="stretch"
         />
-        {/* <Text style={styles.viewTextStyles}>View All Brands</Text> */}
+        <Text style={{...styles.viewTextStyles, paddingTop: 10}}>
+          View All Brands
+        </Text>
       </TouchableOpacity>
     );
   };

@@ -17,12 +17,20 @@ import {colors} from '../../theme/colors';
 import {theme} from '../../theme/theme';
 import CommonSearchHeader from '../UI/CommonSearchHeader';
 import _orderBy from 'lodash/orderBy';
-import {cdnUrl, clientCode} from '../../../qbconfig';
+import {
+  cdnUrl,
+  clientCode,
+  clientName,
+  restEndPoints,
+  requestHeaders,
+} from '../../../qbconfig';
 import {Image} from 'react-native-elements';
 import {Loader} from '../Loader';
 import _startCase from 'lodash/startCase';
 import _toLower from 'lodash/toLower';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import {useDebounce} from 'use-debounce';
+import axios from 'axios';
 
 const {width, height} = Dimensions.get('window');
 
@@ -91,9 +99,10 @@ const genderData = [
 
 export const ShowBrands = ({route, navigation}) => {
   const {title, catsSubcats, categoryId} = route.params;
-
   const [showSearch, setShowSearch] = useState(false);
-  const [searchData, setSearchData] = useState(genderData);
+  const [searchData, setSearchData] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [debouncedText] = useDebounce(searchText, 500);
 
   let brands = [];
   catsSubcats.map((catSubCatDetails) => {
@@ -101,7 +110,29 @@ export const ShowBrands = ({route, navigation}) => {
       brands.push(catSubCatDetails);
   });
 
+  const {CATALOG_ITEMS_AC} = restEndPoints;
   const orderedBrands = _orderBy(brands, ['weight'], ['asc']);
+
+  const searchItems = async () => {
+    // console.log(debouncedText, 'debouncedText is........');
+    if (searchText.length >= 3) {
+      try {
+        await axios
+          .get(`${CATALOG_ITEMS_AC.URL}?q=${debouncedText}`, {
+            headers: requestHeaders,
+          })
+          .then((apiResponse) => {
+            // console.log(apiResponse);
+            setSearchData(apiResponse.data);
+          })
+          .catch((error) => {
+            // console.log(error.response, '@@@@@@@@@@@@@@@@@@@@@@@@@@');
+          });
+      } catch (error) {
+        // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+      }
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -112,33 +143,30 @@ export const ShowBrands = ({route, navigation}) => {
   const renderHeader = () => {
     return (
       <CommonSearchHeader
-        leftSideText={'Shop Name'}
+        leftSideText={clientName}
         isSearch={showSearch}
-        isTabView={false}
+        isTabView
         onPressSearchIcon={() => {
-          console.log('onPressSearchIcon');
+          // console.log('onPressSearchIcon');
           setShowSearch(true);
         }}
         onPressSearchCloseButton={() => {
-          console.log('onPressSearchCloseButton');
-          setSearchData(genderData);
+          // console.log('onPressSearchCloseButton');
+          setSearchData([]);
         }}
         onTextChange={(changedText) => {
-          console.log('onTextChange', changedText);
-          let filteredArray = genderData.filter((str) => {
-            return (
-              str.title.toLowerCase().indexOf(changedText.toLowerCase()) >= 0
-            );
-          });
-          setSearchData(filteredArray);
-          console.log('filteredArray', filteredArray);
+          setSearchText(changedText);
+          if (changedText.length === 0) {
+            setSearchData([]);
+          } else {
+            searchItems();
+          }
         }}
         onPressBackButton={() => {
-          console.log('onPressBackButton');
+          // console.log('onPressBackButton');
+          setSearchData([]);
+          setSearchText('');
           setShowSearch(false);
-        }}
-        onPressLeftButton={() => {
-          navigation.goBack();
         }}
       />
     );
@@ -200,7 +228,7 @@ export const ShowBrands = ({route, navigation}) => {
         }}
         data={searchData}
         renderItem={({item}) => renderSearchRow(item)}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -213,8 +241,16 @@ export const ShowBrands = ({route, navigation}) => {
       <TouchableOpacity
         activeOpacity={1}
         style={styles.searchRowStyles}
-        onPress={() => {}}>
-        <Text style={styles.searchRowTextStyles}>{item.title}</Text>
+        onPress={() => {
+          setSearchData([]);
+          setSearchText('');
+          setShowSearch(false);
+          navigation.push(ScreenNamesCustomer.PRODUCTDETAILSFROMSEARCH, {
+            itemName: item,
+            byNameOrId: 'name',
+          });
+        }}>
+        <Text style={styles.searchRowTextStyles}>{item}</Text>
       </TouchableOpacity>
     );
   };
