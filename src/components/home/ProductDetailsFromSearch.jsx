@@ -164,6 +164,7 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
     itemDetails && itemDetails.locationID ? itemDetails.locationID : 0;
   const productRate =
     itemDetails && itemDetails.itemRate ? itemDetails.itemRate : 0;
+  const mrp = itemDetails && itemDetails.mrp ? itemDetails.mrp : 0;
   const productName =
     itemDetails && itemDetails.itemName ? itemDetails.itemName : '';
   const productCode =
@@ -533,7 +534,12 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
             </TouchableOpacity>
           ) : null}
         </View>
-        <Text style={styles.priceStyles}>₹{productRate}</Text>
+        <Text style={styles.priceStyles}>
+          {' '}
+          WHS: ₹{productRate}
+          {'      '}
+          {parseFloat(mrp) > 0 ? `MRP: ₹${mrp}` : ''}
+        </Text>
         <View
           style={{
             flexDirection: 'row',

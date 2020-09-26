@@ -37,8 +37,9 @@ import useAsyncStorage from '../customHooks/async';
 import CommonAlertView from '../UI/CommonAlertView';
 import Reactotron from 'reactotron-react-native';
 import {Image} from 'react-native-elements';
-import {useFocusEffect} from '@react-navigation/native';
+// import {useFocusEffect} from '@react-navigation/native';
 // import {CommonActions} from '@react-navigation/native';
+import {NoDataMessage} from '../NoDataMessage';
 
 const {width} = Dimensions.get('window');
 
@@ -148,6 +149,9 @@ export const HomeCatalogs = ({route, navigation}) => {
   const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
+  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
   const catalogId =
@@ -156,7 +160,6 @@ export const HomeCatalogs = ({route, navigation}) => {
     route.params && route.params.fetchBy ? route.params.fetchBy : 'code';
 
   // console.log(catalogCode, catalogId, 'catalog inputs......');
-
   // const accessToken = getAccessToken();
   const {
     CATALOGS,
@@ -185,11 +188,11 @@ export const HomeCatalogs = ({route, navigation}) => {
     requestHeaders,
   ) => {
     setLoading(true);
-    console.log(
-      defaultCatalogCode,
-      byType,
-      CATALOG_DETAILS.URL(defaultCatalogCode, byType),
-    );
+    // console.log(
+    //   defaultCatalogCode,
+    //   byType,
+    //   CATALOG_DETAILS.URL(defaultCatalogCode, byType),
+    // );
     try {
       await axios
         .get(CATALOG_DETAILS.URL(defaultCatalogCode, byType), {
@@ -197,16 +200,23 @@ export const HomeCatalogs = ({route, navigation}) => {
         })
         .then((apiResponse) => {
           setLoading(false);
+          // console.log(apiResponse, 'api response.......................');
           if (apiResponse.data.status === 'success') {
             setDefaultCatalogDetails(apiResponse.data.response);
           }
         })
         .catch((error) => {
+          // console.log(error.response);
           setLoading(false);
+          setShowNoDataMessage(true);
+          setErrorMessage('We are sorry. No data available at this moment :)');
           // const errorText = error.response.data.errortext;
           // console.log(errorText);
         });
-    } catch {
+    } catch (e) {
+      // console.log(e);
+      setShowNoDataMessage(true);
+      setErrorMessage('Network error. Please try again :)');
       setLoading(false);
     }
   };
@@ -272,7 +282,7 @@ export const HomeCatalogs = ({route, navigation}) => {
 
   useEffect(() => {
     if (accessToken && accessToken.length > 0) {
-      console.log(catalogCode, catalogId, fetchBy);
+      // console.log(catalogCode, catalogId, fetchBy);
       // this will set access token across the app.
       // no need of recalling it seperately in all the components
       requestHeaders['Access-Token'] = accessToken;
@@ -358,7 +368,7 @@ export const HomeCatalogs = ({route, navigation}) => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
         }}
         onPressLeftButton={() => {
-          navigation.navigate(ScreenNamesCustomer.NEWHOME);
+          navigation.navigate(ScreenNamesCustomer.TABBAR);
         }}
         isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
         onPressFilterIcon={() => {
@@ -463,7 +473,7 @@ export const HomeCatalogs = ({route, navigation}) => {
           ) : ( */}
           <Text style={styles.specialPriceStyle}>
             WHS: ₹{itemRate} {/*/{productDetails.uomName}*/}
-            {mrp > 0 && `  MRP: ₹${itemRate}`}
+            {mrp > 0 && `  MRP: ₹${mrp}`}
           </Text>
           {/* )} */}
           <TouchableOpacity
@@ -694,6 +704,8 @@ export const HomeCatalogs = ({route, navigation}) => {
 
   return loading || tokenLoading ? (
     <Loader />
+  ) : showNoDataMessage ? (
+    <NoDataMessage message={errorMessage} />
   ) : catalogItems && catalogItems.length > 0 ? (
     <View style={styles.container}>
       {renderHeader()}

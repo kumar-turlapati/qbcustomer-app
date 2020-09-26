@@ -14,7 +14,7 @@ import {
   ProfileSelected,
 } from '../../icons/Icons';
 import {theme} from '../../theme/theme';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ScreenNamesCustomer} from './ScreenNames';
@@ -36,8 +36,8 @@ const routeToFocusedIcon = {
 const Tab = createBottomTabNavigator();
 
 export const TabBar = ({route}) => {
-  const catalogCode =
-    route.params && route.params.catalogCode ? route.params.catalogCode : null;
+  // const catalogCode =
+  //   route.params && route.params.catalogCode ? route.params.catalogCode : null;
   return (
     <Tab.Navigator
       initialRouteName={ScreenNamesCustomer.NEWHOME}
@@ -61,11 +61,7 @@ export const TabBar = ({route}) => {
           ...theme.viewStyles.tabBarIconStyles,
         },
       }}>
-      <Tab.Screen
-        name={ScreenNamesCustomer.NEWHOME}
-        component={NewHome}
-        initialParams={{catalogCode: catalogCode}}
-      />
+      <Tab.Screen name={ScreenNamesCustomer.NEWHOME} component={NewHome} />
       <Tab.Screen name={ScreenNamesCustomer.CATALOGUE} component={Catalogue} />
       <Tab.Screen name={ScreenNamesCustomer.ORDER} component={Order} />
       <Tab.Screen name={ScreenNamesCustomer.PROFILE} component={Profile} />

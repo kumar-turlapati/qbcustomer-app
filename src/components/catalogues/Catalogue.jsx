@@ -95,11 +95,9 @@ export const Catalogue = ({route, navigation}) => {
   const brandName =
     route.params && route.params.brandName ? route.params.brandName : '';
   const categoryId =
-    route.params && route.params.categoryId ? route.params.categoryId : '';
+    route.params && route.params.categoryId ? route.params.categoryId : 0;
   const subCategoryId =
-    route.params && route.params.subCategoryId
-      ? route.params.subCategoryId
-      : '';
+    route.params && route.params.subCategoryId ? route.params.subCategoryId : 0;
   const [errorMessage, setErrorMessage] = useState('');
   const isFocused = useIsFocused();
   // console.log(categoryId, subCategoryId, brandName, 'catalogs i......');
@@ -148,6 +146,11 @@ export const Catalogue = ({route, navigation}) => {
     return () => {
       setCatalogs([]);
       setShowNoDataMessage(false);
+      navigation.setParams({
+        categoryId: undefined,
+        subCategoryId: undefined,
+        brandName: undefined,
+      });
     };
   }, [isFocused]);
 
