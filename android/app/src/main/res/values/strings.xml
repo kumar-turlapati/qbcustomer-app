@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">S V Fabrics</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">xhKFAgRKB4OyZKxs9Q4w3voU54c7Zp7bOHXDa</string>
 </resources>
