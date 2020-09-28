@@ -98,7 +98,8 @@ export const ViewInvoice = ({route, navigation}) => {
   const [orderItems, setOrderItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  const [invoiceDate, setInvoiceDate] = useState('');
+  const [invoicesCount, setInvoicesCount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
   // const [showAlert, setShowAlert] = useState(false);
   // const [alertText, setAlertText] = useState('');
   // const [apiLoading, setApiLoading] = useState(true);
@@ -124,23 +125,33 @@ export const ViewInvoice = ({route, navigation}) => {
             // console.log(apiResponse.data.response, 'api response is..........');
             setInvoiceDetailsLoading(false);
             if (apiResponse.data.status === 'success') {
-              const orderDetails = apiResponse.data.response.orderDetails;
-              const orderItems =
-                apiResponse.data.response.orderDetails.itemDetails;
+              const invoices = apiResponse.data.response.orderDetails;
+              let orderItems = [],
+                orderDetails = [];
+              Object.entries(invoices).forEach(([_, invoiceInfo]) => {
+                const invoiceItems = invoiceInfo.invoiceItems;
+                const invoiceDetails = invoiceInfo.invoiceDetails;
+                invoiceItems.map((orderItemDetails) => {
+                  orderItems.push(orderItemDetails);
+                });
+                orderDetails.push(invoiceDetails);
+              });
+              setInvoicesCount(orderDetails.length);
+              // console.log(orderDetails, 'order details.....................');
+              // const orderDetails = apiResponse.data.response.orderDetails;
               const businessLocations =
                 apiResponse.data.response.businessLocations;
-              delete orderDetails['itemDetails'];
               setOrderDetails(orderDetails);
               setOrderItems(orderItems);
               setBusinessLocations(businessLocations);
-              setInvoiceDate(orderDetails.invoiceDate);
+              // setInvoiceDate(orderDetails.invoiceDate);
             } else {
               setErrorMessage('Invalid Order :(');
               setShowNoDataMessage(true);
             }
           })
           .catch((error) => {
-            console.log(error.response.data);
+            // console.log(error.response.data);
             setInvoiceDetailsLoading(false);
             setErrorMessage(error.response.data.errortext);
             setShowNoDataMessage(true);
@@ -189,9 +200,7 @@ export const ViewInvoice = ({route, navigation}) => {
           borderTopWidth: 1,
           borderTopColor: theme.colors.BORDER_COLOR,
         }}>
-        <Text style={styles.tileTextStyles}>
-          Order No {orderDetails.indentNo}
-        </Text>
+        <Text style={styles.tileTextStyles}>Order No {orderNo}</Text>
         <Text
           style={[
             styles.tileTextStyles,
@@ -281,7 +290,7 @@ export const ViewInvoice = ({route, navigation}) => {
         }}
         data={orderItems}
         renderItem={({item, index}) => renderRow(item, index)}
-        keyExtractor={(item) => item.itemName}
+        keyExtractor={(item) => item.invoiceItemID}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -289,15 +298,15 @@ export const ViewInvoice = ({route, navigation}) => {
     );
   };
 
-  const renderTotals = () => {
+  const renderTotals = (orderDetails, invoiceSlno) => {
     const orderTotal = parseFloat(orderDetails.billAmount).toFixed(2);
     const discountAmount = parseFloat(orderDetails.discountAmount).toFixed(2);
     const taxable = parseFloat(orderTotal - discountAmount).toFixed(2);
     const gst = parseFloat(orderDetails.taxAmount).toFixed(2);
     const roundOff = parseFloat(orderDetails.roundOff).toFixed(2);
     const payable = parseFloat(orderDetails.netPay).toFixed(2);
-    const invoiceDateString = invoiceDate
-      ? invoiceDate.split('-').reverse().join('/')
+    const invoiceDateString = orderDetails.invoiceDate
+      ? orderDetails.invoiceDate.split('-').reverse().join('/')
       : '';
 
     // console.log(invoiceDateString, 'invoice date string...........');
@@ -313,8 +322,36 @@ export const ViewInvoice = ({route, navigation}) => {
 
     return (
       <View style={{marginHorizontal: 16}}>
-        <View style={[styles.ledgerRowTitleStyle, {marginTop: 23}]}>
-          <Text style={styles.ledgerTextStyles}>Order total</Text>
+        <View style={{marginLeft: 0, marginTop: 5, marginBottom: 2}}>
+          <Text
+            style={
+              (styles.addToCartStyle,
+              {
+                fontSize: 18,
+                color: theme.colors.RED,
+                fontStyle: 'normal',
+                // marginBottom: 10,
+              })
+            }>
+            {`Invoice no.: ${orderDetails.billNo}, ${invoiceDateString}`}
+          </Text>
+        </View>
+        <View style={{marginLeft: 0, marginBottom: 10}}>
+          <Text
+            style={
+              (styles.addToCartStyle,
+              {
+                fontSize: 13,
+                color: theme.colors.RED,
+                fontStyle: 'normal',
+                // marginBottom: 10,
+              })
+            }>
+            {`(Invoice ${invoiceSlno} of ${invoicesCount})`}
+          </Text>
+        </View>
+        <View style={[styles.ledgerRowTitleStyle, {marginTop: 10}]}>
+          <Text style={styles.ledgerTextStyles}>Line items total</Text>
           <Text style={styles.ledgerTextStyles}>₹{orderTotal}</Text>
         </View>
         <View style={styles.ledgerRowTitleStyle}>
@@ -343,36 +380,31 @@ export const ViewInvoice = ({route, navigation}) => {
           <Text style={styles.ledgerTextStyles}>Round off (+/-)</Text>
           <Text style={styles.ledgerTextStyles}>₹{roundOff}</Text>
         </View>
-        <View
-          style={{
-            backgroundColor: theme.colors.BLACK,
-            opacity: 0.1,
-            height: 1,
-            marginTop: 20,
-          }}
-        />
         <View style={[styles.ledgerRowTitleStyle, {marginTop: 13}]}>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+          <Text
+            style={[
+              styles.ledgerTextStyles,
+              {fontWeight: 'bold', fontSize: 18},
+            ]}>
             Invoice value
           </Text>
-          <Text style={[styles.ledgerTextStyles, {fontWeight: 'bold'}]}>
+          <Text
+            style={[
+              styles.ledgerTextStyles,
+              {fontWeight: 'bold', fontSize: 18},
+            ]}>
             ₹{payable}
           </Text>
         </View>
-        <View style={{marginLeft: 0, marginTop: 5, marginBottom: 10}}>
-          <Text
-            style={
-              (styles.addToCartStyle,
-              {
-                fontSize: 15,
-                color: theme.colors.RED,
-                fontStyle: 'normal',
-                marginBottom: 20,
-              })
-            }>
-            {`Invoice no.: ${orderDetails.billNo}, dated ${invoiceDateString}.`}
-          </Text>
-        </View>
+        <View
+          style={{
+            backgroundColor: theme.colors.BLACK,
+            opacity: 0.3,
+            height: 1,
+            marginTop: 5,
+            marginBottom: 15,
+          }}
+        />
       </View>
     );
   };
@@ -390,7 +422,11 @@ export const ViewInvoice = ({route, navigation}) => {
       {renderHeader()}
       {renderOrderID()}
       {renderListView()}
-      {renderTotals()}
+      {/* {renderTotals()} */}
+      {orderDetails.map((invoiceDetails, index) => {
+        const invoiceSlno = index + 1;
+        return renderTotals(invoiceDetails, invoiceSlno);
+      })}
     </ScrollView>
   );
 };

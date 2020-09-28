@@ -40,6 +40,7 @@ import {Image} from 'react-native-elements';
 // import {useFocusEffect} from '@react-navigation/native';
 // import {CommonActions} from '@react-navigation/native';
 import {NoDataMessage} from '../NoDataMessage';
+import _trim from 'lodash/trim';
 
 const {width} = Dimensions.get('window');
 
@@ -135,8 +136,12 @@ export const HomeCatalogs = ({route, navigation}) => {
   const [defaultCatalogDetails, setDefaultCatalogDetails] = useState([]);
   const [catalogBrands, setCatalogBrands] = useState([]);
   const [catalogCategories, setCatalogCategories] = useState([]);
+  const [catalogColors, setCatalogColors] = useState([]);
+  const [catalogSizes, setCatalogSizes] = useState([]);
   const [brandSelected, setBrandSelected] = useState('');
   const [categorySelected, setCategorySelected] = useState('');
+  const [colorSelected, setColorSelected] = useState('');
+  const [sizeSelected, setSizeSelected] = useState('');
   const [catalogItems, setCatalogItems] = useState([]);
   const [businessLocations, setBusinessLocations] = useState([]);
   const [pricing, setPricing] = useState({});
@@ -181,6 +186,14 @@ export const HomeCatalogs = ({route, navigation}) => {
   // console.log(brandSelected, categorySelected, '--------------------------');
   // console.log(pricingFilterValue, 'pricing filter value...........');
   // console.log(catalogItems, 'catalog items..........');
+
+  // console.log(
+  //   brandSelected,
+  //   categorySelected,
+  //   sizeSelected,
+  //   colorSelected,
+  //   'filter properties.....',
+  // );
 
   const getCatalogDetails = async (
     defaultCatalogCode,
@@ -310,13 +323,30 @@ export const HomeCatalogs = ({route, navigation}) => {
       //   Object.keys(defaultCatalogDetails.catalogItems).length,
       //   defaultCatalogDetails.catalogItems,
       // );
+      let catalogColorsUnsorted = [],
+        catalogSizesUnsorted = [];
       const catalogBrands = _uniq(
         _map(defaultCatalogDetails.catalogItems, 'brandName'),
       );
       const catalogCategories = _uniq(
         _map(defaultCatalogDetails.catalogItems, 'categoryName'),
       );
-
+      defaultCatalogDetails.catalogItems.map((itemDetails) => {
+        const color = itemDetails.itemColor;
+        const size = itemDetails.itemSize;
+        if (color.length > 0) {
+          const colorsArray = color.split(',');
+          colorsArray.map((color) => {
+            catalogColorsUnsorted.push(_trim(color));
+          });
+        }
+        if (size.length > 0) {
+          const sizesArray = size.split(',');
+          sizesArray.map((size) => {
+            catalogSizesUnsorted.push(_trim(size));
+          });
+        }
+      });
       const catalogItems = _compact(
         _map(defaultCatalogDetails.catalogItems, (itemDetails) => {
           if (parseFloat(itemDetails.itemRate) > 0) return itemDetails;
@@ -330,6 +360,10 @@ export const HomeCatalogs = ({route, navigation}) => {
               ['asc'],
             )
           : [];
+      const catalogColors =
+        catalogColorsUnsorted.length > 0 ? _uniq(catalogColorsUnsorted) : [];
+      const catalogSizes =
+        catalogSizesUnsorted.length > 0 ? _uniq(catalogSizesUnsorted) : [];
       const maxItemPrice =
         catalogItems.length > 0
           ? Math.max(...catalogItemsSorted.map((o) => parseInt(o.itemRate)), 1)
@@ -338,6 +372,11 @@ export const HomeCatalogs = ({route, navigation}) => {
         catalogItems.length > 0
           ? Math.min(...catalogItemsSorted.map((o) => parseInt(o.itemRate)))
           : 0;
+      // console.log(
+      //   catalogColorsUnsorted,
+      //   catalogSizesUnsorted,
+      //   'in main component.....',
+      // );
       // console.log(minItemPrice, '-----------------');
       // const maxItemPrice = 10000;
       // const minItemPrice = 0;
@@ -348,6 +387,8 @@ export const HomeCatalogs = ({route, navigation}) => {
       setCatalogBrands(catalogBrands);
       setCatalogCategories(catalogCategories);
       setCatalogItems(catalogItemsSorted);
+      setCatalogColors(catalogColors);
+      setCatalogSizes(catalogSizes);
       setBusinessLocations(defaultCatalogDetails.businessLocations);
       setWishlistItems(defaultCatalogDetails.wishlistItems);
       setPricing({minimum: minItemPrice, maximum: maxItemPrice});
@@ -383,6 +424,15 @@ export const HomeCatalogs = ({route, navigation}) => {
             pricing: pricing,
             setPricingFilterValue: (pricingFilterValue) =>
               setPricingFilterValue(pricingFilterValue),
+            catalogSizes: catalogSizes,
+            setSizeSelected: (sizeSelected) => setSizeSelected(sizeSelected),
+            catalogColors: catalogColors,
+            setColorSelected: (colorSelected) =>
+              setColorSelected(colorSelected),
+            catalogBrandsSelected: brandSelected,
+            catalogCategoriesSelected: categorySelected,
+            catalogColorSelected: colorSelected,
+            catalogSizeSelected: sizeSelected,
           });
         }}
         onPressSortIcon={() => {
@@ -395,11 +445,22 @@ export const HomeCatalogs = ({route, navigation}) => {
   const renderRow = (productDetails) => {
     let brandsSelectedArray = [];
     let categoriesSelectedArray = [];
+    let sizeSelectedArray = [];
+    let colorSelectedArray = [];
     const minimumValue = pricing.minimum;
     if (brandSelected.length > 0)
       brandsSelectedArray = brandSelected.split(',');
     if (categorySelected.length > 0)
       categoriesSelectedArray = categorySelected.split(',');
+    if (colorSelected.length > 0) colorSelectedArray = colorSelected.split(',');
+    if (sizeSelected.length > 0) sizeSelectedArray = sizeSelected.split(',');
+    // console.log(
+    //   brandsSelectedArray,
+    //   categoriesSelectedArray,
+    //   colorSelectedArray,
+    //   sizeSelectedArray,
+    //   'hello world....',
+    // );
     const isBrandFiltered =
       brandsSelectedArray.length > 0
         ? brandsSelectedArray.includes(productDetails.brandName)
@@ -407,6 +468,14 @@ export const HomeCatalogs = ({route, navigation}) => {
     const isCategoryFiltered =
       categoriesSelectedArray.length > 0
         ? categoriesSelectedArray.includes(productDetails.categoryName)
+        : true;
+    const isSizeFiltered =
+      sizeSelectedArray.length > 0
+        ? sizeSelectedArray.includes(productDetails.itemSize)
+        : true;
+    const isColorFiltered =
+      colorSelectedArray.length > 0
+        ? colorSelectedArray.includes(productDetails.itemColor)
         : true;
     const isPricingFilterValidated =
       parseFloat(pricingFilterValue) > 0
@@ -440,6 +509,8 @@ export const HomeCatalogs = ({route, navigation}) => {
     return isCategoryFiltered &&
       isBrandFiltered &&
       isPricingFilterValidated &&
+      isColorFiltered &&
+      isSizeFiltered &&
       itemRate > 0 ? (
       <TouchableOpacity
         activeOpacity={1}

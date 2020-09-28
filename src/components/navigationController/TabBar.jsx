@@ -1,4 +1,4 @@
-import {Home} from '../home/HomeCataogs';
+// import {Home} from '../home/HomeCatalogs';
 import {NewHome} from '../home/NewHome';
 import {Catalogue} from '../catalogues/Catalogue';
 import {Order} from '../orders/Order';
@@ -14,7 +14,7 @@ import {
   ProfileSelected,
 } from '../../icons/Icons';
 import {theme} from '../../theme/theme';
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ScreenNamesCustomer} from './ScreenNames';

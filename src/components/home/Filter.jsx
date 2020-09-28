@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -7,15 +7,17 @@ import {
   SectionList,
   TouchableOpacity,
 } from 'react-native';
-import { CheckIcon, UnCheckIcon } from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {CheckIcon, UnCheckIcon} from '../../icons/Icons';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import { Slider } from 'react-native-elements';
+import {Slider} from 'react-native-elements';
 import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
 import _remove from 'lodash/remove';
+import _trim from 'lodash/trim';
+import {LogBox} from 'react-native';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderBottomColor: theme.colors.BLACK_WITH_OPACITY,
     borderBottomWidth: 1,
-    marginTop: 10
+    marginTop: 10,
   },
   buttonViewStyles: {
     height: 70,
@@ -89,43 +91,113 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Filter = ({ route, navigation }) => {
+export const Filter = ({route, navigation}) => {
   const {
     catalogBrands,
     catalogCategories,
+    catalogSizes,
+    catalogColors,
     setBrandSelected,
     setCategorySelected,
+    setSizeSelected,
+    setColorSelected,
+    catalogBrandsSelected,
+    catalogCategoriesSelected,
+    catalogColorSelected,
+    catalogSizeSelected,
     pricing,
     setPricingFilterValue,
   } = route.params;
 
-  // console.log(setBrandSelected, setCategorySelected);
+  // console.log(setBrandSelected, '-----------------');
+  // console.log(catalogSizes, catalogColors, 'colors and sizes......');
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
 
   const filterData = [
     {
       title: 'CATEGORY',
       data: catalogCategories,
     },
+    // {
+    //   title: 'BRANDS',
+    //   data: catalogBrands,
+    // },
     {
-      title: 'BRANDS',
-      data: catalogBrands,
+      title: 'SIZE',
+      data: catalogSizes,
+    },
+    {
+      title: 'COLOR',
+      data: catalogColors,
     },
   ];
-  let selectedBrandStates = new Array();
-  let selectedCategoryStates = new Array();
+
+  let selectedBrandsLocal = [],
+    selectedCategoriesLocal = [],
+    selectedSizesLocal = [],
+    selectedColorsLocal = [];
+
+  let selectedBrandStates = new Array(),
+    selectedCategoryStates = new Array(),
+    selectedSizeStates = new Array(),
+    selectedColorStates = new Array();
+
+  // move options into variables.
+  if (catalogBrandsSelected.length > 0) {
+    const splitBrands = catalogBrandsSelected.split(',');
+    splitBrands.map((brand) => selectedBrandsLocal.push(_trim(brand)));
+  }
+  if (catalogCategoriesSelected.length > 0) {
+    const splitCategories = catalogCategoriesSelected.split(',');
+    splitCategories.map((category) =>
+      selectedCategoriesLocal.push(_trim(category)),
+    );
+  }
+  if (catalogColorSelected.length > 0) {
+    const splitColors = catalogColorSelected.split(',');
+    splitColors.map((color) => selectedColorsLocal.push(_trim(color)));
+  }
+  if (catalogSizeSelected.length > 0) {
+    const splitSizes = catalogSizeSelected.split(',');
+    splitSizes.map((size) => selectedSizesLocal.push(_trim(size)));
+  }
+
+  // loops for filter option selected or not
   catalogBrands.map((brandName) => {
-    selectedBrandStates.push({ brandName: brandName, status: false });
+    const checkedOrUnchecked = selectedBrandsLocal.includes(brandName);
+    selectedBrandStates.push({
+      brandName: brandName,
+      status: checkedOrUnchecked,
+    });
   });
   catalogCategories.map((categoryName) => {
-    selectedCategoryStates.push({ categoryName: categoryName, status: false });
+    const checkedOrUnchecked = selectedCategoriesLocal.includes(categoryName);
+    selectedCategoryStates.push({
+      categoryName: categoryName,
+      status: checkedOrUnchecked,
+    });
+  });
+  catalogSizes.map((size) => {
+    const checkedOrUnchecked = selectedSizesLocal.includes(size);
+    selectedSizeStates.push({size: size, status: checkedOrUnchecked});
+  });
+  catalogColors.map((color) => {
+    const checkedOrUnchecked = selectedColorsLocal.includes(color);
+    selectedColorStates.push({color: color, status: checkedOrUnchecked});
   });
 
   const [filterOptions] = useState(filterData);
   const [sliderValue, setSliderValue] = useState(0);
   const [brandStates, setBrandStates] = useState(selectedBrandStates);
   const [categoryStates, setCategoryStates] = useState(selectedCategoryStates);
+  const [colorStates, setColorStates] = useState(selectedColorStates);
+  const [sizeStates, setSizeStates] = useState(selectedSizeStates);
   const [brandsSelected, setBrandsSelected] = useState([]);
   const [categoriesSelected, setCategoriesSelected] = useState([]);
+  const [sizesSelected, setSizesSelected] = useState([]);
+  const [colorsSelected, setColorsSelected] = useState([]);
 
   // console.log(brandStates, 'brand states..............');
 
@@ -172,6 +244,42 @@ export const Filter = ({ route, navigation }) => {
     }
   };
 
+  const selectedColorFilter = (colorName) => {
+    const currentValue = _findIndex(
+      colorStates,
+      (colorDetails) => colorDetails.color === colorName,
+    );
+    const newValues = [...colorStates];
+    newValues[currentValue] = {
+      ...newValues[currentValue],
+      status: !newValues[currentValue].status,
+    };
+    setColorStates([...newValues]);
+    if (!newValues[currentValue].status) {
+      _remove(colorsSelected, (colorRemove) => colorRemove === colorName);
+    } else {
+      setColorsSelected([...colorsSelected, colorName]);
+    }
+  };
+
+  const selectedSizeFilter = (size) => {
+    const currentValue = _findIndex(
+      sizeStates,
+      (sizeDetails) => sizeDetails.size === size,
+    );
+    const newValues = [...sizeStates];
+    newValues[currentValue] = {
+      ...newValues[currentValue],
+      status: !newValues[currentValue].status,
+    };
+    setSizeStates([...newValues]);
+    if (!newValues[currentValue].status) {
+      _remove(sizesSelected, (sizeRemove) => sizeRemove === size);
+    } else {
+      setSizesSelected([...sizesSelected, size]);
+    }
+  };
+
   // console.log(
   //   route.params.catalogBrands,
   //   route.params.catalogCategories,
@@ -183,10 +291,10 @@ export const Filter = ({ route, navigation }) => {
       <CommonHeader
         leftSideText={'FILTER'}
         isTabView={true}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {}}
         isProduct={true}
-        onPressFilterIcon={() => { }}
-        onPressSortIcon={() => { }}
+        onPressFilterIcon={() => {}}
+        onPressSortIcon={() => {}}
       />
     );
   };
@@ -196,24 +304,45 @@ export const Filter = ({ route, navigation }) => {
       <View style={styles.rowStyles}>
         <TouchableOpacity
           activeOpacity={1}
-          style={{ width: 30, height: 30 }}
+          style={{width: 30, height: 30}}
           onPress={() => {
-            title === 'BRANDS'
-              ? selectedBrandFilter(item)
-              : selectedCategoryFilter(item);
+            if (title === 'BRANDS') selectedBrandFilter(item);
+            if (title === 'CATEGORY') selectedCategoryFilter(item);
+            if (title === 'COLOR') selectedColorFilter(item);
+            if (title === 'SIZE') selectedSizeFilter(item);
+            // title === 'BRANDS'
+            //   ? selectedBrandFilter(item)
+            //   : selectedCategoryFilter(item);
           }}
           value={item}>
-          {title === 'BRANDS' ? (
+          {/* {title === 'BRANDS' ? (
             brandStates[index].status ? (
               <CheckIcon style={styles.iconHeartStyle} />
             ) : (
-                <UnCheckIcon style={styles.iconHeartStyle} />
-              )
-          ) : categoryStates[index].status ? (
-            <CheckIcon style={styles.iconHeartStyle} />
-          ) : (
-                <UnCheckIcon style={styles.iconHeartStyle} />
-              )}
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
+          ) : null} */}
+          {title === 'CATEGORY' ? (
+            categoryStates[index].status ? (
+              <CheckIcon style={styles.iconHeartStyle} />
+            ) : (
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
+          ) : null}
+          {title === 'COLOR' && colorStates.length > 0 ? (
+            colorStates[index].status ? (
+              <CheckIcon style={styles.iconHeartStyle} />
+            ) : (
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
+          ) : null}
+          {title === 'SIZE' && sizeStates.length > 0 ? (
+            sizeStates[index].status ? (
+              <CheckIcon style={styles.iconHeartStyle} />
+            ) : (
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
+          ) : null}
         </TouchableOpacity>
         <Text style={styles.rowTextStyle}>{item}</Text>
       </View>
@@ -225,21 +354,19 @@ export const Filter = ({ route, navigation }) => {
       <SectionList
         sections={filterOptions}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item, index, section: { title } }) =>
+        renderItem={({item, index, section: {title}}) =>
           renderRow(item, index, title)
         }
-        renderSectionHeader={({ section: { title, index } }) => (
+        renderSectionHeader={({section: {title, index}}) => (
           <Text
             style={[
               styles.sectionHeaderStyles,
-              { marginTop: index === 0 ? 100 : 35 },
+              {marginTop: index === 0 ? 100 : 35},
             ]}>
             {title}
           </Text>
         )}
-        ListFooterComponent={
-          renderSliderView()
-        }
+        ListFooterComponent={renderSliderView()}
       />
     );
   };
@@ -257,7 +384,7 @@ export const Filter = ({ route, navigation }) => {
           ]}>
           PRICE RANGE
         </Text>
-        <Text style={[styles.rowTextStyle, { marginTop: 11 }]}>
+        <Text style={[styles.rowTextStyle, {marginTop: 11}]}>
           ₹{pricing.minimum} - ₹{pricing.maximum}
         </Text>
         <Slider
@@ -279,14 +406,19 @@ export const Filter = ({ route, navigation }) => {
   const renderFloatingButtons = () => {
     return (
       <View style={styles.buttonViewStyles}>
-        <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
+        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
           <TouchableOpacity
             activeOpacity={1}
             style={styles.buttonStyles}
             onPress={() => {
+              setBrandSelected('');
+              setCategorySelected('');
+              setPricingFilterValue('');
+              setColorSelected('');
+              setSizeSelected('');
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, { color: theme.colors.BLACK }]}>
+            <Text style={[styles.buttonTextStyle, {color: theme.colors.BLACK}]}>
               CANCEL
             </Text>
           </TouchableOpacity>
@@ -303,6 +435,8 @@ export const Filter = ({ route, navigation }) => {
             onPress={() => {
               const brands = _uniq(brandsSelected);
               const categories = _uniq(categoriesSelected);
+              const colors = _uniq(colorsSelected);
+              const sizes = _uniq(sizesSelected);
               // console.log(
               //   brands.join(),
               //   categories.join(),
@@ -311,9 +445,11 @@ export const Filter = ({ route, navigation }) => {
               setBrandSelected(brands.join());
               setCategorySelected(categories.join());
               setPricingFilterValue(sliderValue.toFixed(2));
+              setColorSelected(colors.join());
+              setSizeSelected(sizes.join());
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, { color: theme.colors.WHITE }]}>
+            <Text style={[styles.buttonTextStyle, {color: theme.colors.WHITE}]}>
               APPLY
             </Text>
           </TouchableOpacity>

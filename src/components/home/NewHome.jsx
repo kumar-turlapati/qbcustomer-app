@@ -32,6 +32,7 @@ import axios from 'axios';
 import _pickBy from 'lodash/pickBy';
 import _orderBy from 'lodash/orderBy';
 import {useDebounce} from 'use-debounce';
+import {useIsFocused} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
@@ -286,6 +287,8 @@ export const NewHome = ({route, navigation}) => {
   const {CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC} = restEndPoints;
   const [searchText, setSearchText] = useState('');
   const [debouncedText] = useDebounce(searchText, 500);
+  const isFocused = useIsFocused();
+
   // console.log(searchData, '-------------------------------');
 
   const searchItems = async () => {
@@ -350,11 +353,11 @@ export const NewHome = ({route, navigation}) => {
       }
     };
 
-    if (accessToken && accessToken.length > 0) {
+    if (accessToken && accessToken.length > 0 && isFocused) {
       requestHeaders['Access-Token'] = accessToken;
       getCatsSubcats();
     }
-  }, [accessToken]);
+  }, [accessToken, isFocused]);
 
   useEffect(() => {
     const getAppContent = async () => {
@@ -406,11 +409,15 @@ export const NewHome = ({route, navigation}) => {
         // console.log(error, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
       }
     };
-    if (accessToken && accessToken.length > 0) {
+    if (accessToken && accessToken.length > 0 && isFocused) {
       requestHeaders['Access-Token'] = accessToken;
       getAppContent();
     }
-  }, [accessToken]);
+  }, [accessToken, isFocused]);
+
+  // useEffect(() => {
+  //   if (isFocused) console.log('refreshing....');
+  // }, [isFocused]);
 
   const renderHeader = () => {
     return (

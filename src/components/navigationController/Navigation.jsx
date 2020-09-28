@@ -18,7 +18,7 @@ import useAsyncStorage from '../customHooks/async';
 import {Loader} from '../Loader';
 import {ShowBrands} from '../home/ShowBrands';
 import {NewHome} from '../home/NewHome';
-import {HomeCatalogs} from '../home/HomeCataogs';
+import {HomeCatalogs} from '../home/HomeCatalogs';
 
 export const AppCustomerNavigator = () => {
   const Stack = createStackNavigator();
