@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import packageJson from '../../../package.json';
 import axios from 'axios';
 import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {NoDataMessage} from '../NoDataMessage';
 
 const styles = StyleSheet.create({
   container: {
@@ -256,7 +257,7 @@ export const Profile = ({navigation}) => {
       {renderHeader()}
       {renderListView()}
       {renderVersion()}
-      {showNoDataMessage && <NoDataMessage message={errorMessage} />}
+      {/* {showNoDataMessage && <NoDataMessage message={errorMessage} />} */}
     </View>
   );
 };

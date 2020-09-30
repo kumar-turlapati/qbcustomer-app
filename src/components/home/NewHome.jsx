@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     paddingTop: 13,
     paddingLeft: 12,
     fontSize: 16,
-    lineHeight: 22,
+    lineHeight: 20,
     letterSpacing: -0.41,
   },
   searchRowStyles: {
@@ -586,7 +586,7 @@ export const NewHome = ({route, navigation}) => {
           style={{
             width: '100%',
             height: 0.5,
-            backgroundColor: colors.SEPERATOR_COLOR,
+            // backgroundColor: colors.SEPERATOR_COLOR,
           }}
         />
         {hotSellers.length > 0 && (
