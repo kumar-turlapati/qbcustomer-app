@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,8 +13,8 @@ import {
   SiyaramsLogo,
   Zaccari,
 } from '../../icons/Icons';
-import { colors } from '../../theme/colors';
-import { theme } from '../../theme/theme';
+import {colors} from '../../theme/colors';
+import {theme} from '../../theme/theme';
 import CommonSearchHeader from '../UI/CommonSearchHeader';
 import _orderBy from 'lodash/orderBy';
 import {
@@ -24,15 +24,15 @@ import {
   restEndPoints,
   requestHeaders,
 } from '../../../qbconfig';
-import { Image } from 'react-native-elements';
-import { Loader } from '../Loader';
+import {Image} from 'react-native-elements';
+import {Loader} from '../Loader';
 import _startCase from 'lodash/startCase';
 import _toLower from 'lodash/toLower';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
-import { useDebounce } from 'use-debounce';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
+import {useDebounce} from 'use-debounce';
 import axios from 'axios';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -74,31 +74,31 @@ const styles = StyleSheet.create({
   },
 });
 
-const genderData = [
-  {
-    id: 1,
-    title: 'Men',
-    image: <RaymondLogo style={{ width: 150, height: 150 }} />,
-  },
-  {
-    id: 2,
-    title: 'Women',
-    image: <RaymondLinenLogo style={{ width: 150, height: 150 }} />,
-  },
-  {
-    id: 3,
-    title: 'Boy',
-    image: <Zaccari style={{ width: 150, height: 150 }} />,
-  },
-  {
-    id: 4,
-    title: 'Girl',
-    image: <SiyaramsLogo style={{ width: 150, height: 150 }} />,
-  },
-];
+// const genderData = [
+//   {
+//     id: 1,
+//     title: 'Men',
+//     image: <RaymondLogo style={{ width: 150, height: 150 }} />,
+//   },
+//   {
+//     id: 2,
+//     title: 'Women',
+//     image: <RaymondLinenLogo style={{ width: 150, height: 150 }} />,
+//   },
+//   {
+//     id: 3,
+//     title: 'Boy',
+//     image: <Zaccari style={{ width: 150, height: 150 }} />,
+//   },
+//   {
+//     id: 4,
+//     title: 'Girl',
+//     image: <SiyaramsLogo style={{ width: 150, height: 150 }} />,
+//   },
+// ];
 
-export const ShowBrands = ({ route, navigation }) => {
-  const { title, catsSubcats, categoryId } = route.params;
+export const ShowBrands = ({route, navigation}) => {
+  const {title, catsSubcats, categoryId} = route.params;
   const [showSearch, setShowSearch] = useState(false);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -110,7 +110,7 @@ export const ShowBrands = ({ route, navigation }) => {
       brands.push(catSubCatDetails);
   });
 
-  const { CATALOG_ITEMS_AC } = restEndPoints;
+  const {CATALOG_ITEMS_AC} = restEndPoints;
   const orderedBrands = _orderBy(brands, ['weight'], ['asc']);
 
   const searchItems = async () => {
@@ -147,7 +147,7 @@ export const ShowBrands = ({ route, navigation }) => {
         isSearch={showSearch}
         isTabView={false}
         onPressLeftButton={() => {
-          navigation.goBack()
+          navigation.goBack();
         }}
         onPressSearchIcon={() => {
           // console.log('onPressSearchIcon');
@@ -167,7 +167,7 @@ export const ShowBrands = ({ route, navigation }) => {
         }}
         onPressBackButton={() => {
           // console.log('onPressBackButton');
-          navigation.goBack()
+          navigation.goBack();
           setSearchData([]);
           setSearchText('');
           setShowSearch(false);
@@ -186,7 +186,7 @@ export const ShowBrands = ({ route, navigation }) => {
         }}
         data={orderedBrands}
         numColumns={2}
-        renderItem={({ item }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.categoryCode}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -211,8 +211,8 @@ export const ShowBrands = ({ route, navigation }) => {
           });
         }}>
         <Image
-          source={{ uri: imageUrl }}
-          style={{ width: 150, height: 150 }}
+          source={{uri: imageUrl}}
+          style={{width: 150, height: 150}}
           resizeMode="stretch"
           PlaceholderContent={<Loader />}
         />
@@ -231,7 +231,7 @@ export const ShowBrands = ({ route, navigation }) => {
           backgroundColor: theme.colors.BLACK_WITH_OPACITY_5,
         }}
         data={searchData}
-        renderItem={({ item }) => renderSearchRow(item)}
+        renderItem={({item}) => renderSearchRow(item)}
         keyExtractor={(item) => item}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}

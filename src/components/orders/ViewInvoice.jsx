@@ -321,7 +321,7 @@ export const ViewInvoice = ({route, navigation}) => {
     // );
 
     return (
-      <View style={{marginHorizontal: 16}}>
+      <View style={{marginHorizontal: 16}} key={invoiceSlno}>
         <View style={{marginLeft: 0, marginTop: 5, marginBottom: 2}}>
           <Text
             style={

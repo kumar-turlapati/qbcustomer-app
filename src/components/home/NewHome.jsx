@@ -1,6 +1,6 @@
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import _find from 'lodash/find';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   BackHandler,
   Dimensions,
@@ -20,21 +20,21 @@ import {
   requestHeaders,
   contentSections,
 } from '../../../qbconfig';
-import { Boy, Girl, MainImage, Men, Women } from '../../icons/Icons';
-import { colors } from '../../theme/colors';
-import { theme } from '../../theme/theme';
+import {Boy, Girl, MainImage, Men, Women} from '../../icons/Icons';
+import {colors} from '../../theme/colors';
+import {theme} from '../../theme/theme';
 import useAsyncStorage from '../customHooks/async';
-import { Loader } from '../Loader';
-import { ScreenNamesCustomer } from '../navigationController/ScreenNames';
+import {Loader} from '../Loader';
+import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import CommonAlertView from '../UI/CommonAlertView';
 import CommonSearchHeader from '../UI/CommonSearchHeader';
 import axios from 'axios';
 import _pickBy from 'lodash/pickBy';
 import _orderBy from 'lodash/orderBy';
-import { useDebounce } from 'use-debounce';
-import { useIsFocused } from '@react-navigation/native';
+import {useDebounce} from 'use-debounce';
+import {useIsFocused} from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 // console.log(width / 2, 'width is.....');
 
@@ -203,69 +203,69 @@ const styles = StyleSheet.create({
   },
 });
 
-const offerData = [
-  {
-    id: 1,
-    offer: '40%',
-    title: 'ON EXCLUSIVE',
-    description: 'REYMOND’S COLLECTION',
-    mainImage: (
-      <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
-    ),
-  },
-  {
-    id: 2,
-    offer: '60%',
-    title: 'ON EXCLUSIVE',
-    description: 'LENIN’S COLLECTION',
-    mainImage: (
-      <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
-    ),
-  },
-  {
-    id: 3,
-    offer: '80%',
-    title: 'ON EXCLUSIVE',
-    description: 'ARROW’S COLLECTION',
-    mainImage: (
-      <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
-    ),
-  },
-  {
-    id: 4,
-    offer: '100%',
-    title: 'ON EXCLUSIVE',
-    description: 'J&J’S COLLECTION',
-    mainImage: (
-      <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
-    ),
-  },
-];
+// const offerData = [
+//   {
+//     id: 1,
+//     offer: '40%',
+//     title: 'ON EXCLUSIVE',
+//     description: 'REYMOND’S COLLECTION',
+//     mainImage: (
+//       <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
+//     ),
+//   },
+//   {
+//     id: 2,
+//     offer: '60%',
+//     title: 'ON EXCLUSIVE',
+//     description: 'LENIN’S COLLECTION',
+//     mainImage: (
+//       <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
+//     ),
+//   },
+//   {
+//     id: 3,
+//     offer: '80%',
+//     title: 'ON EXCLUSIVE',
+//     description: 'ARROW’S COLLECTION',
+//     mainImage: (
+//       <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
+//     ),
+//   },
+//   {
+//     id: 4,
+//     offer: '100%',
+//     title: 'ON EXCLUSIVE',
+//     description: 'J&J’S COLLECTION',
+//     mainImage: (
+//       <MainImage style={{ width: '100%', height: 406, position: 'absolute' }} />
+//     ),
+//   },
+// ];
 
-const genderData = [
-  {
-    id: 1,
-    title: 'Men’s',
-    image: <Men style={{ width: 189, height: 187 }} />,
-  },
-  {
-    id: 2,
-    title: 'Women’s',
-    image: <Women style={{ width: 189, height: 187 }} />,
-  },
-  {
-    id: 3,
-    title: 'Boy’s',
-    image: <Boy style={{ width: 189, height: 187 }} />,
-  },
-  {
-    id: 4,
-    title: 'Girl’s',
-    image: <Girl style={{ width: 189, height: 187 }} />,
-  },
-];
+// const genderData = [
+//   {
+//     id: 1,
+//     title: 'Men’s',
+//     image: <Men style={{ width: 189, height: 187 }} />,
+//   },
+//   {
+//     id: 2,
+//     title: 'Women’s',
+//     image: <Women style={{ width: 189, height: 187 }} />,
+//   },
+//   {
+//     id: 3,
+//     title: 'Boy’s',
+//     image: <Boy style={{ width: 189, height: 187 }} />,
+//   },
+//   {
+//     id: 4,
+//     title: 'Girl’s',
+//     image: <Girl style={{ width: 189, height: 187 }} />,
+//   },
+// ];
 
-export const NewHome = ({ route, navigation }) => {
+export const NewHome = ({route, navigation}) => {
   const [showSortView, setShowSortView] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -281,10 +281,10 @@ export const NewHome = ({ route, navigation }) => {
   const [catsSubcatsLoading, setCatsSubcatsLoading] = useState(true);
   const [appContentErrorText, setAppContentErrorText] = useState('');
   const [catsSubcatsErrorText, setCatsSubcatsErrorText] = useState('');
-  const { storageItem: accessToken, tokenLoading } = useAsyncStorage(
+  const {storageItem: accessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
-  const { CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC } = restEndPoints;
+  const {CATS_SUBCATS, APP_CONTENT, CATALOG_ITEMS_AC} = restEndPoints;
   const [searchText, setSearchText] = useState('');
   const [debouncedText] = useDebounce(searchText, 500);
   const isFocused = useIsFocused();
@@ -327,7 +327,7 @@ export const NewHome = ({ route, navigation }) => {
     const getCatsSubcats = async () => {
       try {
         await axios
-          .get(CATS_SUBCATS.URL, { headers: requestHeaders })
+          .get(CATS_SUBCATS.URL, {headers: requestHeaders})
           .then((apiResponse) => {
             setCatsSubcatsLoading(false);
             // console.log(apiResponse.data, 'cats subcats');
@@ -363,7 +363,7 @@ export const NewHome = ({ route, navigation }) => {
     const getAppContent = async () => {
       try {
         await axios
-          .get(APP_CONTENT.URL, { headers: requestHeaders })
+          .get(APP_CONTENT.URL, {headers: requestHeaders})
           .then((apiResponse) => {
             setAppContentLoading(false);
             if (apiResponse.data.status === 'success') {
@@ -461,7 +461,7 @@ export const NewHome = ({ route, navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={[styles.brandRowStyles, { height: 200 }]}
+        style={[styles.brandRowStyles, {height: 200}]}
         onPress={() => {
           if (enableRedirection) {
             if (catalogId > 0) {
@@ -482,7 +482,7 @@ export const NewHome = ({ route, navigation }) => {
           source={{
             uri: imageUrl,
           }}
-          style={{ width: 200, height: 200 }}
+          style={{width: 200, height: 200}}
           resizeMode="contain"
         />
       </TouchableOpacity>
@@ -499,7 +499,7 @@ export const NewHome = ({ route, navigation }) => {
         }}
         data={topBrands}
         horizontal={true}
-        renderItem={({ item }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.contentCode}
         removeClippedSubviews={true}
         showsHorizontalScrollIndicator={false}
@@ -542,7 +542,7 @@ export const NewHome = ({ route, navigation }) => {
         }}
         data={hotSellers}
         horizontal={true}
-        renderItem={({ item }) => renderRow(item)}
+        renderItem={({item}) => renderRow(item)}
         keyExtractor={(item) => item.contentCode}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -565,7 +565,7 @@ export const NewHome = ({ route, navigation }) => {
         }}
         data={orderedCategories}
         numColumns={2}
-        renderItem={({ item }) => renderBrandRow(item)}
+        renderItem={({item}) => renderBrandRow(item)}
         keyExtractor={(item) => item.categoryCode}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
@@ -622,11 +622,11 @@ export const NewHome = ({ route, navigation }) => {
         }}>
         <Text style={styles.genderTextStyles}>{item.categoryName}</Text>
         <Image
-          source={{ uri: imageUrl }}
-          style={{ width: width / 2, height: width / 2 }}
+          source={{uri: imageUrl}}
+          style={{width: width / 2, height: width / 2}}
           resizeMode="stretch"
         />
-        <Text style={{ ...styles.viewTextStyles, paddingTop: 10 }}>
+        <Text style={{...styles.viewTextStyles, paddingTop: 10}}>
           View All Brands
         </Text>
       </TouchableOpacity>
@@ -635,7 +635,7 @@ export const NewHome = ({ route, navigation }) => {
 
   const renderMainView = () => {
     return (
-      <View style={{ width: '100%', height: 406 }}>
+      <View style={{width: '100%', height: 406}}>
         {renderCarouselView()}
         {!appContentLoading && renderSliderDotView()}
       </View>
@@ -644,23 +644,23 @@ export const NewHome = ({ route, navigation }) => {
 
   const renderCarouselView = () => {
     return (
-      <View style={{ position: 'absolute', width: '100%', height: 406, top: 0 }}>
+      <View style={{position: 'absolute', width: '100%', height: 406, top: 0}}>
         {appContentLoading ? (
           <Loader />
         ) : (
-            <Carousel
-              onSnapToItem={(slideIndex) => setSlideIndex(slideIndex)}
-              data={banners}
-              renderItem={renderSliderItem}
-              sliderWidth={width}
-              itemWidth={width}
-              loop
-              autoplay
-              autoplayDelay={3000}
-              autoplayInterval={3000}
-              layout="default"
-            />
-          )}
+          <Carousel
+            onSnapToItem={(slideIndex) => setSlideIndex(slideIndex)}
+            data={banners}
+            renderItem={renderSliderItem}
+            sliderWidth={width}
+            itemWidth={width}
+            loop
+            autoplay
+            autoplayDelay={3000}
+            autoplayInterval={3000}
+            layout="default"
+          />
+        )}
       </View>
     );
   };
@@ -668,7 +668,7 @@ export const NewHome = ({ route, navigation }) => {
   const renderSliderDotView = () => {
     return (
       <View style={styles.dotView}>
-        {offerData.map((_, index) =>
+        {banners.map((_, index) =>
           index == slideIndex
             ? renderDot(true, index)
             : renderDot(false, index),
@@ -691,7 +691,7 @@ export const NewHome = ({ route, navigation }) => {
     />
   );
 
-  const renderSliderItem = ({ item }) => {
+  const renderSliderItem = ({item}) => {
     const imageUrl = encodeURI(
       `${cdnUrl}/${clientCode}/app-content/${item.imageName}`,
     );
@@ -701,7 +701,7 @@ export const NewHome = ({ route, navigation }) => {
     // console.log('item in banners .....', item);
     return (
       <TouchableOpacity
-        style={{ width: '100%', height: 406, }}
+        style={{width: '100%', height: 406}}
         activeOpacity={1}
         onPress={() => {
           if (enableRedirection) {
@@ -719,9 +719,9 @@ export const NewHome = ({ route, navigation }) => {
           }
         }}>
         <Image
-          source={{ uri: imageUrl }}
+          source={{uri: imageUrl}}
           PlaceholderContent={<Loader />}
-          style={{ width: '100%', height: 406, position: 'absolute' }}
+          style={{width: '100%', height: 406, position: 'absolute'}}
           resizeMode="stretch"
         />
       </TouchableOpacity>
@@ -739,7 +739,7 @@ export const NewHome = ({ route, navigation }) => {
           backgroundColor: theme.colors.BLACK_WITH_OPACITY_5,
         }}
         data={searchData}
-        renderItem={({ item }) => renderSearchRow(item)}
+        renderItem={({item}) => renderSearchRow(item)}
         keyExtractor={(item) => item}
         removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
