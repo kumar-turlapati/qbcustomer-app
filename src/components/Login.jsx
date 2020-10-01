@@ -19,7 +19,7 @@ import {colors} from '../theme/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ScreenNamesCustomer} from './navigationController/ScreenNames';
 import axios from 'axios';
-import {restEndPoints, requestHeaders, qbUrl} from '../../qbconfig';
+import {restEndPoints, requestHeaders, qbUrl, clientCode} from '../../qbconfig';
 import useAsyncStorage from '../components/customHooks/async';
 import {useFocusEffect} from '@react-navigation/native';
 import {Loader} from './Loader';
@@ -122,24 +122,28 @@ export const Login = ({navigation}) => {
   useEffect(() => {
     SplashScreen.hide();
     const getAppDetails = async () => {
+      const contactUrl = `${CONTACT_INFORMATION.URL()}?clientCode=${clientCode}`;
       setApiLoading(true);
       try {
         await axios
-          .get(CONTACT_INFORMATION.URL(), {headers: requestHeaders})
+          .get(contactUrl, {headers: requestHeaders})
           .then((apiResponse) => {
             setApiLoading(false);
+            // console.log(apiResponse.data, 'api response is.......');
             if (apiResponse.data.status === 'success') {
               setContactDetails(apiResponse.data.response.contactDetails);
             }
           })
           .catch((error) => {
-            // console.log(error.response.data);
+            console.log(error.response.data);
             const errorMessage = error.response.data;
+            setApiLoading(false);
             setShowNoDataMessage(true);
             setErrorMessage(errorMessage);
           });
       } catch (e) {
         const errorMessage = 'Network error. Please try again :(';
+        setApiLoading(false);
         setErrorMessage(errorMessage);
         setShowNoDataMessage(true);
       }
@@ -472,7 +476,7 @@ export const Login = ({navigation}) => {
   return tokenLoading || apiLoading ? (
     <Loader />
   ) : showNoDataMessage ? (
-    <showNoDataMessage message={errorMessage} />
+    <NoDataMessage message={errorMessage} />
   ) : (
     <View style={styles.container}>
       <View style={styles.subContainer}>

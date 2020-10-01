@@ -14,7 +14,7 @@ import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import AsyncStorage from '@react-native-community/async-storage';
 import packageJson from '../../../package.json';
 import axios from 'axios';
-import {restEndPoints, requestHeaders} from '../../../qbconfig';
+import {restEndPoints, requestHeaders, clientCode} from '../../../qbconfig';
 import {NoDataMessage} from '../NoDataMessage';
 
 const styles = StyleSheet.create({
@@ -127,9 +127,10 @@ export const Profile = ({navigation}) => {
   useEffect(() => {
     const getAppDetails = async () => {
       setApiLoading(true);
+      const contactUrl = `${CONTACT_INFORMATION.URL()}?clientCode=${clientCode}`;
       try {
         await axios
-          .get(CONTACT_INFORMATION.URL(), {headers: requestHeaders})
+          .get(contactUrl, {headers: requestHeaders})
           .then((apiResponse) => {
             setApiLoading(false);
             if (apiResponse.data.status === 'success') {
