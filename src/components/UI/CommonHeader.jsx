@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {
-  Dimensions,
+  // Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,12 +13,12 @@ import {
   SortIcon,
   WishListIcon,
   HeartSelected,
-  HeartUnSelected,
+  // HeartUnSelected,
 } from '../../icons/Icons';
 import {theme} from '../../theme/theme';
 import {ShoppingCartContext} from '../context/ShoppingCart';
 
-const {height, width} = Dimensions.get('window');
+// const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   headerStyles: {
-    height: 88,
+    height: 75, // changed
     backgroundColor: theme.colors.WHITE,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   iconViewStyles: {
     height: 44,
-    marginTop: 49,
+    marginTop: 25, //changed
     flexDirection: 'row',
   },
   leftTextStyle: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     width: 30,
     marginRight: 7,
     height: 44,
-    marginTop: 49,
+    marginTop: 20,
   },
   iconWishListStyles: {
     height: 20,
@@ -96,7 +96,7 @@ export default CommonHeader = ({
   isWishList,
   onPressWishListIcon,
   isItemInWishlist,
-  disableCart,
+  // disableCart,
 }) => {
   const {cartItems} = useContext(ShoppingCartContext);
 
