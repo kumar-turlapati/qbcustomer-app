@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   headerStyles: {
-    height: 75, // changed
+    height: 55, // changed
     backgroundColor: theme.colors.WHITE,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   iconViewStyles: {
     height: 44,
-    marginTop: 25, //changed
+    marginTop: 20, //changed
     flexDirection: 'row',
   },
   leftTextStyle: {
