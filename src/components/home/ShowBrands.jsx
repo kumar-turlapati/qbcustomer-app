@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  RaymondLinenLogo,
-  RaymondLogo,
-  SiyaramsLogo,
-  Zaccari,
-} from '../../icons/Icons';
+// import {
+//   RaymondLinenLogo,
+//   RaymondLogo,
+//   SiyaramsLogo,
+//   Zaccari,
+// } from '../../icons/Icons';
 import {colors} from '../../theme/colors';
 import {theme} from '../../theme/theme';
 import CommonSearchHeader from '../UI/CommonSearchHeader';

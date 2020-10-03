@@ -156,6 +156,9 @@ export const HomeCatalogs = ({route, navigation}) => {
   );
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [categoryId, setCategoryId] = useState(0);
+  const [subCategoryId, setSubCategoryId] = useState(0);
+  const [catalogBrandName, setCatalogBrandName] = useState('');
 
   const catalogCode =
     route.params && route.params.catalogCode ? route.params.catalogCode : null;
@@ -392,6 +395,9 @@ export const HomeCatalogs = ({route, navigation}) => {
       setBusinessLocations(defaultCatalogDetails.businessLocations);
       setWishlistItems(defaultCatalogDetails.wishlistItems);
       setPricing({minimum: minItemPrice, maximum: maxItemPrice});
+      setCategoryId(defaultCatalogDetails.categoryID);
+      setSubCategoryId(defaultCatalogDetails.subCategoryID);
+      setCatalogBrandName(defaultCatalogDetails.brandName);
     }
   }, [defaultCatalogDetails]);
 
@@ -409,7 +415,12 @@ export const HomeCatalogs = ({route, navigation}) => {
           navigation.push(ScreenNamesCustomer.CARTVIEW);
         }}
         onPressLeftButton={() => {
-          navigation.navigate(ScreenNamesCustomer.TABBAR);
+          // console.log(categoryId, subCategoryId, '--------------');
+          navigation.navigate(ScreenNamesCustomer.CATALOGUE, {
+            brandName: catalogBrandName,
+            categoryId: categoryId,
+            subCategoryId: subCategoryId,
+          });
         }}
         isProduct={catalogBrands.length > 0 && catalogCategories.length > 0}
         onPressFilterIcon={() => {
