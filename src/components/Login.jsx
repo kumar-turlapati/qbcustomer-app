@@ -475,8 +475,6 @@ export const Login = ({navigation}) => {
 
   return tokenLoading || apiLoading ? (
     <Loader />
-  ) : showNoDataMessage ? (
-    <NoDataMessage message={errorMessage} />
   ) : (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -492,3 +490,7 @@ export const Login = ({navigation}) => {
     </View>
   );
 };
+
+// : showNoDataMessage ? (
+//   <NoDataMessage message={errorMessage} />
+// )

@@ -20,7 +20,7 @@ import {
   requestHeaders,
   contentSections,
 } from '../../../qbconfig';
-import {Boy, Girl, MainImage, Men, Women} from '../../icons/Icons';
+// import {Boy, Girl, MainImage, Men, Women} from '../../icons/Icons';
 import {colors} from '../../theme/colors';
 import {theme} from '../../theme/theme';
 import useAsyncStorage from '../customHooks/async';

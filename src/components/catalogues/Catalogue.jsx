@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, FlatList} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {StyleSheet, View, Text, FlatList, BackHandler} from 'react-native';
 import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
 import {SideArrowIcon} from '../../icons/Icons';
@@ -15,6 +15,8 @@ import _startCase from 'lodash/startCase';
 import _toLower from 'lodash/toLower';
 import {NoDataMessage} from '../NoDataMessage';
 import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+
 // import {CommonActions} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
@@ -100,7 +102,19 @@ export const Catalogue = ({route, navigation}) => {
     route.params && route.params.subCategoryId ? route.params.subCategoryId : 0;
   const [errorMessage, setErrorMessage] = useState('');
   const isFocused = useIsFocused();
-  // console.log(categoryId, subCategoryId, brandName, 'catalogs i......');
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // BackHandler.exitApp();
+        // return true;
+        navigation.navigate(ScreenNamesCustomer.NEWHOME);
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
   useEffect(() => {
     const getCatalogs = async () => {

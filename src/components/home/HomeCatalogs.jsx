@@ -773,7 +773,7 @@ export const HomeCatalogs = ({route, navigation}) => {
           })
           .catch((error) => {
             // console.log(error, 'error text.............');
-            setAlertText('Oops, something went wrong.');
+            setAlertText('Oops, something went wrong :)');
             setWishlistLoading(false);
             // setApiError(true);
             // setApiErrorText(errorText);
