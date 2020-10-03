@@ -601,7 +601,7 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
     return (
       <View style={styles.descripitonViewStyle}>
         <View style={styles.descripitonSubViewStyle} />
-        <Text style={styles.descriptionTextStyle}>Description</Text>
+        <Text style={styles.descriptionTextStyle}>About</Text>
         {/* <View
           style={{
             backgroundColor: theme.colors.BLACK,
@@ -612,7 +612,7 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
             height: 1,
           }}
         /> */}
-        <View style={{marginLeft: 24, marginTop: 16}}>
+        <View style={{marginLeft: 24, marginTop: 0}}>
           {/* <Text style={styles.addToCartStyle}>{'Size & Fit'}</Text> */}
           <Text style={styles.addToCartStyle}>{productDescription}</Text>
           <Text
@@ -621,7 +621,7 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
               {fontWeight: 'normal', marginTop: -5},
             ]}></Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 26}}>
+        <View style={{marginLeft: 24, marginTop: 10}}>
           <Text style={styles.addToCartStyle}>Specifications</Text>
           <Text
             style={[
@@ -648,7 +648,7 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
             Category - {_startCase(_lowerCase(productCategory))}
           </Text>
         </View>
-        <View style={{marginLeft: 24, marginTop: 24}}>
+        <View style={{marginLeft: 24, marginTop: 10}}>
           <Text style={styles.addToCartStyle}>Billing Information</Text>
           <Text
             style={[

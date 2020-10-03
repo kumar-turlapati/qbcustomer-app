@@ -635,7 +635,7 @@ export const NewHome = ({route, navigation}) => {
 
   const renderMainView = () => {
     return (
-      <View style={{width: '100%', height: 250}}>
+      <View style={{width: '100%', height: 200}}>
         {renderCarouselView()}
         {!appContentLoading && renderSliderDotView()}
       </View>
@@ -644,7 +644,7 @@ export const NewHome = ({route, navigation}) => {
 
   const renderCarouselView = () => {
     return (
-      <View style={{position: 'absolute', width: '100%', height: 250, top: 0}}>
+      <View style={{position: 'absolute', width: '100%', height: 200, top: 0}}>
         {appContentLoading ? (
           <Loader />
         ) : (
@@ -701,7 +701,7 @@ export const NewHome = ({route, navigation}) => {
     // console.log('item in banners .....', item);
     return (
       <TouchableOpacity
-        style={{width: '100%', height: 250}}
+        style={{width: '100%', height: 200}}
         activeOpacity={1}
         onPress={() => {
           if (enableRedirection) {
@@ -721,7 +721,7 @@ export const NewHome = ({route, navigation}) => {
         <Image
           source={{uri: imageUrl}}
           PlaceholderContent={<Loader />}
-          style={{width: '100%', height: 250, position: 'absolute'}}
+          style={{width: '100%', height: 200, position: 'absolute'}}
           resizeMode="stretch"
         />
       </TouchableOpacity>
@@ -734,7 +734,7 @@ export const NewHome = ({route, navigation}) => {
         style={{
           flex: 1,
           position: 'absolute',
-          marginTop: 75,
+          marginTop: 60,
           height: height - 88,
           backgroundColor: theme.colors.BLACK_WITH_OPACITY_5,
         }}

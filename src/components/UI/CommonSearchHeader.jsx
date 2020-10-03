@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   headerStyles: {
-    height: 75, //changed
+    height: 60, //changed
     backgroundColor: theme.colors.WHITE,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   iconViewStyles: {
     flexDirection: 'row',
     marginHorizontal: 2,
-    marginTop: 25, // changed
+    marginTop: 10, // changed
   },
   leftTextStyle: {
     fontSize: 17,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   searchViewStyles: {
     width: 40,
     height: 40,
-    marginTop: 20,
+    marginTop: 10,
   },
   iconBackStyles: {
     height: 11,
@@ -175,7 +175,7 @@ export default CommonSearchHeader = ({
             style={{
               width: '100%',
               height: 40,
-              marginTop: 20,
+              marginTop: 10,
               flexDirection: 'row',
             }}>
             <TouchableOpacity

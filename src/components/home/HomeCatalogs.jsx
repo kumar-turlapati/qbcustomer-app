@@ -506,6 +506,10 @@ export const HomeCatalogs = ({route, navigation}) => {
     );
     const itemRate = parseFloat(productDetails.itemRate).toFixed(0);
     const mrp = parseFloat(productDetails.mrp).toFixed(0);
+    const itemName =
+      productDetails.itemName.length > 17
+        ? `${productDetails.itemName.substr(0, 16)}...`
+        : productDetails.itemName;
     return isCategoryFiltered &&
       isBrandFiltered &&
       isPricingFilterValidated &&
@@ -530,7 +534,7 @@ export const HomeCatalogs = ({route, navigation}) => {
             source={{uri: imageUrl}}
             PlaceholderContent={<Loader />}
           />
-          <Text style={styles.rowTextStyle}>{productDetails.itemName}</Text>
+          <Text style={styles.rowTextStyle}>{itemName}</Text>
           {/* {item.specialPrice.length !== 0 ? (
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.specialPriceStyle}>₹{item.specialPrice}</Text>
