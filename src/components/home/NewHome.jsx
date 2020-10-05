@@ -453,7 +453,7 @@ export const NewHome = ({route, navigation}) => {
 
   const renderRow = (item) => {
     const imageUrl = encodeURI(
-      `${cdnUrl}/${clientCode}/categories/${item.imageName}`,
+      `${cdnUrl}/${clientCode}/app-content/${item.imageName}`,
     );
     const enableRedirection = parseInt(item.enableRedirection, 10);
     const itemId = parseInt(item.itemID, 10);
@@ -580,6 +580,7 @@ export const NewHome = ({route, navigation}) => {
   };
 
   const renderFooterComponent = () => {
+    // console.log(hotSellers, 'hot sellers.....');
     return (
       <>
         <View
