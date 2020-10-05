@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,22 +8,22 @@ import {
   BackHandler,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import {Logo, TextBoxSelect, QLogo} from '../icons/Icons';
-import {theme} from '../theme/theme';
+import { Logo, TextBoxSelect, QLogo } from '../icons/Icons';
+import { theme } from '../theme/theme';
 import {
   isMobileNumberValid,
   isMobileNumberValidWithReason,
 } from '../utils/Validators';
 import CommonButton from './UI/CommonButton';
-import {colors} from '../theme/colors';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {ScreenNamesCustomer} from './navigationController/ScreenNames';
+import { colors } from '../theme/colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScreenNamesCustomer } from './navigationController/ScreenNames';
 import axios from 'axios';
-import {restEndPoints, requestHeaders, qbUrl, clientCode} from '../../qbconfig';
+import { restEndPoints, requestHeaders, qbUrl, clientCode } from '../../qbconfig';
 import useAsyncStorage from '../components/customHooks/async';
-import {useFocusEffect} from '@react-navigation/native';
-import {Loader} from './Loader';
-import {NoDataMessage} from './NoDataMessage';
+import { useFocusEffect } from '@react-navigation/native';
+import { Loader } from './Loader';
+import { NoDataMessage } from './NoDataMessage';
 
 const styles = StyleSheet.create({
   container: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Login = ({navigation}) => {
+export const Login = ({ navigation }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOTP] = useState('');
   const [showOTPView, setShowOTPView] = useState(false);
@@ -85,11 +85,11 @@ export const Login = ({navigation}) => {
   const [disableResendOtp, setDisableResendOtp] = useState(false);
   const [uuid, setUuid] = useState('');
   const [apiErrorText, setApiErrorText] = useState('');
-  const {LOGIN, RESEND_OTP, GET_TOKEN} = restEndPoints;
+  const { LOGIN, RESEND_OTP, GET_TOKEN } = restEndPoints;
   const [loading, setLoading] = useState(false);
-  const {updateStorageItem: storeUuid} = useAsyncStorage('@uuid');
-  const {updateStorageItem: storeAccessToken} = useAsyncStorage('@accessToken');
-  const {storageItem: storedAccessToken, tokenLoading} = useAsyncStorage(
+  const { updateStorageItem: storeUuid } = useAsyncStorage('@uuid');
+  const { updateStorageItem: storeAccessToken } = useAsyncStorage('@accessToken');
+  const { storageItem: storedAccessToken, tokenLoading } = useAsyncStorage(
     '@accessToken',
   );
   const [contactDetails, setContactDetails] = useState([]);
@@ -97,7 +97,7 @@ export const Login = ({navigation}) => {
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const {CONTACT_INFORMATION} = restEndPoints;
+  const { CONTACT_INFORMATION } = restEndPoints;
 
   useFocusEffect(
     useCallback(() => {
@@ -126,7 +126,7 @@ export const Login = ({navigation}) => {
       setApiLoading(true);
       try {
         await axios
-          .get(contactUrl, {headers: requestHeaders})
+          .get(contactUrl, { headers: requestHeaders })
           .then((apiResponse) => {
             setApiLoading(false);
             // console.log(apiResponse.data, 'api response is.......');
@@ -166,7 +166,7 @@ export const Login = ({navigation}) => {
           {
             mobileNo: mobileNumber,
           },
-          {headers: requestHeaders},
+          { headers: requestHeaders },
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -199,7 +199,7 @@ export const Login = ({navigation}) => {
           {
             uuid: uuid,
           },
-          {headers: requestHeaders},
+          { headers: requestHeaders },
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -230,7 +230,7 @@ export const Login = ({navigation}) => {
             uuid: uuid,
             otp: otp,
           },
-          {headers: requestHeaders},
+          { headers: requestHeaders },
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -306,13 +306,14 @@ export const Login = ({navigation}) => {
         {showOTPView && (
           <View>
             <TextInput
-              style={[styles.textInputStyles, {marginTop: 15}]}
+              style={[styles.textInputStyles, { marginTop: 15 }]}
               placeholder="OTP"
               onChangeText={(otp) => {
                 setOTP(otp);
               }}
               maxLength={4}
               keyboardType="number-pad"
+              returnKeyType='done'
               onEndEditing={(e) => {
                 const otp = e.nativeEvent.text;
                 getAccessTokenFromApi();
@@ -322,8 +323,8 @@ export const Login = ({navigation}) => {
             <Text style={styles.otpTextStyle}>
               If you have any issues with OTP please call us on{' '}
               {contactDetails &&
-              contactDetails.appContactTech &&
-              contactDetails.appContactTech.length > 0
+                contactDetails.appContactTech &&
+                contactDetails.appContactTech.length > 0
                 ? contactDetails.appContactTech
                 : ''}
             </Text>
@@ -340,7 +341,7 @@ export const Login = ({navigation}) => {
         onPressButton={() => {
           getOtp();
         }}
-        propStyle={{marginTop: 16}}
+        propStyle={{ marginTop: 16 }}
         disabled={!showTickMark || loading}
         disableButton={!showTickMark || loading}
       />
@@ -354,7 +355,7 @@ export const Login = ({navigation}) => {
         onPressButton={() => {
           getAccessTokenFromApi();
         }}
-        propStyle={{marginTop: 16}}
+        propStyle={{ marginTop: 16 }}
         disabled={disableLoginButton || loading}
         disableButton={disableLoginButton || loading}
       />
@@ -367,45 +368,45 @@ export const Login = ({navigation}) => {
         {apiErrorText.length > 0 ? (
           <Text style={styles.errorTextStyles}>{apiErrorText}</Text>
         ) : (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              console.log('resend otp cliced');
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 30,
-                marginTop: 20,
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                console.log('resend otp cliced');
               }}>
-              <Text
-                style={[
-                  styles.errorTextStyles,
-                  {
-                    textAlign: 'center',
-                    color: colors.BLACK,
-                    marginTop: 0,
-                  },
-                ]}>
-                Didn’t receive OTP?{' '}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 30,
+                  marginTop: 20,
+                }}>
+                <Text
+                  style={[
+                    styles.errorTextStyles,
+                    {
+                      textAlign: 'center',
+                      color: colors.BLACK,
+                      marginTop: 0,
+                    },
+                  ]}>
+                  Didn’t receive OTP?{' '}
+                </Text>
+                <Text
+                  style={[
+                    styles.errorTextStyles,
+                    {
+                      textAlign: 'center',
+                      textDecorationLine: 'underline',
+                      fontWeight: '500',
+                      marginTop: 0,
+                    },
+                  ]}>
+                  Resend
               </Text>
-              <Text
-                style={[
-                  styles.errorTextStyles,
-                  {
-                    textAlign: 'center',
-                    textDecorationLine: 'underline',
-                    fontWeight: '500',
-                    marginTop: 0,
-                  },
-                ]}>
-                Resend
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
+              </View>
+            </TouchableOpacity>
+          )}
       </>
     );
   };
@@ -476,19 +477,19 @@ export const Login = ({navigation}) => {
   return tokenLoading || apiLoading ? (
     <Loader />
   ) : (
-    <View style={styles.container}>
-      <View style={styles.subContainer}>
-        <Logo style={{width: 55, height: 74}} />
-        {renderWelcomeName()}
-        {renderPhoneField()}
-        {showOtpButton && renderButtonGetOtp()}
-        {showLoginButton && renderButtonLogin()}
-        {apiErrorText.length > 0 && renderErrorMessage()}
-        {showOTPView && renderResendOTPView()}
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
+          <Logo style={{ width: 55, height: 74 }} />
+          {renderWelcomeName()}
+          {renderPhoneField()}
+          {showOtpButton && renderButtonGetOtp()}
+          {showLoginButton && renderButtonLogin()}
+          {apiErrorText.length > 0 && renderErrorMessage()}
+          {showOTPView && renderResendOTPView()}
+        </View>
+        {renderFooterView()}
       </View>
-      {renderFooterView()}
-    </View>
-  );
+    );
 };
 
 // : showNoDataMessage ? (
