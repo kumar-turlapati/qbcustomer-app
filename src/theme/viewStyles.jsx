@@ -1,4 +1,5 @@
-import {colors} from './colors';
+import { colors } from './colors';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 export const viewStyles = {
   flex: {
@@ -16,7 +17,7 @@ export const viewStyles = {
     marginTop: 15,
   },
   shadow: {
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
@@ -77,7 +78,7 @@ export const viewStyles = {
   },
   productListTextStyles: {
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 22,
     letterSpacing: -0.41,
     color: colors.PRODUCT_LIST_SPECIAL_TEXT_COLOR,
@@ -135,13 +136,17 @@ export const viewStyles = {
   tabBarOptionStyle: {
     borderTopColor: 'transparent',
     shadowColor: colors.BLACK,
-    shadowOffset: {width: 0, height: -10},
+    shadowOffset: { width: 0, height: -10 },
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 10,
     borderTopWidth: 0,
     top: 1,
-    height: 57,
+    ...ifIphoneX({
+      height: 100,
+    }, {
+      height: 57,
+    })
   },
   tabBarIconStyles: {
     marginTop: 8,

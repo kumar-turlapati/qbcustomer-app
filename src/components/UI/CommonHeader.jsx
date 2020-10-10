@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   // Dimensions,
   StyleSheet,
@@ -15,8 +15,9 @@ import {
   HeartSelected,
   // HeartUnSelected,
 } from '../../icons/Icons';
-import {theme} from '../../theme/theme';
-import {ShoppingCartContext} from '../context/ShoppingCart';
+import { theme } from '../../theme/theme';
+import { ShoppingCartContext } from '../context/ShoppingCart';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 // const {height, width} = Dimensions.get('window');
 
@@ -32,7 +33,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   headerStyles: {
-    height: 55, // changed
+    ...ifIphoneX({
+      height: 90,
+    }, {
+      height: 60, //changed
+    }),
     backgroundColor: theme.colors.WHITE,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -47,7 +52,11 @@ const styles = StyleSheet.create({
   },
   iconViewStyles: {
     height: 44,
-    marginTop: 20, //changed
+    ...ifIphoneX({
+      marginTop: 50, // changed
+    }, {
+      marginTop: 25, // changed
+    }),
     flexDirection: 'row',
   },
   leftTextStyle: {
@@ -64,18 +73,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
-  rightIconViewStyle: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginTop: 45,
-    marginRight: 5,
-  },
   productIconStyles: {
     width: 30,
     marginRight: 7,
     height: 44,
-    marginTop: 20,
+    ...ifIphoneX({
+      marginTop: 50, // changed
+    }, {
+      marginTop: 25,
+    }),
   },
   iconWishListStyles: {
     height: 20,
@@ -98,7 +104,7 @@ export default CommonHeader = ({
   isItemInWishlist,
   // disableCart,
 }) => {
-  const {cartItems} = useContext(ShoppingCartContext);
+  const { cartItems } = useContext(ShoppingCartContext);
 
   const renderHeader = () => {
     return (
@@ -123,9 +129,9 @@ export default CommonHeader = ({
             </Text>
           </View>
         </TouchableOpacity>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           {isProduct && (
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => {
@@ -149,7 +155,7 @@ export default CommonHeader = ({
 
           {isWishList ? (
             isItemInWishlist ? (
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={() => {
@@ -161,18 +167,18 @@ export default CommonHeader = ({
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    onPressWishListIcon();
-                  }}>
-                  <View style={styles.productIconStyles}>
-                    <WishListIcon style={styles.iconWishListStyles} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      onPressWishListIcon();
+                    }}>
+                    <View style={styles.productIconStyles}>
+                      <WishListIcon style={styles.iconWishListStyles} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )
           ) : null}
 
           {cartItems && cartItems.length > 0 && (
