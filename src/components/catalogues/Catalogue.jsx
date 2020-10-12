@@ -190,7 +190,9 @@ export const Catalogue = ({route, navigation}) => {
       <CommonHeader
         leftSideText={`${_startCase(_toLower(brandName))} Catalogs`}
         isTabView={false}
-        onPressRightButton={() => {}}
+        onPressRightButton={() => {
+          navigation.push(ScreenNamesCustomer.CARTVIEW);
+        }}
         onPressLeftButton={() => {
           navigation.navigate(ScreenNamesCustomer.NEWHOME);
         }}

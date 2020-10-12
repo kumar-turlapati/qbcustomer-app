@@ -238,7 +238,7 @@ export const Profile = ({navigation}) => {
           fontSize: 12,
         }}>
         <Text style={theme.viewStyles.versionTextStyle}>
-          Version No. {packageJson.version}
+          Build No. {packageJson.version}
         </Text>
         <Text
           style={[
