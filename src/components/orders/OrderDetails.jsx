@@ -18,6 +18,7 @@ import axios from 'axios';
 import _find from 'lodash/find';
 import {Image} from 'react-native-elements';
 import _toLower from 'lodash/toLower';
+import {checkTokenExpired} from '../../utils/general';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -165,6 +166,8 @@ export const OrderDetails = ({route, navigation}) => {
           setOrderDeleted(true);
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           // console.log(error, 'error is.......');
           const errorText = error.response.data.errortext;
           setApiLoading(false);
@@ -205,6 +208,8 @@ export const OrderDetails = ({route, navigation}) => {
             }
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             // console.log(error.response.data);
             setErrorMessage(error.response.data.errortext);
             setShowNoDataMessage(true);

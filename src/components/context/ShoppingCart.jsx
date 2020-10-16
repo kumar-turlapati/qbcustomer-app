@@ -2,6 +2,7 @@ import React, {createContext, useState, useEffect} from 'react';
 import axios from 'axios';
 import {restEndPoints, requestHeaders} from '../../../qbconfig';
 import useAsyncStorage from '../customHooks/async';
+import {checkTokenExpired} from '../../utils/general';
 
 export const ShoppingCartContext = createContext();
 
@@ -52,6 +53,8 @@ export const ShoppingCartProvider = (props) => {
         })
         .catch((error) => {
           // console.log(error, 'hello world....');
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           setApiErrorText('Something went wrong. Please try again.');
           setLoading(false);
         });
@@ -80,6 +83,8 @@ export const ShoppingCartProvider = (props) => {
           }
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           const errorText = error.response.data.errortext;
           setLoading(false);
           setApiError(true);
@@ -110,6 +115,8 @@ export const ShoppingCartProvider = (props) => {
           }
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           const errorText = error.response.data.errortext;
           setLoading(false);
           setApiError(true);
@@ -140,6 +147,8 @@ export const ShoppingCartProvider = (props) => {
           fetchCart();
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           const errorText = error.response.data.errortext;
           // console.log('in catch block,remove item from cart....', error);
           setLoading(false);

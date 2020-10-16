@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {theme} from '../theme/theme';
 
 export const NoDataMessage = (props) => {
@@ -8,17 +9,21 @@ export const NoDataMessage = (props) => {
   // console.log(message, 'message in NoDataMessage......');
 
   return (
-    <View style={[styles.container, styles.horizontal]}>
-      {message && message.length > 0 ? (
-        <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
-          {message}
-        </Text>
-      ) : (
-        <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
-          No Data found :(
-        </Text>
-      )}
-    </View>
+    <>
+      <View style={[styles.container, styles.horizontal]}>
+        {message && message.length > 0 ? (
+          <>
+            <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
+              {message}
+            </Text>
+          </>
+        ) : (
+          <Text style={{color: theme.colors.RED, fontWeight: 'bold'}}>
+            No Data found :(
+          </Text>
+        )}
+      </View>
+    </>
   );
 };
 

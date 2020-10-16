@@ -12,6 +12,7 @@ import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
 import _sumBy from 'lodash/sumBy';
 import _startCase from 'lodash/startCase';
+import {checkTokenExpired} from '../../utils/general';
 
 const {height, width} = Dimensions.get('window');
 
@@ -69,6 +70,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomWidth: 2,
     borderBottomColor: theme.colors.BLACK_WITH_OPACITY_2,
+  },
+  noDataMessage: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
 });
 
@@ -167,6 +177,8 @@ export const Ledger = ({navigation}) => {
           })
           .catch((error) => {
             // console.log(error.response.data, '@@@@@@@@@@@@@@@@@@@@@@@@@@');
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             const errorMessage = error.response.data.errortext;
             setLedgerLoading(false);
             setShowNoDataMessage(true);
@@ -329,8 +341,6 @@ export const Ledger = ({navigation}) => {
 
   return ledgerLoading ? (
     <Loader />
-  ) : showNoDataMessage ? (
-    <NoDataMessage message={errorMessage} />
   ) : (
     <ScrollView
       style={styles.container}
@@ -338,9 +348,17 @@ export const Ledger = ({navigation}) => {
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}>
       {renderHeader()}
-      {renderTransaction()}
-      {renderDescription()}
-      <View style={{height: 20}} />
+      {showNoDataMessage ? (
+        <View style={{marginTop: height / 2 - 100}}>
+          <NoDataMessage message={errorMessage} />
+        </View>
+      ) : (
+        <>
+          {renderTransaction()}
+          {renderDescription()}
+          <View style={{height: 20}} />
+        </>
+      )}
     </ScrollView>
   );
 };

@@ -11,6 +11,7 @@ import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
 import useAsyncStorage from '../customHooks/async';
 import {useIsFocused} from '@react-navigation/native';
+import {checkTokenExpired} from '../../utils/general';
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +73,8 @@ export const Order = ({navigation}) => {
             }
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             // console.log(error, '@@@@@@@@@@@@@@@@@@@@@@@@@@', requestHeaders);
             setOrdersLoading(false);
             setShowNoDataMessage(true);

@@ -18,6 +18,7 @@ import {Image} from 'react-native-elements';
 import _toLower from 'lodash/toLower';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import {checkTokenExpired} from '../../utils/general';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -152,6 +153,8 @@ export const ViewInvoice = ({route, navigation}) => {
           })
           .catch((error) => {
             // console.log(error.response.data);
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             setInvoiceDetailsLoading(false);
             setErrorMessage(error.response.data.errortext);
             setShowNoDataMessage(true);

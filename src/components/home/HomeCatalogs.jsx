@@ -41,6 +41,7 @@ import {Image} from 'react-native-elements';
 // import {CommonActions} from '@react-navigation/native';
 import {NoDataMessage} from '../NoDataMessage';
 import _trim from 'lodash/trim';
+import {checkTokenExpired} from '../../utils/general';
 
 const {width} = Dimensions.get('window');
 
@@ -223,6 +224,8 @@ export const HomeCatalogs = ({route, navigation}) => {
         })
         .catch((error) => {
           // console.log(error.response);
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           setLoading(false);
           setShowNoDataMessage(true);
           setErrorMessage('We are sorry. No data available at this moment :)');
@@ -256,6 +259,8 @@ export const HomeCatalogs = ({route, navigation}) => {
           }
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           setLoading(false);
           const errorText = error.response.data.errortext;
           // console.log(errorText);
@@ -737,6 +742,8 @@ export const HomeCatalogs = ({route, navigation}) => {
             }
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             setWishlistLoading(false);
             setAlertText('Oops, something went wrong.');
             // console.log(errorText);
@@ -780,6 +787,8 @@ export const HomeCatalogs = ({route, navigation}) => {
             // console.log(errorText);
           });
       } catch (e) {
+        if (checkTokenExpired(error))
+          navigation.push(ScreenNamesCustomer.LOGIN);
         setWishlistLoading(false);
         setAlertText('Network error. Please try again.');
         // console.log(e);

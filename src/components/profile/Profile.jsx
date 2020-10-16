@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import packageJson from '../../../package.json';
 import axios from 'axios';
 import {restEndPoints, requestHeaders, clientCode} from '../../../qbconfig';
-import {NoDataMessage} from '../NoDataMessage';
+// import {NoDataMessage} from '../NoDataMessage';
 
 const styles = StyleSheet.create({
   container: {
@@ -115,10 +115,11 @@ const profileOptions = [
 ];
 
 export const Profile = ({navigation}) => {
-  const [apiLoading, setApiLoading] = useState(true);
+  // const [apiLoading, setApiLoading] = useState(true);
   const [contactDetails, setContactDetails] = useState([]);
-  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [asyncRemoved, setAsyncRemoved] = useState(false);
+  // const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const {CONTACT_INFORMATION} = restEndPoints;
 
@@ -126,31 +127,44 @@ export const Profile = ({navigation}) => {
 
   useEffect(() => {
     const getAppDetails = async () => {
-      setApiLoading(true);
+      // setApiLoading(true);
       const contactUrl = `${CONTACT_INFORMATION.URL()}?clientCode=${clientCode}`;
       try {
         await axios
           .get(contactUrl, {headers: requestHeaders})
           .then((apiResponse) => {
-            setApiLoading(false);
+            // setApiLoading(false);
             if (apiResponse.data.status === 'success') {
               setContactDetails(apiResponse.data.response.contactDetails);
             }
           })
           .catch((error) => {
             // console.log(error.response.data);
-            const errorMessage = error.response.data;
-            setShowNoDataMessage(true);
-            setErrorMessage(errorMessage);
+            // const errorMessage = error.response.data;
+            // setShowNoDataMessage(true);
+            // setErrorMessage(errorMessage);
           });
       } catch (e) {
-        const errorMessage = 'Network error. Please try again :(';
-        setErrorMessage(errorMessage);
-        setShowNoDataMessage(true);
+        // const errorMessage = 'Network error. Please try again :(';
+        // setErrorMessage(errorMessage);
+        // setShowNoDataMessage(true);
       }
     };
     getAppDetails();
   }, []);
+
+  useEffect(() => {
+    if (asyncRemoved) navigation.push(ScreenNamesCustomer.LOGIN);
+  }, [asyncRemoved]);
+
+  const clearAsyncStorage = async () => {
+    const keys = ['@uuid', '@accessToken'];
+    try {
+      await AsyncStorage.multiRemove(keys).then(() => {
+        setAsyncRemoved(true);
+      });
+    } catch (e) {}
+  };
 
   const renderHeader = () => {
     return (
@@ -180,8 +194,7 @@ export const Profile = ({navigation}) => {
             } else if (index === 2) {
               navigation.push(ScreenNamesCustomer.LEDGER);
             } else if (index === 3) {
-              AsyncStorage.clear();
-              navigation.push(ScreenNamesCustomer.LOGIN);
+              clearAsyncStorage();
             } else if (index === 4) {
               navigation.push(ScreenNamesCustomer.NEWHOME);
             }

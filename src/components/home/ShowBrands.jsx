@@ -31,6 +31,7 @@ import _toLower from 'lodash/toLower';
 import {ScreenNamesCustomer} from '../navigationController/ScreenNames';
 import {useDebounce} from 'use-debounce';
 import axios from 'axios';
+import {checkTokenExpired} from '../../utils/general';
 
 const {width, height} = Dimensions.get('window');
 
@@ -74,29 +75,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// const genderData = [
-//   {
-//     id: 1,
-//     title: 'Men',
-//     image: <RaymondLogo style={{ width: 150, height: 150 }} />,
-//   },
-//   {
-//     id: 2,
-//     title: 'Women',
-//     image: <RaymondLinenLogo style={{ width: 150, height: 150 }} />,
-//   },
-//   {
-//     id: 3,
-//     title: 'Boy',
-//     image: <Zaccari style={{ width: 150, height: 150 }} />,
-//   },
-//   {
-//     id: 4,
-//     title: 'Girl',
-//     image: <SiyaramsLogo style={{ width: 150, height: 150 }} />,
-//   },
-// ];
-
 export const ShowBrands = ({route, navigation}) => {
   const {title, catsSubcats, categoryId} = route.params;
   const [showSearch, setShowSearch] = useState(false);
@@ -126,6 +104,8 @@ export const ShowBrands = ({route, navigation}) => {
             setSearchData(apiResponse.data);
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             // console.log(error.response, '@@@@@@@@@@@@@@@@@@@@@@@@@@');
           });
       } catch (error) {
@@ -144,7 +124,7 @@ export const ShowBrands = ({route, navigation}) => {
     return (
       <CommonSearchHeader
         leftSideText={clientName}
-        isSearch={showSearch}
+        isSearch
         isTabView={false}
         onPressLeftButton={() => {
           navigation.goBack();

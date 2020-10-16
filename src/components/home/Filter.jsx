@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -7,17 +7,18 @@ import {
   SectionList,
   TouchableOpacity,
 } from 'react-native';
-import { CheckIcon, UnCheckIcon } from '../../icons/Icons';
-import { theme } from '../../theme/theme';
+import {CheckIcon, UnCheckIcon} from '../../icons/Icons';
+import {theme} from '../../theme/theme';
 import CommonHeader from '../UI/CommonHeader';
-import { Slider } from 'react-native-elements';
+import {Slider} from 'react-native-elements';
 import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
 import _remove from 'lodash/remove';
 import _trim from 'lodash/trim';
-import { LogBox } from 'react-native';
+import {LogBox} from 'react-native';
+import {filter} from 'lodash';
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
   },
   sliderView: {
     marginHorizontal: 16,
-    borderBottomColor: theme.colors.BLACK_WITH_OPACITY,
-    borderBottomWidth: 1,
+    // borderBottomColor: theme.colors.BLACK_WITH_OPACITY,
+    // borderBottomWidth: 1,
     marginTop: 10,
   },
   buttonViewStyles: {
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Filter = ({ route, navigation }) => {
+export const Filter = ({route, navigation}) => {
   const {
     catalogBrands,
     catalogCategories,
@@ -109,30 +110,11 @@ export const Filter = ({ route, navigation }) => {
     setPricingFilterValue,
   } = route.params;
 
-  // console.log(setBrandSelected, '-----------------');
+  // console.log(pricing, '-----------------');
   // console.log(catalogSizes, catalogColors, 'colors and sizes......');
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
-
-  const filterData = [
-    {
-      title: 'CATEGORY',
-      data: catalogCategories,
-    },
-    // {
-    //   title: 'BRANDS',
-    //   data: catalogBrands,
-    // },
-    {
-      title: 'SIZE',
-      data: catalogSizes,
-    },
-    {
-      title: 'COLOR',
-      data: catalogColors,
-    },
-  ];
 
   let selectedBrandsLocal = [],
     selectedCategoriesLocal = [],
@@ -181,12 +163,33 @@ export const Filter = ({ route, navigation }) => {
   });
   catalogSizes.map((size) => {
     const checkedOrUnchecked = selectedSizesLocal.includes(size);
-    selectedSizeStates.push({ size: size, status: checkedOrUnchecked });
+    selectedSizeStates.push({size: size, status: checkedOrUnchecked});
   });
   catalogColors.map((color) => {
     const checkedOrUnchecked = selectedColorsLocal.includes(color);
-    selectedColorStates.push({ color: color, status: checkedOrUnchecked });
+    selectedColorStates.push({color: color, status: checkedOrUnchecked});
   });
+
+  const filterData = [
+    {
+      title: 'CATEGORY',
+      data: catalogCategories,
+    },
+  ];
+
+  if (catalogSizes.length > 1) {
+    filterData.push({
+      title: 'SIZE',
+      data: catalogSizes,
+    });
+  }
+
+  if (catalogColors.length > 1) {
+    filterData.push({
+      title: 'COLOR',
+      data: catalogColors,
+    });
+  }
 
   const [filterOptions] = useState(filterData);
   const [sliderValue, setSliderValue] = useState(0);
@@ -199,7 +202,7 @@ export const Filter = ({ route, navigation }) => {
   const [sizesSelected, setSizesSelected] = useState([]);
   const [colorsSelected, setColorsSelected] = useState([]);
 
-  // console.log(brandStates, 'brand states..............');
+  // console.log(filterData, 'filter data is.......');
 
   const selectedBrandFilter = (brandName) => {
     const currentValue = _findIndex(
@@ -291,10 +294,10 @@ export const Filter = ({ route, navigation }) => {
       <CommonHeader
         leftSideText={'FILTER'}
         isTabView={true}
-        onPressRightButton={() => { }}
+        onPressRightButton={() => {}}
         isProduct={true}
-        onPressFilterIcon={() => { }}
-        onPressSortIcon={() => { }}
+        onPressFilterIcon={() => {}}
+        onPressSortIcon={() => {}}
       />
     );
   };
@@ -304,7 +307,7 @@ export const Filter = ({ route, navigation }) => {
       <View style={styles.rowStyles}>
         <TouchableOpacity
           activeOpacity={1}
-          style={{ width: 30, height: 30 }}
+          style={{width: 30, height: 30}}
           onPress={() => {
             if (title === 'BRANDS') selectedBrandFilter(item);
             if (title === 'CATEGORY') selectedCategoryFilter(item);
@@ -326,22 +329,22 @@ export const Filter = ({ route, navigation }) => {
             categoryStates[index].status ? (
               <CheckIcon style={styles.iconHeartStyle} />
             ) : (
-                <UnCheckIcon style={styles.iconHeartStyle} />
-              )
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
           ) : null}
           {title === 'COLOR' && colorStates.length > 0 ? (
             colorStates[index].status ? (
               <CheckIcon style={styles.iconHeartStyle} />
             ) : (
-                <UnCheckIcon style={styles.iconHeartStyle} />
-              )
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
           ) : null}
           {title === 'SIZE' && sizeStates.length > 0 ? (
             sizeStates[index].status ? (
               <CheckIcon style={styles.iconHeartStyle} />
             ) : (
-                <UnCheckIcon style={styles.iconHeartStyle} />
-              )
+              <UnCheckIcon style={styles.iconHeartStyle} />
+            )
           ) : null}
         </TouchableOpacity>
         <Text style={styles.rowTextStyle}>{item}</Text>
@@ -350,18 +353,19 @@ export const Filter = ({ route, navigation }) => {
   };
 
   const renderListView = () => {
+    // console.log(colorStates, sizeStates, '--------------');
     return (
       <SectionList
         sections={filterOptions}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item, index, section: { title } }) =>
+        renderItem={({item, index, section: {title}}) =>
           renderRow(item, index, title)
         }
-        renderSectionHeader={({ section: { title, index } }) => (
+        renderSectionHeader={({section: {title, index}}) => (
           <Text
             style={[
               styles.sectionHeaderStyles,
-              { marginTop: index === 0 ? 100 : 35 },
+              {marginTop: index === 0 ? 100 : 35},
             ]}>
             {title}
           </Text>
@@ -384,7 +388,7 @@ export const Filter = ({ route, navigation }) => {
           ]}>
           PRICE RANGE
         </Text>
-        <Text style={[styles.rowTextStyle, { marginTop: 11 }]}>
+        <Text style={[styles.rowTextStyle, {marginTop: 11}]}>
           ₹{pricing.minimum} - ₹{pricing.maximum}
         </Text>
         <Slider
@@ -399,7 +403,7 @@ export const Filter = ({ route, navigation }) => {
           minimumValue={pricing.minimum}
           maximumValue={pricing.maximum}
         />
-        <View style={{ height: 70 }} />
+        <View style={{height: 70}} />
       </View>
     );
   };
@@ -407,7 +411,7 @@ export const Filter = ({ route, navigation }) => {
   const renderFloatingButtons = () => {
     return (
       <View style={styles.buttonViewStyles}>
-        <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
+        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
           <TouchableOpacity
             activeOpacity={1}
             style={styles.buttonStyles}
@@ -419,7 +423,7 @@ export const Filter = ({ route, navigation }) => {
               setSizeSelected('');
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, { color: theme.colors.BLACK }]}>
+            <Text style={[styles.buttonTextStyle, {color: theme.colors.BLACK}]}>
               CANCEL
             </Text>
           </TouchableOpacity>
@@ -450,7 +454,7 @@ export const Filter = ({ route, navigation }) => {
               setSizeSelected(sizes.join());
               navigation.goBack();
             }}>
-            <Text style={[styles.buttonTextStyle, { color: theme.colors.WHITE }]}>
+            <Text style={[styles.buttonTextStyle, {color: theme.colors.WHITE}]}>
               APPLY
             </Text>
           </TouchableOpacity>

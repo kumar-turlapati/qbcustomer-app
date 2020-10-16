@@ -24,6 +24,7 @@ import CommonAlertView from '../UI/CommonAlertView';
 import _find from 'lodash/find';
 import {ShoppingCartContext} from '../context/ShoppingCart';
 import {Image} from 'react-native-elements';
+import {checkTokenExpired} from '../../utils/general';
 
 const {height, width} = Dimensions.get('window');
 
@@ -428,6 +429,8 @@ export const WishList = ({navigation}) => {
           }
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           setLoading(false);
           setShowAlert(true);
           setAlertText(
@@ -461,6 +464,8 @@ export const WishList = ({navigation}) => {
           }
         })
         .catch((error) => {
+          if (checkTokenExpired(error))
+            navigation.push(ScreenNamesCustomer.LOGIN);
           // console.log(error);
           setWishlistLoading(false);
           setWishlistAlertText('Oops, something went wrong.');

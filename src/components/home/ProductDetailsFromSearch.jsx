@@ -30,6 +30,7 @@ import {Image} from 'react-native-elements';
 import ImageZoom from 'react-native-image-pan-zoom';
 import {Loader} from '../Loader';
 import {NoDataMessage} from '../NoDataMessage';
+import {checkTokenExpired} from '../../utils/general';
 
 const {width: winWidth, height: winHeight} = Dimensions.get('window');
 
@@ -292,6 +293,8 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
             }
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             setAlertText('Oops, something went wrong.');
             setWishlistLoading(false);
           });
@@ -320,6 +323,8 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
             }
           })
           .catch((error) => {
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             setAlertText('Oops, something went wrong.');
             // console.log(error, 'error text.............');
             // setApiError(true);
@@ -450,7 +455,12 @@ export const ProductDetailsFromSearch = ({route, navigation}) => {
           imageHeight={winHeight}>
           <Image
             source={{uri: imageUrl}}
-            style={{width: winWidth, height: winHeight}}
+            style={{
+              width: winWidth - 50,
+              height: winHeight - 150,
+              marginLeft: 25,
+              marginTop: 80,
+            }}
           />
         </ImageZoom>
       </View>

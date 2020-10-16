@@ -16,6 +16,7 @@ import _toLower from 'lodash/toLower';
 import {NoDataMessage} from '../NoDataMessage';
 import {useIsFocused} from '@react-navigation/native';
 import {useFocusEffect} from '@react-navigation/native';
+import {checkTokenExpired} from '../../utils/general';
 
 // import {CommonActions} from '@react-navigation/native';
 
@@ -117,6 +118,7 @@ export const Catalogue = ({route, navigation}) => {
   );
 
   useEffect(() => {
+    // console.log(requestHeaders, '---------------');
     const getCatalogs = async () => {
       setLoading(true);
       const catalogsUrl = `${CATALOGS.URL}?categoryID=${categoryId}&subCategoryID=${subCategoryId}`;
@@ -126,7 +128,7 @@ export const Catalogue = ({route, navigation}) => {
             headers: requestHeaders,
           })
           .then((apiResponse) => {
-            // console.log(apiResponse, '----------------------');
+            // console.log(apiResponse, 'apiResponse.......');
             setLoading(false);
             if (apiResponse.data.status === 'success') {
               const catalogs = apiResponse.data.response.catalogs;
@@ -145,6 +147,9 @@ export const Catalogue = ({route, navigation}) => {
             }
           })
           .catch((error) => {
+            // console.log(error, 'error in catalog......');
+            if (checkTokenExpired(error))
+              navigation.push(ScreenNamesCustomer.LOGIN);
             setLoading(false);
             setShowNoDataMessage(true);
             setErrorMessage('Catalogs are coming soon :)');

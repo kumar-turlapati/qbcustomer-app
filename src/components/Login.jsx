@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,22 +8,23 @@ import {
   BackHandler,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import { Logo, TextBoxSelect, QLogo } from '../icons/Icons';
-import { theme } from '../theme/theme';
+import {Logo, TextBoxSelect, QLogo} from '../icons/Icons';
+import {theme} from '../theme/theme';
 import {
   isMobileNumberValid,
   isMobileNumberValidWithReason,
 } from '../utils/Validators';
 import CommonButton from './UI/CommonButton';
-import { colors } from '../theme/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ScreenNamesCustomer } from './navigationController/ScreenNames';
+import {colors} from '../theme/colors';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScreenNamesCustomer} from './navigationController/ScreenNames';
 import axios from 'axios';
-import { restEndPoints, requestHeaders, qbUrl, clientCode } from '../../qbconfig';
+import {restEndPoints, requestHeaders, qbUrl, clientCode} from '../../qbconfig';
 import useAsyncStorage from '../components/customHooks/async';
-import { useFocusEffect } from '@react-navigation/native';
-import { Loader } from './Loader';
-import { NoDataMessage } from './NoDataMessage';
+import {useFocusEffect} from '@react-navigation/native';
+import {Loader} from './Loader';
+// import {NoDataMessage} from './NoDataMessage';
+// import {useIsFocused} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Login = ({ navigation }) => {
+export const Login = ({navigation}) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOTP] = useState('');
   const [showOTPView, setShowOTPView] = useState(false);
@@ -85,19 +86,24 @@ export const Login = ({ navigation }) => {
   const [disableResendOtp, setDisableResendOtp] = useState(false);
   const [uuid, setUuid] = useState('');
   const [apiErrorText, setApiErrorText] = useState('');
-  const { LOGIN, RESEND_OTP, GET_TOKEN } = restEndPoints;
+  const {LOGIN, RESEND_OTP, GET_TOKEN} = restEndPoints;
   const [loading, setLoading] = useState(false);
-  const { updateStorageItem: storeUuid } = useAsyncStorage('@uuid');
-  const { updateStorageItem: storeAccessToken } = useAsyncStorage('@accessToken');
-  const { storageItem: storedAccessToken, tokenLoading } = useAsyncStorage(
+  const {updateStorageItem: storeUuid} = useAsyncStorage('@uuid');
+  const {updateStorageItem: storeAccessToken} = useAsyncStorage('@accessToken');
+  const {storageItem: storedAccessToken, tokenLoading} = useAsyncStorage(
     '@accessToken',
   );
   const [contactDetails, setContactDetails] = useState([]);
   const [apiLoading, setApiLoading] = useState(true);
-  const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState('');
+  // const [reloadPage, setReloadPage] = useState(false);
+  // const isFocused = useIsFocused();
 
-  const { CONTACT_INFORMATION } = restEndPoints;
+  const {CONTACT_INFORMATION} = restEndPoints;
+
+  // console.log('access token', storedAccessToken, '---------------------');
+  // console.log('api error text', apiErrorText);
 
   useFocusEffect(
     useCallback(() => {
@@ -124,28 +130,34 @@ export const Login = ({ navigation }) => {
     const getAppDetails = async () => {
       const contactUrl = `${CONTACT_INFORMATION.URL()}?clientCode=${clientCode}`;
       setApiLoading(true);
+      // console.log('request headers in contact info.....', requestHeaders);
       try {
         await axios
-          .get(contactUrl, { headers: requestHeaders })
+          .get(contactUrl, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Org-Id': clientCode,
+              Accept: 'application/json',
+            },
+          })
           .then((apiResponse) => {
             setApiLoading(false);
-            // console.log(apiResponse.data, 'api response is.......');
             if (apiResponse.data.status === 'success') {
               setContactDetails(apiResponse.data.response.contactDetails);
             }
           })
           .catch((error) => {
-            console.log(error.response.data);
+            // console.log(error.response.data, 'hello world.............');
             const errorMessage = error.response.data;
             setApiLoading(false);
-            setShowNoDataMessage(true);
+            // setShowNoDataMessage(true);
             setErrorMessage(errorMessage);
           });
       } catch (e) {
         const errorMessage = 'Network error. Please try again :(';
         setApiLoading(false);
         setErrorMessage(errorMessage);
-        setShowNoDataMessage(true);
+        // setShowNoDataMessage(true);
       }
     };
     getAppDetails();
@@ -157,6 +169,10 @@ export const Login = ({ navigation }) => {
     }
   }, [storedAccessToken]);
 
+  useEffect(() => {
+    if (otp.length === 0) setApiErrorText('');
+  }, [otp]);
+
   const getOtp = async () => {
     setLoading(true);
     try {
@@ -166,7 +182,7 @@ export const Login = ({ navigation }) => {
           {
             mobileNo: mobileNumber,
           },
-          { headers: requestHeaders },
+          {headers: requestHeaders},
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -199,7 +215,7 @@ export const Login = ({ navigation }) => {
           {
             uuid: uuid,
           },
-          { headers: requestHeaders },
+          {headers: requestHeaders},
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -230,7 +246,7 @@ export const Login = ({ navigation }) => {
             uuid: uuid,
             otp: otp,
           },
-          { headers: requestHeaders },
+          {headers: requestHeaders},
         )
         .then((apiResponse) => {
           setLoading(false);
@@ -291,6 +307,9 @@ export const Login = ({ navigation }) => {
             textContentType="telephoneNumber"
             dataDetectorTypes="phoneNumber"
           />
+          {apiErrorText && apiErrorText.length > 0 ? (
+            <Text style={styles.otpTextStyle}>{apiErrorText}</Text>
+          ) : null}
           {showTickMark && (
             <TextBoxSelect
               style={{
@@ -306,28 +325,32 @@ export const Login = ({ navigation }) => {
         {showOTPView && (
           <View>
             <TextInput
-              style={[styles.textInputStyles, { marginTop: 15 }]}
+              style={[styles.textInputStyles, {marginTop: 15}]}
               placeholder="OTP"
               onChangeText={(otp) => {
                 setOTP(otp);
               }}
               maxLength={4}
               keyboardType="number-pad"
-              returnKeyType='done'
+              returnKeyType="done"
               onEndEditing={(e) => {
                 const otp = e.nativeEvent.text;
                 getAccessTokenFromApi();
               }}
               textContentType="oneTimeCode"
             />
-            <Text style={styles.otpTextStyle}>
-              If you have any issues with OTP please call us on{' '}
-              {contactDetails &&
+            {apiErrorText && apiErrorText.length > 0 ? (
+              <Text style={styles.otpTextStyle}>{apiErrorText}</Text>
+            ) : (
+              <Text style={styles.otpTextStyle}>
+                If you have any issues with OTP please call us on{' '}
+                {contactDetails &&
                 contactDetails.appContactTech &&
                 contactDetails.appContactTech.length > 0
-                ? contactDetails.appContactTech
-                : ''}
-            </Text>
+                  ? contactDetails.appContactTech
+                  : ''}
+              </Text>
+            )}
           </View>
         )}
       </>
@@ -341,7 +364,7 @@ export const Login = ({ navigation }) => {
         onPressButton={() => {
           getOtp();
         }}
-        propStyle={{ marginTop: 16 }}
+        propStyle={{marginTop: 16}}
         disabled={!showTickMark || loading}
         disableButton={!showTickMark || loading}
       />
@@ -355,7 +378,7 @@ export const Login = ({ navigation }) => {
         onPressButton={() => {
           getAccessTokenFromApi();
         }}
-        propStyle={{ marginTop: 16 }}
+        propStyle={{marginTop: 16}}
         disabled={disableLoginButton || loading}
         disableButton={disableLoginButton || loading}
       />
@@ -368,45 +391,45 @@ export const Login = ({ navigation }) => {
         {apiErrorText.length > 0 ? (
           <Text style={styles.errorTextStyles}>{apiErrorText}</Text>
         ) : (
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => {
-                console.log('resend otp cliced');
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              console.log('resend otp cliced');
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 30,
+                marginTop: 20,
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 30,
-                  marginTop: 20,
-                }}>
-                <Text
-                  style={[
-                    styles.errorTextStyles,
-                    {
-                      textAlign: 'center',
-                      color: colors.BLACK,
-                      marginTop: 0,
-                    },
-                  ]}>
-                  Didn’t receive OTP?{' '}
-                </Text>
-                <Text
-                  style={[
-                    styles.errorTextStyles,
-                    {
-                      textAlign: 'center',
-                      textDecorationLine: 'underline',
-                      fontWeight: '500',
-                      marginTop: 0,
-                    },
-                  ]}>
-                  Resend
+              <Text
+                style={[
+                  styles.errorTextStyles,
+                  {
+                    textAlign: 'center',
+                    color: colors.BLACK,
+                    marginTop: 0,
+                  },
+                ]}>
+                Didn’t receive OTP?{' '}
               </Text>
-              </View>
-            </TouchableOpacity>
-          )}
+              <Text
+                style={[
+                  styles.errorTextStyles,
+                  {
+                    textAlign: 'center',
+                    textDecorationLine: 'underline',
+                    fontWeight: '500',
+                    marginTop: 0,
+                  },
+                ]}>
+                Resend
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </>
     );
   };
@@ -477,19 +500,19 @@ export const Login = ({ navigation }) => {
   return tokenLoading || apiLoading ? (
     <Loader />
   ) : (
-      <View style={styles.container}>
-        <View style={styles.subContainer}>
-          <Logo style={{ width: 55, height: 74 }} />
-          {renderWelcomeName()}
-          {renderPhoneField()}
-          {showOtpButton && renderButtonGetOtp()}
-          {showLoginButton && renderButtonLogin()}
-          {apiErrorText.length > 0 && renderErrorMessage()}
-          {showOTPView && renderResendOTPView()}
-        </View>
-        {renderFooterView()}
+    <View style={styles.container}>
+      <View style={styles.subContainer}>
+        <Logo style={{width: 55, height: 74}} />
+        {renderWelcomeName()}
+        {renderPhoneField()}
+        {showOtpButton && renderButtonGetOtp()}
+        {showLoginButton && renderButtonLogin()}
+        {/* {apiErrorText && apiErrorText.length > 0 && renderErrorMessage()} */}
+        {showOTPView && renderResendOTPView()}
       </View>
-    );
+      {renderFooterView()}
+    </View>
+  );
 };
 
 // : showNoDataMessage ? (
