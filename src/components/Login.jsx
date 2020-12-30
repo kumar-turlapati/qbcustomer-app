@@ -175,6 +175,11 @@ export const Login = ({navigation}) => {
 
   const getOtp = async () => {
     setLoading(true);
+    const headersLogin = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Org-Id': clientCode,
+      Accept: 'application/json',
+    };
     try {
       await axios
         .post(
@@ -182,7 +187,7 @@ export const Login = ({navigation}) => {
           {
             mobileNo: mobileNumber,
           },
-          {headers: requestHeaders},
+          {headers: headersLogin},
         )
         .then((apiResponse) => {
           setLoading(false);
